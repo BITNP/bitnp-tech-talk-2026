@@ -1,0 +1,49 @@
+% talk-common.tex —— 各场分享共用的导言区配置
+% 放在仓库根目录，由各个入口 .tex 通过 \input{talk-common.tex} 引用。
+% 编译时需要把仓库根目录加入 TEXINPUTS，详见根目录 AGENTS.md 第 2 节。
+
+\usetheme[customfont,showmaxslides,nofooterlogo]{pureminimalistic}
+\usefonttheme{professionalfonts}
+\usepackage[UTF8,fontset=none]{ctex}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{appendixnumberbeamer}
+
+\setsansfont{Fira Sans}
+\setmonofont{Fira Mono}
+\setCJKmainfont{Noto Sans CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}
+\setCJKmonofont{Noto Sans CJK SC}
+
+% 默认不引用上游示例 logo，有真实素材时再统一配置
+\renewcommand{\logotitle}{}
+\renewcommand{\logoheader}{}
+\renewcommand{\logofooter}{}
+\renewcommand{\pageword}{}
+
+% 字号设置必须放在加载主题之后，避免被主题覆盖
+\setbeamerfont{title}{size=\LARGE,shape=\upshape,series=\bfseries}
+\setbeamerfont{presentation title}{shape=\upshape}
+\setbeamerfont{frametitle}{size=\Large,shape=\upshape,series=\bfseries}
+
+% 对浅色/深色都保持明确的代码对比度
+\definecolor{TalkCodeBg}{HTML}{F3F4F6}
+\definecolor{TalkCodeFg}{HTML}{17212B}
+\definecolor{TalkCodeKeyword}{HTML}{174EA6}
+\definecolor{TalkCodeComment}{HTML}{47634D}
+\definecolor{TalkCodeString}{HTML}{8A3014}
+\lstdefinestyle{talkcode}{
+  basicstyle=\ttfamily\small\color{TalkCodeFg},
+  backgroundcolor=\color{TalkCodeBg},
+  keywordstyle=\bfseries\color{TalkCodeKeyword},
+  commentstyle=\color{TalkCodeComment},
+  stringstyle=\color{TalkCodeString},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=4,
+  numbers=none,
+  frame=none
+}
+\lstset{style=talkcode}

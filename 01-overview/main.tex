@@ -1,0 +1,111 @@
+% 01-overview/01-general/main.tex
+% 示例幻灯片：演示 pureminimalistic 主题与本仓库的常用版式。
+% 从本文件所在目录编译，详见根目录 AGENTS.md 第 2 节。
+\documentclass[aspectratio=169]{beamer}
+\input{../talk-common.tex}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{booktabs}
+
+\title[从源代码到程序运行]{从源代码到程序运行}
+\author{}
+\institute{}
+\date{}
+
+\begin{document}
+\maketitle
+
+% 目录页使用 plain 且不编号，避免与正文页脚冲突
+\begin{frame}[plain,noframenumbering]{目录}
+  \tableofcontents
+\end{frame}
+
+\section{程序的执行过程}
+
+\begin{frame}{从源代码到可执行文件}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.46\textwidth}
+      \begin{itemize}
+        \item 编译器把源文件翻译成目标文件。
+        \item 链接器把目标文件和用到的库合并成可执行文件。
+        \item 操作系统装载可执行文件，创建进程并开始执行。
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        node distance=9mm,
+        box/.style={
+          draw, rounded corners, align=center,
+          inner sep=4pt, minimum width=0.85\linewidth
+        },
+        ar/.style={-{Latex[length=2mm]}, thick}
+      ]
+        \node[box] (src) {源代码\\\texttt{main.c}};
+        \node[box, below=of src] (obj) {目标文件\\\texttt{main.o}};
+        \node[box, below=of obj] (exe) {可执行文件\\\texttt{a.out}};
+        \draw[ar] (src) -- node[right, font=\footnotesize] {编译器} (obj);
+        \draw[ar] (obj) -- node[right, font=\footnotesize] {链接器} (exe);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{三个阶段的分工}
+  \centering
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    阶段 & 负责者 & 主要工作 \\
+    \midrule
+    编译期 & 编译器 & 检查语法、生成目标代码 \\
+    链接期 & 链接器 & 解析符号、合并库函数 \\
+    运行期 & 操作系统 & 装载程序、分配内存、调度进程 \\
+    \bottomrule
+  \end{tabular}
+  \medskip
+  \par
+  \normalsize
+  一次编译并不等于程序已经可以运行。
+\end{frame}
+
+\section{代码示例}
+
+\begin{frame}[fragile]{函数返回值如何传回调用方}
+  \begin{lstlisting}[language=Python]
+def square(value):
+    return value * value
+
+result = square(4)
+print(result)  # 16
+  \end{lstlisting}
+  \medskip
+  \texttt{return} 把计算结果交回调用方，调用方再用变量接收。
+\end{frame}
+
+\begin{frame}{小结}
+  \begin{vfilleditems}
+    \item 源代码需要经过编译、链接才能成为可执行文件。
+    \item 编译期、链接期和运行期由不同角色负责。
+    \item 理解的入口是“每一步的输入和输出是什么”。
+  \end{vfilleditems}
+\end{frame}
+
+\appendix
+\section*{备查}
+
+\begin{frame}[fragile]{常用编译命令}
+  \begin{lstlisting}[language=bash]
+# 只编译到汇编，查看编译器输出
+gcc -S main.c
+
+# 编译并链接成可执行文件
+gcc main.c -o app
+
+# 查看可执行文件依赖的动态库
+ldd app
+  \end{lstlisting}
+\end{frame}
+
+\end{document}

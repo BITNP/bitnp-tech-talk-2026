@@ -1,0 +1,53 @@
+# ── 各场分享的编译产物与预览图片 ──────────────────────────────
+build/
+
+# ── LaTeX 辅助文件（编译过程中生成）──────────────────────────
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.bcf
+*.run.xml
+*.blg
+*.bbl
+*.idx
+*.ind
+*.ilg
+*.lof
+*.lot
+*.glg
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.loa
+
+# latexmk / minted 等生成的中间目录
+_minted/
+.texpadtmp/
+
+# ── 编辑器与 IDE ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── 操作系统 ─────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── 其他常见临时文件 ─────────────────────────────────────────
+*.tmp
+*.bak
+*.orig

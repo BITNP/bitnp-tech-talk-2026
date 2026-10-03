@@ -26,12 +26,45 @@
 \setbeamerfont{presentation title}{shape=\upshape}
 \setbeamerfont{frametitle}{size=\Large,shape=\upshape,series=\bfseries}
 
-% 对浅色/深色都保持明确的代码对比度
-\definecolor{TalkCodeBg}{HTML}{F3F4F6}
-\definecolor{TalkCodeFg}{HTML}{17212B}
-\definecolor{TalkCodeKeyword}{HTML}{174EA6}
-\definecolor{TalkCodeComment}{HTML}{47634D}
-\definecolor{TalkCodeString}{HTML}{8A3014}
+% 浅色配色：海军蓝标题、蓝绿强调、石墨色正文。
+% 使用主题提供的接口；所有分享共用同一组语义色。
+\definecolor{TalkBg}{HTML}{FFFFFF}
+\definecolor{TalkText}{HTML}{253343}
+\definecolor{TalkTitle}{HTML}{19354A}
+\definecolor{TalkAccent}{HTML}{147D82}
+\definecolor{TalkMuted}{HTML}{657382}
+\definecolor{TalkSurface}{HTML}{F2F5F7}
+\definecolor{TalkWarm}{HTML}{98633B}
+
+\renewcommand{\beamerbgcolor}{TalkBg}
+\renewcommand{\beamertextcolor}{TalkText}
+\renewcommand{\beamertitlecolor}{TalkTitle}
+\renewcommand{\beamerfootertextcolor}{TalkMuted}
+
+% 标题与强调分工：标题沉稳，重点和列表标记使用蓝绿色。
+\setbeamercolor{structure}{fg=TalkAccent}
+\setbeamercolor{alerted text}{fg=TalkAccent,bg=TalkBg}
+\setbeamercolor{example text}{fg=TalkAccent,bg=TalkBg}
+\setbeamercolor{itemize item}{fg=TalkAccent}
+\setbeamercolor{itemize subitem}{fg=TalkAccent}
+\setbeamercolor{itemize subsubitem}{fg=TalkAccent}
+\setbeamercolor{enumerate item}{fg=TalkAccent}
+\setbeamercolor{enumerate subitem}{fg=TalkAccent}
+\setbeamercolor{enumerate subsubitem}{fg=TalkAccent}
+\setbeamercolor{block title}{fg=TalkTitle,bg=TalkTitle!8!TalkBg}
+\setbeamercolor{block body}{fg=TalkText,bg=TalkSurface}
+\setbeamercolor{block title alerted}{fg=TalkAccent,bg=TalkAccent!10!TalkBg}
+\setbeamercolor{block body alerted}{fg=TalkText,bg=TalkAccent!4!TalkBg}
+\setbeamercolor{block title example}{fg=TalkAccent,bg=TalkAccent!10!TalkBg}
+\setbeamercolor{block body example}{fg=TalkText,bg=TalkAccent!4!TalkBg}
+\hypersetup{colorlinks=true,linkcolor=TalkTitle,urlcolor=TalkAccent,citecolor=TalkAccent}
+
+% 代码复用整套配色；暖棕仅用于字符串，注释保持足够对比度。
+\colorlet{TalkCodeBg}{TalkSurface}
+\colorlet{TalkCodeFg}{TalkText}
+\colorlet{TalkCodeKeyword}{TalkTitle}
+\definecolor{TalkCodeComment}{HTML}{63766F}
+\colorlet{TalkCodeString}{TalkWarm}
 \lstdefinestyle{talkcode}{
   basicstyle=\ttfamily\small\color{TalkCodeFg},
   backgroundcolor=\color{TalkCodeBg},

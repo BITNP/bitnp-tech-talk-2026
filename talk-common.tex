@@ -80,3 +80,32 @@
   frame=none
 }
 \lstset{style=talkcode}
+
+% 页脚署名开关：默认只显示“短标题 | 副标题”，需要时由本场入口追加
+% \renewcommand{\talkfooterauthor}{\insertshortauthor} 才会带上短作者。
+% 直接改写 footline，因为上游的版式名已被 \defbeamertemplate 占用、无法再次注册；
+% 若哪天去掉主题的 nofooterlogo 选项，页脚会退回上游默认版式。
+% 判空不用 \@empty：本导言区里 \@ 已被重新定义，\@empty 展开不再是空宏，
+% 主题自带的 \ifx...\@empty 判断因此失效（副标题为空时会多印一个分隔符）。
+\makeatletter
+\newcommand{\talk@empty}{}
+\newcommand{\talkfooterauthor}{}
+\setbeamertemplate{footline}{%
+  \basicfooter{\myfooterheight}{%
+    \vbox to\myfooterheight{%
+      \vfil%
+      \insertshorttitle{}%
+      \ifx\insertsubtitle\talk@empty%
+        \else%
+        ~|~ \insertshortsubtitle{}%
+      \fi%
+      \ifx\talkfooterauthor\talk@empty%
+        \else%
+        ~|~ \talkfooterauthor%
+      \fi%
+      \hfill \showpagenum%
+      \par\vfil\vfil
+    }%
+  }%
+}
+\makeatother

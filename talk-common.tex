@@ -81,6 +81,20 @@
 }
 \lstset{style=talkcode}
 
+% 将封面元信息分行呈现，避免上游模板的判空逻辑吞掉日期或挤在同一行。
+% 仍由主题的 \maketitle 创建封面，不修改上游主题源码。
+\setbeamertemplate{title page}{%
+  \vfill
+  {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+  \medskip
+  {\usebeamerfont{subtitle}\insertsubtitle\par}
+  \bigskip
+  {\usebeamerfont{author}\insertauthor\quad\insertinstitute\par}
+  \medskip
+  {\usebeamerfont{date}\insertdate\par}
+  \vfill
+}
+
 % 页脚署名开关：默认只显示“短标题 | 副标题”，需要时由本场入口追加
 % \renewcommand{\talkfooterauthor}{\insertshortauthor} 才会带上短作者。
 % 直接改写 footline，因为上游的版式名已被 \defbeamertemplate 占用、无法再次注册；

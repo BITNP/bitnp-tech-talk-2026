@@ -4,7 +4,6 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,positioning}
 
-% 页脚只显示“短标题 | 副标题”，不出现演讲者姓名（见 talk-common.tex 的页脚开关）。
 \title[技术部第一次分享]{技术部第一次技术分享会}
 \subtitle{技术部 2026 年活动总览}
 \author{姚雨森}
@@ -13,153 +12,128 @@
 
 \begin{document}
 
-% 封面由主题自己建立 frame，不要包在 frame 环境中。
 \maketitle
 
 \section{这一年，技术部做什么}
 
 \begin{frame}{这一年，技术部做什么}
+  \begin{vfilleditems}
+    \item \textbf{第一学期：亲手做出一个能用的程序}\par
+      学习编程基础，和伙伴一起完善电脑检测工具。
+    \item \textbf{寒假：尝试新的语言和工具}\par
+      学习另一种编程语言，练习借助 AI 开发程序。
+    \item \textbf{第二学期：让别人用上我们的成果}\par
+      按兴趣参与协会项目，为线上服务、AI 助手等增加功能。
+  \end{vfilleditems}
+\end{frame}
+
+\section{第一学期的实践项目：ClinicAssistant}
+
+\begin{frame}{ClinicAssistant：电脑诊所工具箱}
+  \centering
+  在一个界面里，集中查看电脑的温度、内存占用和电池状态。
+  \par\medskip
+  \includegraphics[
+    width=0.95\linewidth,
+    height=0.56\textheight,
+    keepaspectratio
+  ]{assets/clinic-assistant-monitor.png}
+  \par\medskip
+  \alert{它还可以启动常用工具，帮助我们检测和维修电脑。}
+\end{frame}
+
+\begin{frame}{一个具体例子：自动烤机测试}
+  让电脑持续进行高强度运算，观察它的温度和运行状态。
+  \par\bigskip
+  \centering
+  \begin{tikzpicture}[
+    node distance=7mm,
+    proc/.style={
+      draw, rounded corners, align=center,
+      inner sep=6pt, text width=0.24\textwidth
+    },
+    ar/.style={-{Latex[length=2mm]}, thick}
+  ]
+    \node[proc] (start) {启动测试};
+    \node[proc, right=of start] (observe) {持续观察\\温度等指标};
+    \node[proc, right=of observe] (stop) {按设定条件停止};
+    \draw[ar] (start) -- (observe);
+    \draw[ar] (observe) -- (stop);
+  \end{tikzpicture}
+  \par\bigskip
   \begin{itemize}
-    \item \textbf{第一学期：打基础，做第一次协作开发}\par
-      四次分享会打底，再分组完成一个有界面的实用程序。
-    \item \textbf{寒假：自学为主}\par
-      学 Go 语言、常用算法与数据结构，练习用 AI 编程。
-    \item \textbf{第二学期：参与协会项目}\par
-      按兴趣选方向，在协会正在运行的项目里承担真实需求。
-    \item \alert{所有安排都以不挤占大家太多时间为前提。}
+    \item 测试期间反复读取数据，并在界面上显示变化曲线。
+    \item 温度超过设定上限，或满足程序的评估条件时，结束测试。
+    \item 将数据保存成表格文件，方便用 Excel 查看和分析。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ClinicAssistant 的界面与核心功能}
+  \centering
+  \begin{tikzpicture}[
+    node distance=16mm,
+    layer/.style={
+      draw, rounded corners, align=center,
+      inner sep=6pt, minimum width=0.84\textwidth
+    },
+    ar/.style={-{Latex[length=2mm]}, thick}
+  ]
+    \node[layer] (ui) {界面：显示信息、接收操作};
+    \node[layer, below=of ui] (core) {核心功能：获取信息、完成具体任务};
+    \draw[ar] ([xshift=-2cm]ui.south)
+      -- node[left] {操作请求} ([xshift=-2cm]core.north);
+    \draw[ar] ([xshift=2cm]core.north)
+      -- node[right] {返回数据} ([xshift=2cm]ui.south);
+  \end{tikzpicture}
+  \par\bigskip
+  \begin{itemize}
+    \item 界面把点击交给相应的功能模块，再把结果展示出来。
+    \item 功能模块可以调用现成工具，无需从头实现每项能力。
   \end{itemize}
 \end{frame}
 
 \section{第一学期的计划}
 
 \begin{frame}{第一学期怎么安排}
-  \centering
-  \begin{tikzpicture}[
-    node distance=0pt,
-    meeting/.style={draw, rounded corners, align=center, inner sep=4pt, minimum width=2cm},
-    timelabel/.style={font=\footnotesize, align=center}
-  ]
-    \node[meeting] (m1) {分享会 1};
-    \node[meeting, right=8mm of m1] (m2) {分享会 2};
-    \node[meeting, right=16mm of m2] (m3) {分享会 3};
-    \node[meeting, right=8mm of m3] (m4) {分享会 4};
-    \draw[dashed] ($(m2.east)!0.5!(m3.west)+(0,9mm)$) -- ($(m2.east)!0.5!(m3.west)+(0,1mm)$);
-    \node[timelabel, above=3mm of m2.north east] {分组};
-    \node[timelabel, below=6mm of m2.south, anchor=north] {前两次：简单实践};
-    \node[timelabel, below=6mm of m3.south, anchor=north] {后两次：同步推进项目};
-  \end{tikzpicture}
-  \par\medskip
-  \begin{itemize}
-    \item 分组尊重大家意愿：按晚上有空的时间、想跟的部长或同学来组队。
-    \item 每组五个人，由一位部长带着；每周要做什么统一给出，组会上讨论细节、回顾上周的工作。
-    \item 这学期的项目是重写 ClinicAssistant：把功能拆成一个个具体的小需求，一步步实现。
-    \item 时间上有上限：组会不超过一小时，每周自己写代码不超过三小时。
-  \end{itemize}
-\end{frame}
-
-\section{第一学期的实践项目：ClinicAssistant}
-
-% 面向零基础听众，只讲“做什么、怎么配合”，不涉及设计模式和具体实现。
-\begin{frame}{ClinicAssistant 是什么}
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.46\textwidth}
-      \begin{itemize}
-        \item 电脑诊所维修用的功能工具箱。
-        \item 以前要在多个软件之间来回切换，还要记住不少命令。
-        \item 现在常用操作收进一个界面，点一下就能完成。
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \centering
-      \includegraphics[
-        width=\linewidth,
-        height=0.62\textheight,
-        keepaspectratio
-      ]{assets/clinic-assistant-monitor.png}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{它是怎么工作的：界面与内核分工}
-  \centering
-  \begin{tikzpicture}[
-    node distance=8mm,
-    layer/.style={
-      draw, rounded corners, align=center,
-      inner sep=6pt, minimum width=0.86\textwidth
-    },
-    ar/.style={-{Latex[length=2mm]}, thick}
-  ]
-    \node[layer] (ui) {界面层：显示信息、接收点击};
-    \node[layer, below=of ui] (kernel) {内核层：采集硬件信息、执行系统操作};
-    \draw[ar] ([xshift=-1.2cm]kernel.north) -- ([xshift=-1.2cm]ui.south);
-    \draw[ar] ([xshift=1.2cm]ui.south) -- ([xshift=1.2cm]kernel.north);
-  \end{tikzpicture}
-  \par\medskip
-  \begin{itemize}
-    \item 采集硬件信息：借助已有的开源工具 LibreHardwareMonitor 读取温度、功率和频率。
-    \item 执行系统操作：调用 \texttt{diskpart}、\texttt{manage-bde} 等系统命令；
-      系统命令只输出给人看的文字，程序再从中读取需要的信息。
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{一个具体例子：自动烤机测试}
-  \centering
-  \begin{tikzpicture}[
-    node distance=8mm,
-    proc/.style={
-      draw, rounded corners, align=center,
-      inner sep=5pt, text width=0.25\textwidth
-    },
-    ar/.style={-{Latex[length=2mm]}, thick}
-  ]
-    \node[proc] (s1) {读出 CPU、GPU 的温度和功率};
-    \node[proc, right=of s1] (s2) {绘制温度与功率随时间变化的曲线};
-    \node[proc, right=of s2] (s3) {自动判断何时结束测试};
-    \draw[ar] (s1) -- (s2);
-    \draw[ar] (s2) -- (s3);
-  \end{tikzpicture}
-  \par\medskip
-  \begin{itemize}
-    \item 程序按固定间隔重复上面三步，直到温度超出安全上限，或判断散热已经足够好。
-    \item 测试结果写入 CSV 文件，可以用 Excel 打开继续分析。
-    \item 两层各司其职：内核不停地读数据、发指令，界面负责把它展示出来。
-  \end{itemize}
+  \begin{enumerate}
+    \item \textbf{前两次分享会：认识基本概念，做简单练习}\par
+      安装开发工具，熟悉基本操作。
+    \item \textbf{第二次分享会后：分组，开始项目}\par
+      每组五人，由一位部长指导；结合空闲时间和组队意愿安排。
+    \item \textbf{后两次分享会及之后：边学边做}\par
+      把 ClinicAssistant 的功能拆成小任务，逐步重新实现。\par
+      每周统一给出任务，组会上回顾进展、讨论问题。
+  \end{enumerate}
+  \bigskip
+  \alert{组会每周不超过 1 小时，独立写代码每周不超过 3 小时。}
 \end{frame}
 
 \section{怎么继续学}
 
-% 收束整场：分享会给框架和动机，细节和动手要靠自学。
 \begin{frame}{分享会之外，怎么学}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.52\textwidth}
-      \centering
-      \begin{tikzpicture}[
-        row/.style={draw, rounded corners, align=center, inner sep=4pt, text width=48mm}
-      ]
-        \node[row] (givehead) {分享会能给的};
-        \node[row, below=1.5mm of givehead] (give1) {一个大框架：有哪些东西、怎么关联};
-        \node[row, below=1.5mm of give1] (give2) {一个工具或技术为什么存在、解决什么问题};
-        \draw[TalkAccent, thick] ($(givehead.north west)+(-1.5mm,1.5mm)$) rectangle ($(give2.south east)+(1.5mm,-1.5mm)$);
-      \end{tikzpicture}
+    \begin{column}{0.47\textwidth}
+      \textbf{分享会：建立整体认识}
+      \medskip
+      \begin{itemize}
+        \item 有哪些知识，它们怎样关联。
+        \item 一个工具为什么存在，能解决什么问题。
+      \end{itemize}
     \end{column}
-    \begin{column}{0.48\textwidth}
-      \centering
-      \begin{tikzpicture}[
-        row/.style={draw, rounded corners, align=center, inner sep=4pt, text width=48mm}
-      ]
-        \node[row] (ownhead) {要自己补的};
-        \node[row, below=1.5mm of ownhead] (own1) {具体语法、API、命令怎么写};
-        \node[row, below=1.5mm of own1] (own2) {实际动手把它用起来};
-      \end{tikzpicture}
+    \begin{column}{0.47\textwidth}
+      \textbf{课后自学与实践：掌握具体内容}
+      \medskip
+      \begin{itemize}
+        \item 根据学习资料，自主学习具体知识和用法。
+        \item 通过练习和小任务，把学到的内容用起来。
+      \end{itemize}
     \end{column}
   \end{columns}
+  \bigskip
+  \bigskip
+  我们会提供入门资料，由部长指导小组实践。
   \par\medskip
-  \begin{itemize}
-    \item 学习资料我会整理好发给大家，不用自己到处找。
-    \item 大学非常需要自学能力：入门和方向可以教，能走多远取决于自己。
-    \item 锻炼自学能力，可以从把分享会讲到的东西自己动手做一遍开始。
-  \end{itemize}
+  \alert{遇到问题，可以在群里提问，也可以带到组会上一起讨论。}
 \end{frame}
 
 \end{document}

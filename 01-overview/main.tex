@@ -1,6 +1,9 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../talk-common.tex}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
 % 页脚只显示“短标题 | 副标题”，不出现演讲者姓名（见 talk-common.tex 的页脚开关）。
 \title[技术部第一次分享]{技术部第一次技术分享会}
 \subtitle{技术部 2026 年活动总览}
@@ -24,6 +27,76 @@
     \item \textbf{第二学期：参与协会项目}\par
       按兴趣选方向，在协会正在运行的项目里承担真实需求。
     \item \alert{所有安排都以不挤占大家太多时间为前提。}
+  \end{itemize}
+\end{frame}
+
+\section{第一学期的实践项目：ClinicAssistant}
+
+% 面向零基础听众，只讲“做什么、怎么配合”，不涉及设计模式和具体实现。
+\begin{frame}{ClinicAssistant 是什么}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.46\textwidth}
+      \begin{itemize}
+        \item 电脑诊所维修用的功能工具箱。
+        \item 以前要在多个软件之间来回切换，还要记住不少命令。
+        \item 现在常用操作收进一个界面，点一下就能完成。
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[
+        width=\linewidth,
+        height=0.62\textheight,
+        keepaspectratio
+      ]{assets/clinic-assistant-monitor.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{它是怎么工作的：界面与内核分工}
+  \centering
+  \begin{tikzpicture}[
+    node distance=8mm,
+    layer/.style={
+      draw, rounded corners, align=center,
+      inner sep=6pt, minimum width=0.86\textwidth
+    },
+    ar/.style={-{Latex[length=2mm]}, thick}
+  ]
+    \node[layer] (ui) {界面层：显示信息、接收点击};
+    \node[layer, below=of ui] (kernel) {内核层：采集硬件信息、执行系统操作};
+    \draw[ar] ([xshift=-1.2cm]kernel.north) -- ([xshift=-1.2cm]ui.south);
+    \draw[ar] ([xshift=1.2cm]ui.south) -- ([xshift=1.2cm]kernel.north);
+  \end{tikzpicture}
+  \par\medskip
+  \begin{itemize}
+    \item 采集硬件信息：借助已有的开源工具 LibreHardwareMonitor 读取温度、功率和频率。
+    \item 执行系统操作：调用 \texttt{diskpart}、\texttt{manage-bde} 等系统命令；
+      系统命令只输出给人看的文字，程序再从中读取需要的信息。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{一个具体例子：自动烤机测试}
+  \centering
+  \begin{tikzpicture}[
+    node distance=8mm,
+    proc/.style={
+      draw, rounded corners, align=center,
+      inner sep=5pt, text width=0.25\textwidth
+    },
+    ar/.style={-{Latex[length=2mm]}, thick}
+  ]
+    \node[proc] (s1) {读出 CPU、GPU 的温度和功率};
+    \node[proc, right=of s1] (s2) {绘制温度与功率随时间变化的曲线};
+    \node[proc, right=of s2] (s3) {自动判断何时结束测试};
+    \draw[ar] (s1) -- (s2);
+    \draw[ar] (s2) -- (s3);
+  \end{tikzpicture}
+  \par\medskip
+  \begin{itemize}
+    \item 程序按固定间隔重复上面三步，直到温度超出安全上限，或判断散热已经足够好。
+    \item 测试结果写入 CSV 文件，可以用 Excel 打开继续分析。
+    \item 两层各司其职：内核不停地读数据、发指令，界面负责把它展示出来。
   \end{itemize}
 \end{frame}
 

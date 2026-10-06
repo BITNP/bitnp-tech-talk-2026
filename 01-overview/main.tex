@@ -2,7 +2,7 @@
 \input{../talk-common.tex}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,calc,positioning}
 
 % 页脚只显示“短标题 | 副标题”，不出现演讲者姓名（见 talk-common.tex 的页脚开关）。
 \title[技术部第一次分享]{技术部第一次技术分享会}
@@ -27,6 +27,33 @@
     \item \textbf{第二学期：参与协会项目}\par
       按兴趣选方向，在协会正在运行的项目里承担真实需求。
     \item \alert{所有安排都以不挤占大家太多时间为前提。}
+  \end{itemize}
+\end{frame}
+
+\section{第一学期的计划}
+
+\begin{frame}{第一学期怎么安排}
+  \centering
+  \begin{tikzpicture}[
+    node distance=0pt,
+    meeting/.style={draw, rounded corners, align=center, inner sep=4pt, minimum width=2cm},
+    timelabel/.style={font=\footnotesize, align=center}
+  ]
+    \node[meeting] (m1) {分享会 1};
+    \node[meeting, right=8mm of m1] (m2) {分享会 2};
+    \node[meeting, right=16mm of m2] (m3) {分享会 3};
+    \node[meeting, right=8mm of m3] (m4) {分享会 4};
+    \draw[dashed] ($(m2.east)!0.5!(m3.west)+(0,9mm)$) -- ($(m2.east)!0.5!(m3.west)+(0,1mm)$);
+    \node[timelabel, above=3mm of m2.north east] {分组};
+    \node[timelabel, below=6mm of m2.south, anchor=north] {前两次：简单实践};
+    \node[timelabel, below=6mm of m3.south, anchor=north] {后两次：同步推进项目};
+  \end{tikzpicture}
+  \par\medskip
+  \begin{itemize}
+    \item 分组尊重大家意愿：按晚上有空的时间、想跟的部长或同学来组队。
+    \item 每组五个人，由一位部长带着；每周要做什么统一给出，组会上讨论细节、回顾上周的工作。
+    \item 这学期的项目是重写 ClinicAssistant：把功能拆成一个个具体的小需求，一步步实现。
+    \item 时间上有上限：组会不超过一小时，每周自己写代码不超过三小时。
   \end{itemize}
 \end{frame}
 
@@ -97,6 +124,41 @@
     \item 程序按固定间隔重复上面三步，直到温度超出安全上限，或判断散热已经足够好。
     \item 测试结果写入 CSV 文件，可以用 Excel 打开继续分析。
     \item 两层各司其职：内核不停地读数据、发指令，界面负责把它展示出来。
+  \end{itemize}
+\end{frame}
+
+\section{怎么继续学}
+
+% 收束整场：分享会给框架和动机，细节和动手要靠自学。
+\begin{frame}{分享会之外，怎么学}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        row/.style={draw, rounded corners, align=center, inner sep=4pt, text width=48mm}
+      ]
+        \node[row] (givehead) {分享会能给的};
+        \node[row, below=1.5mm of givehead] (give1) {一个大框架：有哪些东西、怎么关联};
+        \node[row, below=1.5mm of give1] (give2) {一个工具或技术为什么存在、解决什么问题};
+        \draw[TalkAccent, thick] ($(givehead.north west)+(-1.5mm,1.5mm)$) rectangle ($(give2.south east)+(1.5mm,-1.5mm)$);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        row/.style={draw, rounded corners, align=center, inner sep=4pt, text width=48mm}
+      ]
+        \node[row] (ownhead) {要自己补的};
+        \node[row, below=1.5mm of ownhead] (own1) {具体语法、API、命令怎么写};
+        \node[row, below=1.5mm of own1] (own2) {实际动手把它用起来};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \par\medskip
+  \begin{itemize}
+    \item 学习资料我会整理好发给大家，不用自己到处找。
+    \item 大学非常需要自学能力：入门和方向可以教，能走多远取决于自己。
+    \item 锻炼自学能力，可以从把分享会讲到的东西自己动手做一遍开始。
   \end{itemize}
 \end{frame}
 

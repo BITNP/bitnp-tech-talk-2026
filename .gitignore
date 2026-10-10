@@ -37,7 +37,8 @@ _minted/
 .texpadtmp/
 
 # ── 编辑器与 IDE ─────────────────────────────────────────────
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo

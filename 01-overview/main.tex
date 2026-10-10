@@ -56,53 +56,124 @@
   ]{assets/clinic-assistant-monitor.png}
 \end{frame}
 
-\begin{frame}{一个具体例子：自动烤机测试}
-  让电脑持续进行高强度运算，观察它的温度和运行状态。
+\begin{frame}[fragile]{最开始收到的是一份指标清单}
+  ClinicAssistant 借助 LibreHardwareMonitor 读取硬件信息。
+  \par\medskip
+  第一次先取得一段 \textbf{JSON 文本}，按固定格式列出能读取的指标。
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \begin{lstlisting}[language={}]
+[
+  {"Name": "CPU Package",
+   "Info": "Temperature", "Index": 7},
+  {"Name": "CPU Package",
+   "Info": "Power", "Index": 8},
+  {"Name": "Memory Used",
+   "Info": "Data", "Index": 20}
+]
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{itemize}
+        \item \texttt{Name}：名称
+        \item \texttt{Info}：指标类型
+        \item \texttt{Index}：索引（编号）
+      \end{itemize}
+      \medskip
+      清单告诉程序\alert{能读什么、用哪个编号读取}。
+    \end{column}
+  \end{columns}
+  \par\medskip
+  {\small\color{TalkMuted}按项目辅助程序的格式简化展示，省略其他字段；编号为示例。}
+\end{frame}
+
+\begin{frame}{程序把文本拆成一条条记录}
+  按 JSON 的格式识别名称、类型和编号，这一步叫\textbf{解析}。
+  \par\bigskip
+  \centering
+  \begingroup
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{lll}
+    \textbf{名称（Name）} & \textbf{类型（Info）} & \textbf{编号（Index）} \\
+    \hline
+    \texttt{CPU Package} & \texttt{Temperature}（温度） & 7 \\
+    \texttt{CPU Package} & \texttt{Power}（功率） & 8 \\
+    \texttt{Memory Used} & \texttt{Data}（数据量） & 20 \\
+  \end{tabular}
+  \endgroup
+  \par\bigskip
+  \begin{itemize}
+    \item 原来是一整段文字，现在可以逐条取出里面的信息。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{挑出需要的指标，记住它的编号}
+  读取数值时需要提供\textbf{索引（编号）}，所以要先找到并保存它。
+  \par\bigskip
+  \begin{enumerate}
+    \item \textbf{检查名称}\par
+      找到名称为 \texttt{CPU Package} 的记录。
+    \item \textbf{再检查指标类型}\par
+      选择 \texttt{Temperature}（温度），区分同名的功率记录。
+    \item \textbf{把编号记下来}\par
+      保存后，就能用它反复读取 CPU 温度，无需重新查找清单。
+  \end{enumerate}
+  \bigskip
+  \begin{block}{记住的对应关系}
+    CPU 温度的读取编号：\textbf{7}（示例）
+  \end{block}
+\end{frame}
+
+\begin{frame}{用编号读取数值，再保存到程序里}
+  ClinicAssistant 请辅助程序更新读数，再按记住的编号取值。
   \par\bigskip
   \centering
   \begin{tikzpicture}[
     node distance=7mm,
-    proc/.style={
-      draw, rounded corners, align=center,
-      inner sep=6pt, text width=0.24\textwidth
+    stage/.style={
+      draw=TalkAccent, rounded corners, align=center,
+      inner sep=6pt, text width=0.25\textwidth,
+      minimum height=18mm
     },
-    ar/.style={-{Latex[length=2mm]}, thick}
+    ar/.style={-{Latex[length=2mm]}, thick, draw=TalkAccent}
   ]
-    \node[proc] (start) {启动测试};
-    \node[proc, right=of start] (observe) {持续观察\\温度等指标};
-    \node[proc, right=of observe] (stop) {按设定条件停止};
-    \draw[ar] (start) -- (observe);
-    \draw[ar] (observe) -- (stop);
+    \node[stage] (request) {请求编号 \textbf{7}\\对应的读数};
+    \node[stage, right=of request] (receive) {收到数值\\\textbf{50}};
+    \node[stage, right=of receive] (save) {保存到程序里\\CPU 温度：\textbf{50}};
+    \draw[ar] (request) -- (receive);
+    \draw[ar] (receive) -- (save);
   \end{tikzpicture}
   \par\bigskip
   \begin{itemize}
-    \item 测试期间反复读取数据，并在界面上显示变化曲线。
-    \item 温度超过设定上限，或满足程序的评估条件时，结束测试。
-    \item 将数据保存成表格文件，方便用 Excel 查看和分析。
+    \item 程序知道自己问的是 CPU 温度，就把 50 存到对应位置。
+    \item 下次读到 51，就把保存的温度更新成 51。
   \end{itemize}
 \end{frame}
 
-\begin{frame}{ClinicAssistant 的界面与核心功能}
+\begin{frame}{硬件信息怎样显示到界面上}
+  以显示 CPU 温度为例，看看一个读数经过哪些地方。
+  \par\bigskip
   \centering
   \begin{tikzpicture}[
-    node distance=16mm,
-    layer/.style={
-      draw, rounded corners, align=center,
-      inner sep=6pt, minimum width=0.84\textwidth
+    node distance=6mm,
+    stage/.style={
+      draw=TalkAccent, rounded corners, align=center,
+      inner sep=6pt, text width=0.24\textwidth,
+      minimum height=16mm
     },
-    ar/.style={-{Latex[length=2mm]}, thick}
+    ar/.style={-{Latex[length=2mm]}, thick, draw=TalkAccent}
   ]
-    \node[layer] (ui) {界面：显示信息、接收操作};
-    \node[layer, below=of ui] (core) {核心功能：获取信息、完成具体任务};
-    \draw[ar] ([xshift=-2cm]ui.south)
-      -- node[left] {操作请求} ([xshift=-2cm]core.north);
-    \draw[ar] ([xshift=2cm]core.north)
-      -- node[right] {返回数据} ([xshift=2cm]ui.south);
+    \node[stage, text width=0.32\textwidth] (read) {LibreHardwareMonitor\\读取温度};
+    \node[stage, right=of read] (data) {ClinicAssistant\\接收并保存读数};
+    \node[stage, right=of data] (ui) {UI（用户界面）\\显示温度和单位};
+    \draw[ar] (read) -- (data);
+    \draw[ar] (data) -- (ui);
   \end{tikzpicture}
   \par\bigskip
   \begin{itemize}
-    \item 界面把点击交给相应的功能模块，再把结果展示出来。
-    \item 功能模块可以调用现成工具，无需从头实现每项能力。
+    \item UI 取出保存的温度 50，加上名称和单位，显示“CPU 温度：50\,°C”。
+    \item 程序反复读取，界面定时刷新，让我们看到温度变化。
   \end{itemize}
 \end{frame}
 

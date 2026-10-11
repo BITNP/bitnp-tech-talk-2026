@@ -27,7 +27,7 @@
     \item 对技术有自己的理解和品味。
     \item 认识新的同学，和大家一起交流、共同进步。
   \end{vfilleditems}
-  \note{test}
+  \note{我们先讲讲，这一年在技术部，大家能收获什么。（念）}
 \end{frame}
 
 \section{这一年，技术部做什么}
@@ -41,6 +41,7 @@
     \item \textbf{第二学期：真实项目实战}\par
       按照自身兴趣，参与协会真实生产项目的开发。
   \end{vfilleditems}
+  \note{那为了这样的目标，我们就要有很多相应的活动，我们这一年的安排是这样的（念）}
 \end{frame}
 
 \section{第一学期的实践项目：ClinicAssistant}
@@ -57,9 +58,11 @@
     height=0.56\textheight,
     keepaspectratio
   ]{assets/clinic-assistant-monitor.png}
+  \note{那第一学期做什么项目呢？大家以后一定会听说一位叫金旭亮的老师，他非常厉害。他大二上有一门计算机学院的专业限选课，就是java开发，我当时是诊所的部长，做了一个软硬件信息检测和调用维修工具的程序，叫clinic assistant。它算是我第一个认真写的项目，代码比较简单，大家可以可视化看到程序的样子，所以我们第一学期围绕它展开。
+  为了说明我们要对这个项目具体做什么，我先介绍一个它实际工作的工作原理，就是它是如何获取硬件信息，比如CPU的温度信息的}
 \end{frame}
 
-\begin{frame}[fragile]{最开始收到的是一份指标清单}
+\begin{frame}[fragile]{最开始收到的是指标和对应索引的映射}
   ClinicAssistant 借助 LibreHardwareMonitor 读取硬件信息。
   \par\medskip
   第一次先取得一段 \textbf{JSON 文本}，按固定格式列出能读取的指标。
@@ -84,52 +87,49 @@
         \item \texttt{Index}：索引（编号）
       \end{itemize}
       \medskip
-      清单告诉程序\alert{能读什么、用哪个编号读取}。
+      列表告诉程序\alert{能读什么、用哪个编号读取}。
     \end{column}
   \end{columns}
   \par\medskip
-  {\small\color{TalkMuted}按项目辅助程序的格式简化展示，省略其他字段；编号为示例。}
+  \note{首先，clinic assistant自己没有能力去读cpu温度这种信息，它是借助了一个叫libre hardware monitor的东西读的，简称LHM。首先它先问这个LHM获取它能读到的信息的列表，也就是左边这样。每个指标有它的名字，指标类型和索引编号。}
 \end{frame}
 
-\begin{frame}{程序把文本拆成一条条记录}
-  按 JSON 的格式识别名称、类型和编号，这一步叫\textbf{解析}。
-  \par\bigskip
-  \centering
-  \begingroup
-  \renewcommand{\arraystretch}{1.6}
-  \begin{tabular}{lll}
-    \textbf{名称（Name）} & \textbf{类型（Info）} & \textbf{编号（Index）} \\
-    \hline
-    \texttt{CPU Package} & \texttt{Temperature}（温度） & 7 \\
-    \texttt{CPU Package} & \texttt{Power}（功率） & 8 \\
-    \texttt{Memory Used} & \texttt{Data}（数据量） & 20 \\
-  \end{tabular}
-  \endgroup
-  \par\bigskip
-  \begin{itemize}
-    \item 原来是一整段文字，现在可以逐条取出里面的信息。
-  \end{itemize}
-\end{frame}
+% \begin{frame}{程序把文本拆成一条条记录}
+%   按 JSON 的格式识别名称、类型和编号，这一步叫\textbf{解析}。
+%   \par\bigskip
+%   \centering
+%   \begingroup
+%   \renewcommand{\arraystretch}{1.6}
+%   \begin{tabular}{lll}
+%     \textbf{名称（Name）} & \textbf{类型（Info）} & \textbf{编号（Index）} \\
+%     \hline
+%     \texttt{CPU Package} & \texttt{Temperature}（温度） & 7 \\
+%     \texttt{CPU Package} & \texttt{Power}（功率） & 8 \\
+%     \texttt{Memory Used} & \texttt{Data}（数据量） & 20 \\
+%   \end{tabular}
+%   \endgroup
+%   \par\bigskip
+%   \begin{itemize}
+%     \item 原来是一整段文字，现在可以逐条取出里面的信息。
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}{挑出需要的指标，记住它的编号}
-  向LibreHardwareMonitor读取数值时需要提供\textbf{索引（编号）}，所以要先找到它。
+\begin{frame}{根据索引读取对应的数值}
+  清单告诉我们指标的名称和索引；要取得\textbf{当前数值}，还需要按索引请求读取。
   \par\bigskip
   \begin{enumerate}
-    \item \textbf{检查名称}\par
-      找到名称为 \texttt{CPU Package} 的记录。
-    \item \textbf{再检查指标类型}\par
-      选择 \texttt{Temperature}（温度），区分同名的功率记录。
-    \item \textbf{把编号记下来}\par
-      保存后，就能用它反复读取 CPU 温度，无需重新查找清单。
+    \item \textbf{查到 CPU 温度对应的索引是 7}\par
+      清单中，\texttt{CPU Package} 的 \texttt{Temperature} 对应 \texttt{Index: 7}。
+    \item \textbf{把索引 7 发给 LHM 辅助程序}\par
+      ClinicAssistant 请求：“请读取索引 7 对应的当前数值。”
+    \item \textbf{收到返回值 50}\par
+      请求的是 CPU 温度，因此这次读到的温度是 \alert{50\,°C}。
   \end{enumerate}
-  \bigskip
-  \begin{block}{记住的对应关系}
-    CPU 温度的读取编号：\textbf{7}（示例）
-  \end{block}
+  \note{刚刚那些相当于只是这些指标的名字，我们要想获得具体的值，就得把指标对应的索引发给LHM。比如我们要读第一个CPU温度，那就告诉LHM，我们要索引7的值，它就会把值给我们了。}
 \end{frame}
 
 \begin{frame}{用编号读取数值，再保存到程序里}
-  ClinicAssistant 请辅助程序更新读数，再按记住的编号取值。
+  ClinicAssistant更新读数，再按记住的编号取值。
   \par\bigskip
   \centering
   \begin{tikzpicture}[
@@ -152,6 +152,7 @@
     \item 程序知道自己问的是 CPU 温度，就把 50 存到对应位置。
     \item 下次读到 51，就把保存的温度更新成 51。
   \end{itemize}
+  \note{之后程序可以把这个数值存起来，供图形界面去调用}
 \end{frame}
 
 % \begin{frame}{硬件信息怎样显示到界面上}
@@ -193,6 +194,7 @@
   \end{enumerate}
   \bigskip
   \alert{重复查找的开销、准备工作的时机、代码的复杂程度，都需要权衡。}
+  \note{说这个例子是想说明一个事情，就是像刚刚这样一个流程，中间的步骤都有很多不同的实现方法。比如（念）}
 \end{frame}
 
 \section{第一学期的计划}

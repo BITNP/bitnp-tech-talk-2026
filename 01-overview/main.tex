@@ -109,7 +109,7 @@
 \end{frame}
 
 \begin{frame}{挑出需要的指标，记住它的编号}
-  读取数值时需要提供\textbf{索引（编号）}，所以要先找到并保存它。
+  向LibreHardwareMonitor读取数值时需要提供\textbf{索引（编号）}，所以要先找到它。
   \par\bigskip
   \begin{enumerate}
     \item \textbf{检查名称}\par
@@ -151,33 +151,62 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{硬件信息怎样显示到界面上}
-  以显示 CPU 温度为例，看看一个读数经过哪些地方。
+% \begin{frame}{硬件信息怎样显示到界面上}
+%   以显示 CPU 温度为例，看看一个读数经过哪些地方。
+%   \par\bigskip
+%   \centering
+%   \begin{tikzpicture}[
+%     node distance=6mm,
+%     stage/.style={
+%       draw=TalkAccent, rounded corners, align=center,
+%       inner sep=6pt, text width=0.24\textwidth,
+%       minimum height=16mm
+%     },
+%     ar/.style={-{Latex[length=2mm]}, thick, draw=TalkAccent}
+%   ]
+%     \node[stage, text width=0.32\textwidth] (read) {LibreHardwareMonitor\\读取温度};
+%     \node[stage, right=of read] (data) {ClinicAssistant\\接收并保存读数};
+%     \node[stage, right=of data] (ui) {UI（用户界面）\\显示温度和单位};
+%     \draw[ar] (read) -- (data);
+%     \draw[ar] (data) -- (ui);
+%   \end{tikzpicture}
+%   \par\bigskip
+%   \begin{itemize}
+%     \item UI 取出保存的温度 50，加上名称和单位，显示“CPU 温度：50\,°C”。
+%     \item 程序反复读取，界面定时刷新，让我们看到温度变化。
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}{同一个流程，可以有不同的实现}
+  刚才展示了一种做法。仅仅是\textbf{什么时候查找索引}，就有多种选择。
   \par\bigskip
-  \centering
-  \begin{tikzpicture}[
-    node distance=6mm,
-    stage/.style={
-      draw=TalkAccent, rounded corners, align=center,
-      inner sep=6pt, text width=0.24\textwidth,
-      minimum height=16mm
-    },
-    ar/.style={-{Latex[length=2mm]}, thick, draw=TalkAccent}
-  ]
-    \node[stage, text width=0.32\textwidth] (read) {LibreHardwareMonitor\\读取温度};
-    \node[stage, right=of read] (data) {ClinicAssistant\\接收并保存读数};
-    \node[stage, right=of data] (ui) {UI（用户界面）\\显示温度和单位};
-    \draw[ar] (read) -- (data);
-    \draw[ar] (data) -- (ui);
-  \end{tikzpicture}
-  \par\bigskip
-  \begin{itemize}
-    \item UI 取出保存的温度 50，加上名称和单位，显示“CPU 温度：50\,°C”。
-    \item 程序反复读取，界面定时刷新，让我们看到温度变化。
-  \end{itemize}
+  \begin{enumerate}
+    \item \textbf{每次读取前都查找}\par
+      每次获取 CPU 温度，都先从清单中找到编号，再读取数值。
+    \item \textbf{第一次用到时查找并保存}\par
+      后续直接使用已存的编号；需要判断这个指标是否已经查过。
+    \item \textbf{程序启动时集中查找}\par
+      先找齐所有需要的编号，后续直接使用；启动时要做更多准备。
+  \end{enumerate}
+  \bigskip
+  \alert{重复查找的开销、准备工作的时机、代码的复杂程度，都需要权衡。}
 \end{frame}
 
 \section{第一学期的计划}
+
+\begin{frame}{第一学期：在小任务中练习设计}
+  第一学期主要就是围绕这样的流程，练习设计、实现和改进。
+  \par\bigskip
+  \begin{itemize}
+    \item \textbf{重写一个已有功能}\par
+      每次选取流程中的一小部分，小组讨论如何设计、如何实现。
+    \item \textbf{阅读并理解已有代码}\par
+      理解代码如何组织、如何设计、如何实现，
+      也可以试着找找原有的 bug 和不足。
+    \item \textbf{整个过程都在小组内分工进行}\par
+      从阅读代码、讨论设计，到编写、检查和整合，都由组员分工协作。
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{第一学期怎么安排}
   \begin{enumerate}

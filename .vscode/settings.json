@@ -4,7 +4,7 @@
   "latex-workshop.latex.recipes": [
     {
       "name": "latexmk (xelatex)",
-      "tools": ["xelatexmk"]
+      "tools": ["xelatexmk", "copy-pdf"]
     }
   ],
   "latex-workshop.latex.tools": [
@@ -24,6 +24,12 @@
       "env": {
         "TEXINPUTS": ".:%DIR%/..:"
       }
+    },
+    {
+      "name": "copy-pdf",
+      "command": "cp",
+      "args": ["%OUTDIR%/%DOCFILE%.pdf", "%DIR%/%DOCFILE%.pdf"],
+      "cwd": "%DIR%"
     }
   ]
 }

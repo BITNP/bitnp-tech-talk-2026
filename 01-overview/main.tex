@@ -59,39 +59,49 @@
     keepaspectratio
   ]{assets/clinic-assistant-monitor.png}
   \note{那第一学期做什么项目呢？大家以后一定会听说一位叫金旭亮的老师，他非常厉害。他大二上有一门计算机学院的专业限选课，就是java开发，我当时是诊所的部长，做了一个软硬件信息检测和调用维修工具的程序，叫clinic assistant。它算是我第一个认真写的项目，代码比较简单，大家可以可视化看到程序的样子，所以我们第一学期围绕它展开。
-  为了说明我们要对这个项目具体做什么，我先介绍一个它实际工作的工作原理，就是它是如何获取硬件信息，比如CPU的温度信息的}
+  为了说明我们要对这个项目具体做什么，我先介绍一个它实际工作的工作原理。我们就拿获取CPU温度为例子。}
 \end{frame}
 
-\begin{frame}[fragile]{最开始收到的是指标和对应索引的映射}
-  ClinicAssistant 借助 LibreHardwareMonitor 读取硬件信息。
+\begin{frame}{先看读数：每个数值都有一个编号}
+  ClinicAssistant 借助 LibreHardwareMonitor（简称 LHM）读取硬件信息。
   \par\medskip
-  第一次先取得一段 \textbf{JSON 文本}，按固定格式列出能读取的指标。
+  LHM用索引和数值的表来储存各个硬件信息。
   \par\bigskip
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.58\textwidth}
-      \begin{lstlisting}[language={}]
-[
-  {"Name": "CPU Package",
-   "Info": "Temperature", "Index": 7},
-  {"Name": "CPU Package",
-   "Info": "Power", "Index": 8},
-  {"Name": "Memory Used",
-   "Info": "Data", "Index": 20}
-]
-      \end{lstlisting}
-    \end{column}
-    \begin{column}{0.38\textwidth}
-      \begin{itemize}
-        \item \texttt{Name}：名称
-        \item \texttt{Info}：指标类型
-        \item \texttt{Index}：索引（编号）
-      \end{itemize}
-      \medskip
-      列表告诉程序\alert{能读什么、用哪个编号读取}。
-    \end{column}
-  \end{columns}
-  \par\medskip
-  \note{首先，clinic assistant自己没有能力去读cpu温度这种信息，它是借助了一个叫libre hardware monitor的东西读的，简称LHM。首先它先问这个LHM获取它能读到的信息的列表，也就是左边这样。每个指标有它的名字，指标类型和索引编号。}
+  \begin{center}
+    \begingroup
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{cc}
+      \textbf{索引（编号）} & \textbf{当前数值（示例）} \\
+      \hline
+      \alert{7} & \alert{50} \\
+      8 & 25 \\
+      20 & 12 \\
+    \end{tabular}
+    \endgroup
+  \end{center}
+  \bigskip
+  哪个指标是CPU温度？
+  \note{首先，clinic assistant自己没有能力去读cpu温度这种信息，它是借助了一个叫libre hardware monitor的东西读的，简称LHM。LHM是用列表和对应数值这样去存数据的。我们需要的CPU温度就在这里面。但是到底哪个是CPU温度呢？}
+\end{frame}
+
+\begin{frame}{再查名称：CPU 温度对应哪个编号}
+  LHM 辅助程序还提供一份清单，列出\textbf{指标名称与编号的对应关系}。
+  \par\bigskip
+  \begin{center}
+    \begingroup
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lc}
+      \textbf{指标名称} & \textbf{索引（编号）} \\
+      \hline
+      \alert{CPU 温度} & \alert{7} \\
+      CPU 功率 & 8 \\
+      已用内存 & 20 \\
+    \end{tabular}
+    \endgroup
+  \end{center}
+  \bigskip
+  这个表说明CPU温度对应的索引是7。接下来我们使用索引7向LHM查询，即可得到需要的数值。
+  \note{所以，首先它先问这个LHM获取它能读到的信息的列表，也就是左边这样。每个指标有它的名字和索引编号。}
 \end{frame}
 
 % \begin{frame}{程序把文本拆成一条条记录}
@@ -119,7 +129,7 @@
   \par\bigskip
   \begin{enumerate}
     \item \textbf{查到 CPU 温度对应的索引是 7}\par
-      清单中，\texttt{CPU Package} 的 \texttt{Temperature} 对应 \texttt{Index: 7}。
+      名称清单中，CPU 温度对应的编号是 7。
     \item \textbf{把索引 7 发给 LHM 辅助程序}\par
       ClinicAssistant 请求：“请读取索引 7 对应的当前数值。”
     \item \textbf{收到返回值 50}\par

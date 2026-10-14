@@ -383,4 +383,112 @@
 %   \alert{写代码也像写文章：除了表达正确，还要组织清楚，方便修改。}
 % \end{frame}
 
+\begin{frame}{代码的修改，需要留下记录}
+  每完成一个需求或一次修复，就主动记录这一步修改。
+  \par\bigskip
+  \begin{center}
+    \begin{tikzpicture}[
+      record/.style={circle,fill=TalkAccent,inner sep=0pt,minimum size=7pt},
+      flow/.style={-{Stealth[length=5pt]},thick,TalkAccent},
+      label/.style={align=center,text width=2.9cm}
+    ]
+      \node[record] (start) at (0,0) {};
+      \node[record,right=3.2cm of start] (read) {};
+      \node[record,right=3.2cm of read] (display) {};
+      \node[record,right=3.2cm of display] (fix) {};
+      \draw[flow] (start) -- (read);
+      \draw[flow] (read) -- (display);
+      \draw[flow] (display) -- (fix);
+      \node[label,above=8pt of start] {初始版本};
+      \node[label,above=8pt of read] {完成温度读取};
+      \node[label,above=8pt of display] {增加界面显示};
+      \node[label,above=8pt of fix] {修复显示错误};
+      \node[below=10pt of $(read)!0.5!(display)$,text=TalkMuted]
+        {每个节点，都是一次保存的修改记录};
+    \end{tikzpicture}
+  \end{center}
+  \bigskip
+  \begin{itemize}
+    \item \textbf{逐步积累：}把一次次修改串起来，保留代码的演变过程。
+    \item \textbf{出现问题：}比较改动，必要时回到之前记录的版本。
+    \item \textbf{回看历史：}追溯某段代码何时加入、当时改了什么。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{多人写代码，需要整合修改}
+  从同一个版本出发，每个人负责不同任务，分别修改代码。
+  \par\medskip
+  \begin{center}
+    \begin{tikzpicture}[
+      record/.style={circle,fill=TalkAccent,inner sep=0pt,minimum size=7pt},
+      flow/.style={-{Stealth[length=5pt]},thick,TalkAccent},
+      label/.style={align=center}
+    ]
+      \node[record] (base) at (0,0) {};
+      \node[record] (alert) at (4.4,0.8) {};
+      \node[record] (ui) at (4.4,-0.8) {};
+      \node[record] (merged) at (8.8,0) {};
+      \draw[flow] (base) -- (alert);
+      \draw[flow] (base) -- (ui);
+      \draw[flow] (alert) -- (merged);
+      \draw[flow] (ui) -- (merged);
+      \node[label,above=8pt of base] {共同版本};
+      \node[label,above=8pt of alert] {小王：增加温度告警};
+      \node[label,below=8pt of ui] {小李：改进界面显示};
+      \node[label,above=8pt of merged] {整合后的版本};
+    \end{tikzpicture}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \textbf{各自开发：}分别记录修改，推进自己负责的任务。
+    \item \textbf{整合成果：}把不同成员完成的修改合并到一起。
+    \item \textbf{处理冲突：}修改发生冲突时，共同确认最终的代码。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Git：仓库、提交与分支}
+  \alert{\textbf{Git 是版本控制工具，}}
+  帮助我们记录代码历史、组织开发并整合修改。
+  \par\bigskip
+  \begin{itemize}
+    \item \textbf{仓库（repo）：管理项目的版本历史}\par
+      保存项目文件的历史版本，以及提交、分支等信息。
+    \item \textbf{提交（commit）：记录一次修改}\par
+      保存选定的修改并写下说明，对应图中的一个记录节点。
+    \item \textbf{分支（branch）：让不同任务分别推进}\par
+      从已有版本出发，沿不同路线继续提交，也可用于个人尝试新功能。\par
+      完成后可合并（merge）修改；有冲突时需要人工处理。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{仓库托管平台：以 GitHub 为例}
+  GitHub 等平台把 Git 仓库托管在网上，\par
+  方便团队共享代码、查看历史，并协作开发。
+  \par\medskip
+  示例：协会的 \href{https://github.com/BITNP/clinic-backend}{\texttt{BITNP/clinic-backend}} 仓库。
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{仓库首页：文件与分支}
+      \par\medskip
+      \centering
+      % 截图为 96 dpi；裁去外围导航、侧栏和下方文件，保留仓库主体。
+      \includegraphics[
+        trim=350bp 520bp 820bp 165bp,clip,
+        width=\linewidth,height=0.43\textheight,keepaspectratio
+      ]{assets/repo0.png}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{提交历史：改动与时间}
+      \par\medskip
+      \centering
+      % 保留最近两天的修改说明和时间，裁去右侧编号，放大主要内容。
+      \includegraphics[
+        trim=310bp 530bp 820bp 175bp,clip,
+        width=\linewidth,height=0.43\textheight,keepaspectratio
+      ]{assets/repo1.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \end{document}

@@ -319,4 +319,68 @@
   \alert{只会语法，不代表能写好文章；只会语言，也不代表能写好程序。}
 \end{frame}
 
+\begin{frame}{开发工具：IDEA 与 Git}
+  写程序时，既要编辑和运行代码，也要管理不断发生的修改。
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{IDE：集成开发环境}
+      \par\medskip
+      我们使用 IntelliJ IDEA。
+      \medskip
+      \begin{itemize}
+        \item \textbf{编写：}补全代码、提示错误。
+        \item \textbf{运行：}启动程序、查看结果。
+        \item \textbf{调试：}暂停程序、检查数值。
+      \end{itemize}
+      \medskip
+      就像写作时使用文字编辑软件。
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Git：版本管理工具}
+      \par\medskip
+      记录代码怎样一步步改过来。
+      \medskip
+      \begin{itemize}
+        \item \textbf{记录：}保存选定的修改。
+        \item \textbf{追溯：}查看差异、找回旧代码。
+        \item \textbf{协作：}合并修改、处理冲突。
+      \end{itemize}
+      \medskip
+      就像保留修订记录、合并多人稿件。
+    \end{column}
+  \end{columns}
+  \bigskip
+  \alert{例如：用 IDEA 排查温度显示异常，再用 Git 记录这次修复。}
+\end{frame}
+
+\begin{frame}{同样的功能，可以有不同的代码组织}
+  以 CPU、GPU、硬盘三个位置显示温度为例，两种写法都能实现。
+  \par\medskip
+  \textbf{现在修改需求：}把 \texttt{50 °C} 改为 \texttt{50.0 °C}，统一保留一位小数。
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{写法一：各处重复实现}
+      \medskip
+      \begin{itemize}
+        \item 三处各写一遍小数和单位处理。
+        \item \textbf{阅读：}逐处查看，确认处理规则是否一致。
+        \item \textbf{修改：}三处分别改，漏一处就会显示不一致。
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{写法二：提取共用函数}
+      \medskip
+      \begin{itemize}
+        \item 写一个“格式化温度”函数，三个位置都调用它。
+        \item \textbf{阅读：}名字说明用途，处理细节集中查看。
+        \item \textbf{修改：}改一处，三处一起更新。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \alert{写代码也像写文章：除了表达正确，还要组织清楚，方便修改。}
+\end{frame}
+
 \end{document}

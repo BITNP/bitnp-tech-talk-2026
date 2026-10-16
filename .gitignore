@@ -52,3 +52,6 @@ Thumbs.db
 *.tmp
 *.bak
 *.orig
+
+# 独立管理的课堂 Java 示例仓库
+/01-overview/SampleGUI/

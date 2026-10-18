@@ -2,7 +2,7 @@
 
 平时我们用鼠标打开文件夹、复制文件、启动应用。命令行让我们用文字完成这些操作：告诉电脑“到哪里去”“处理哪个文件”“打开哪个项目”。学会这些基本动作，后面运行程序和使用 Git 就有了起点。
 
-本文在 **Windows 的 PowerShell** 中操作，使用 `pwd`、`ls`、`cd`、`mkdir`、`cat`、`cp`、`mv`、`rm` 等短命令。按文中的选项和示例输入即可。Git 留到后续部分介绍。
+本文在 **Windows 的 PowerShell** 中操作，使用 `pwd`、`ls`、`cd`、`mkdir`、`cat`、`cp`、`mv`、`rm` 等短命令。按文中的选项和示例输入即可。后半部分用一个练习项目介绍 Git 的基本操作。
 
 ## 1. 先弄清楚：文件放在哪里，我现在在哪里？
 
@@ -758,6 +758,271 @@ pwd
 | 永久修改变量后仍显示旧值 | 重启终端或其宿主应用，让新程序读取新配置 |
 -->
 
+## 8. 为什么需要 Git？先用几个例子理解
+
+写作业或做项目时，经常会遇到这些问题：昨天的内容改坏了，想找回来；一周后忘记为什么改了一段代码；和同学各改了一份文件，不知道应该保留哪份。Git 用来管理文件的版本，让修改有记录、能比较，也便于协作。
+
+### 8.1 从“最终版”文件夹到版本记录
+
+如果只靠复制文件夹保存进度，项目可能变成 `作业最终版`、`作业最终版2`、`作业真的最终版`。这些名字很难说明每一版改了什么。Git 让我们在重要节点主动保存一次记录，并附上一句话说明。
+
+例如，一份作业的历史可以是“完成输入功能”“补充错误提示”“修正计算结果”。每条记录都说明一个具体变化，之后就能查看对应版本，而不必猜哪个文件夹才是想找的那一份。
+
+这里的**提交（commit）**，可以先理解为给选好的项目内容保存一个“存档点”。这是一种帮助理解的类比；提交会记录项目快照、作者、说明等信息，不是额外复制出一个“最终版”文件夹。
+
+### 8.2 例子一：这次 commit“添加我的介绍”
+
+刚开始学习时，容易把“保存文件”和“提交版本”混为一谈。先用这次的练习仓库看看：我们到底准备提交什么？这一节只讲过程，不用输入命令。
+
+假设你已经把协会的练习项目下载到电脑。里面原本有一份 `README.md`，现在要增加一个以自己名字命名的文件，例如 `xiaoming.txt`。
+
+| 时刻 | 你做了什么 | Git 里的含义 |
+|---|---|---|
+| 刚拿到项目 | 打开原有文件看看 | 本地已经有项目原来的版本和历史 |
+| 写完介绍 | 在 `xiaoming.txt` 写“大家好，我是小明”，保存文件 | 工作区里多了一个文件，还没有新提交 |
+| 选好本次内容 | 决定这次只记录新增的介绍文件 | 把这个文件的内容放进暂存区，准备提交 |
+| 正式存档 | 做一次 commit，说明写“添加小明的介绍” | 在已有历史之后增加一条提交记录 |
+
+这次提交带来的变化是“新增小明的介绍文件”。项目原有内容仍是这个版本的一部分，不会因为只选了新文件就消失。
+
+**保存文件，只是把文字写进电脑上的文件；commit 才把选好的内容记录进版本历史。** 提交后文件还在原来的目录，不会被搬到别的文件夹。
+
+### 8.3 例子二：改了两件事，可以分两次 commit
+
+实际操作中，一次可能修改了多个文件，但它们未必属于同一件事。把相关内容放在同一次提交里，更容易说清楚这次改动的目的。
+
+假设小明同时做了两件事：新增自己的介绍文件，还顺手修正了 `README.md` 中的一处错字。他可以这样安排：
+
+1. 先选好介绍文件，做一次 commit，说明是“添加小明的介绍”。
+2. 此时 README 的错字修改仍留在电脑上的文件里，但没有进入刚才的提交。
+3. 再选好 README 的修改，做另一次 commit，说明是“修正说明中的错字”。
+
+这样回看历史，就能分别找到“加介绍”和“改错字”。**commit 的内容由你事先选好的内容决定，不是自动把电脑上所有修改都存进去。**
+
+这里用到的三个概念可以这样记：
+
+| 名称 | 通俗理解 | 例子 |
+|---|---|---|
+| 工作区 | 你正在编辑的项目文件 | 介绍文件、README 中的当前文字 |
+| 暂存区 | 为下一次提交准备好的内容 | 先选中的介绍文件，不包含尚未选中的错字修改 |
+| 提交历史 | 已经正式记录的版本 | “添加介绍”“修正错字”这两次提交 |
+
+这是三个概念，不是要求你自己创建三个文件夹。
+
+### 8.5 Git、托管平台、本地副本有什么关系？
+
+本次项目已经放在协会的平台上，需要先弄清楚：网页上的仓库和自己电脑里的文件是什么关系。
+
+Git 是版本管理工具；GitHub、协会的 Git 平台等提供仓库托管和协作功能。本次使用的是[协会的示例仓库](https://git.bitnp.net/BITNP/techdept-git-playground)。
+
+按照该仓库 README 的练习流程，我们先 Fork，再 clone：
+
+```text
+协会平台上的原仓库
+BITNP/techdept-git-playground
+          │ Fork：在平台上创建属于自己账号的仓库副本
+          ↓
+协会平台上自己账号下的仓库
+你的账号/techdept-git-playground
+          │ clone：把这个仓库克隆到自己的电脑
+          ↓
+电脑上的 techdept-git-playground 目录
+在这里编辑文件、准备内容、做本地提交
+```
+
+Fork 完成后，副本仍在平台上；clone 完成后，电脑上才有本地仓库。克隆通常会带下已有的文件和提交历史，不是只下载一包当前文件。
+
+**本地 commit 不会自动更新网页上的仓库。** 下一节跟着 playground，把本地修改、上传和请求合并串成一次完整练习。
+
+## 9. 跟着 playground 完成一次协作
+
+下面直接按照[协会 playground](https://git.bitnp.net/BITNP/techdept-git-playground) 的 README 操作：创建 token → Fork → clone → 配置署名 → 添加自己的文件 → 提交并上传 → 创建 PR。目标是让自己写的一份文件经过审核，进入协会的原仓库。
+
+以下假定已经安装 Git，并能登录协会 Git 平台。命令中的用户名、邮箱和文件名换成自己的；回显只展示关键部分，路径、提交编号和进度数字以实际结果为准。
+
+### 9.1 创建 access token
+
+后面上传改动时，可能需要用 token 完成身份认证，所以先把它准备好。
+
+在协会 Git 平台右上角点击个人头像，按顺序进入：
+
+```text
+Settings → Applications → New access token
+```
+
+按 README 填写：
+
+1. 名字随意，例如 `local`。
+2. `Repository and organization access` 选择 `All`。
+3. `Select permissions` 中的 `repository` 选择 `Read and write`。
+4. 点击 `Generate token`。
+
+生成的 token 会出现在页面上方，复制并妥善保存，后面认证时使用。不要把它写进练习文件或提交到仓库。
+
+### 9.2 Fork 仓库
+
+为了能上传自己的修改，先在平台上创建一份属于自己的仓库。
+
+打开 [BITNP/techdept-git-playground](https://git.bitnp.net/BITNP/techdept-git-playground)，点击右上角 `Fork`，选择自己的账号并创建。
+
+完成后会进入自己账号下的仓库页面。原仓库属于 `BITNP`，新副本属于你；这时文件还在平台上，下一步才下载到电脑。
+
+### 9.3 clone 到本地并进入目录
+
+要在电脑上编辑文件，先把自己 Fork 的仓库克隆下来。
+
+打开 PowerShell，进入想存放代码的位置。例如电脑有 D 盘，希望放在 D 盘根目录，就输入：
+
+```powershell
+cd D:/
+pwd
+```
+
+`cd` 成功通常没有文字回显，`pwd` 应显示 `D:\`。没有 D 盘时，可以用 `cd ~` 选择自己的主目录；后续路径相应替换。下面统一以 D 盘为例。
+
+在刚才自己 Fork 的仓库页面复制 HTTPS 克隆地址。命令写法是：
+
+```text
+git clone <刚才复制的地址>
+```
+
+把尖括号及里面的文字替换成实际地址。例如账号是 `yys` 时，地址可能是：
+
+```powershell
+git clone https://git.bitnp.net/yys/techdept-git-playground
+```
+
+当前位于 `D:\`，预期先显示：
+
+```text
+Cloning into 'techdept-git-playground'...
+```
+
+然后显示下载进度，成功结束后回到提示符。此时仍在 `D:\`，但下面已经多了 `techdept-git-playground` 文件夹。进入它：
+
+```powershell
+cd techdept-git-playground
+pwd
+ls
+```
+
+`pwd` 应显示 `D:\techdept-git-playground`，`ls` 应列出仓库中的 `README.md` 等文件。**后面的配置、文件修改、提交和上传，都在这个目录里继续。**
+
+### 9.4 配置用户名和邮箱
+
+提交需要记录作者的名字和联系方式。这里配置的是提交署名，不是平台的登录密码。
+
+按 README，先设置常用邮箱，再设置英文姓名或网名。当前位于 `D:\techdept-git-playground`，把下面的示例值换成自己的：
+
+```powershell
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```
+
+成功时通常没有回显，当前位置不变。`--global` 表示为当前电脑上的这个用户设置默认署名，通常只需要配置一次；已经正确配置过就不必重复。按本次练习要求使用英文名或网名，不必实名。
+
+### 9.5 加入自己的改动
+
+这次要提交的内容很简单：新增一个以自己名字命名的文件，写一些自己想说的话。
+
+仍在 `D:\techdept-git-playground`，例如创建 `yys.txt`。可以用记事本打开：
+
+```powershell
+notepad .\yys.txt
+```
+
+写一段自己的话，保存到当前项目目录，编码选择 UTF-8，再关闭记事本。文件名换成自己的名字，避免覆盖其他人的文件。
+
+这一步保存了文件，但还没有提交。PowerShell 的当前位置仍是 `D:\techdept-git-playground`。
+
+### 9.6 提交改动，再上传到自己的仓库
+
+文件写好后，先把修改记录成本地提交，再上传到刚才 Fork 的仓库。这是两个连续但不同的动作。
+
+**第一步：准备提交内容。** 在项目目录执行 README 中的命令：
+
+```powershell
+git add .
+```
+
+成功时通常没有回显。`.` 表示当前目录，这里会暂存项目目录及其子目录中的变化；因此下一步要检查是否只包含自己想提交的内容。
+
+**第二步：检查暂存结果。** 当前位置不变，输入：
+
+```powershell
+git status
+```
+
+如果本次只新增了 `yys.txt`，预期关键回显是：
+
+```text
+Changes to be committed:
+        new file:   yys.txt
+```
+
+这表示介绍文件已经准备好，可以提交。文件名应是你自己的文件；如果还列出了不打算提交的修改，先核对清楚。
+
+**第三步：创建提交。** 继续在项目目录输入：
+
+```powershell
+git commit -m "add yys' file"
+```
+
+`-m` 后面是这次改动的说明，换成自己的名字和内容。预期回显类似：
+
+```text
+[main abc1234] add yys' file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 yys.txt
+```
+
+这表示本地新增了一次提交，`abc1234` 是示例编号。此时网页上的仓库还没有更新，继续上传：
+
+**第四步：push 到自己的 Fork。** 当前位置仍是项目目录，执行：
+
+```powershell
+git push origin main
+```
+
+按 README，这份仓库的远程名称是 `origin`，分支是 `main`；`origin` 指向刚才克隆的、自己账号下的仓库。
+
+如果出现下面的认证提示：
+
+```text
+Username for 'https://git.bitnp.net':
+Password for 'https://yys@git.bitnp.net':
+```
+
+`Username` 填通行证用户名，`Password` 填第 9.1 节保存的 token。也可能直接打开浏览器，出现 `Authorize "Git Credential Manager" to access your account?`，按 README 点击 `Authorize application` 即可。
+
+上传成功的关键回显类似：
+
+```text
+To https://git.bitnp.net/yys/techdept-git-playground
+   4ec8a9a..e0b92f9  main -> main
+```
+
+账号和提交编号以实际结果为准。命令执行后当前位置不变。刷新自己 Fork 的仓库页面，应能看到刚添加的文件。
+
+### 9.7 创建 PR，请维护者合并
+
+现在改动已经在自己的仓库里。要让它进入协会原仓库，还需要发起一个合并请求，也就是 Pull Request（PR）。
+
+打开原仓库 [BITNP/techdept-git-playground](https://git.bitnp.net/BITNP/techdept-git-playground)，进入 `Pull Requests`，点击 `New Pull Request`。
+
+按 README 选择两端：
+
+| 页面字段 | 应选择什么 |
+|---|---|
+| `merge into`：要合并到哪里 | 原仓库 `BITNP:main` |
+| `pull from`：改动来自哪里 | 自己 Fork 的仓库，例如 `yys:main` |
+
+检查页面显示的改动是否符合预期，写好标题和说明，点击 `Create Pull Request`。
+
+创建 PR 后，等待维护者审核并合并。**发出请求不等于已经合并**；合并完成后，刷新原仓库，才能在那里看到自己的改动。
+
+如果维护者要求修改，就继续在本地这个项目的 `main` 分支修改文件，再按刚才的顺序 add、检查 status、commit、push。按 README，向同一个来源分支继续推送后，尚未合并的 PR 会随之更新，不需要重新创建一份。
+
 ## 参考资料
 
 需要核对具体行为时，可以查看以下官方说明；阅读正文不要求先掌握这些文档中的完整命令名称。
@@ -770,3 +1035,10 @@ pwd
 - [VS Code 命令行用法](https://code.visualstudio.com/docs/configure/command-line)
 - [环境变量与持久配置](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables)
 -->
+
+- [Git：版本与快照](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
+- [Git：首次配置](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
+- [Git：创建与克隆仓库](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
+- [Git：记录修改](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository)
+
+- [协会 Git 练习仓库](https://git.bitnp.net/BITNP/techdept-git-playground)：练习流程依据用户提供的 [README](/home/potato/Projects/techdept-git-playground/README.md)，在线页面此前未能读取。

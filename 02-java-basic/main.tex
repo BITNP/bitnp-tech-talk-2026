@@ -104,4 +104,81 @@ System.out.println(score);
   赋值时不用再写类型。
 \end{frame}
 
+% 类型范围依据 Java Language Specification §4.2：
+% https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html#jls-4.2
+\begin{frame}[fragile]{整数类型：能保存的范围不同}
+  \texttt{byte}、\texttt{short}、\texttt{int} 和 \texttt{long} 都能保存整数。
+  \par\medskip
+  它们占用的位数不同，能保存的整数范围也不同：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lcll}
+      \textbf{类型} & \textbf{位数} & \textbf{取值范围} & \textbf{声明并赋值} \\
+      \hline
+      \texttt{byte} & 8 & $-128 \sim 127$ & \texttt{byte level = 10;} \\
+      \texttt{short} & 16 & $-32768 \sim 32767$ & \texttt{short count = 1000;} \\
+      \texttt{int} & 32 & $-2^{31} \sim 2^{31}-1$ & \texttt{int score = 60;} \\
+      \texttt{long} & 64 & $-2^{63} \sim 2^{63}-1$ & \texttt{long total = 3000000000L;} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item 一般使用 \texttt{int} 即可，范围约为负 21 亿到正 21 亿。
+    \item 需要更大范围时使用 \texttt{long}；上例数字末尾的 \texttt{L} 表示 \texttt{long}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{浮点类型：保存带小数的数值}
+  \texttt{float} 和 \texttt{double} 的取值范围与精度不同。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lclc}
+      \textbf{类型} & \textbf{位数} & \textbf{有限值范围（约）} & \textbf{有效数字} \\
+      \hline
+      \texttt{float} & 32 & $-3.4\times10^{38} \sim 3.4\times10^{38}$ & 约 7 位 \\
+      \texttt{double} & 64 & $-1.8\times10^{308} \sim 1.8\times10^{308}$ & 约 15--16 位 \\
+    \end{tabular}
+  \end{center}
+  \begin{lstlisting}[language=Java]
+float temperature = 36.5F;
+double height = 1.75;
+  \end{lstlisting}
+  \begin{itemize}
+    \item 一般使用 \texttt{double}；带小数点的数值默认是 \texttt{double}。
+    \item 给 \texttt{float} 赋值时，上例在数字末尾加 \texttt{F}。
+    \item 浮点数通常是近似值，不能精确表示范围内的每一个小数。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{布尔类型：只有 true 和 false}
+  \texttt{boolean} 只有两个值：\texttt{true}（真）和 \texttt{false}（假）。
+  \par\medskip
+  \begin{lstlisting}[language=Java]
+boolean ready = true;
+System.out.println(ready);
+
+ready = false;
+System.out.println(ready);
+  \end{lstlisting}
+  两次输出依次为 \texttt{true} 和 \texttt{false}，各占一行。
+  \par\medskip
+  先记住它的写法，具体作用留到后面介绍。
+\end{frame}
+
+\begin{frame}[fragile]{字符类型：用单引号表示一个字符}
+  \texttt{char} 可以保存一个英文字母，比如 \texttt{A}。
+  \par\medskip
+  \begin{lstlisting}[language=Java]
+char letter = 'A';
+System.out.println(letter);
+
+letter = 'B';
+System.out.println(letter);
+  \end{lstlisting}
+  \begin{itemize}
+    \item 字符使用\textbf{单引号}，如 \texttt{'A'}；不要写成双引号 \texttt{"A"}。
+    \item 两次输出依次为 \texttt{A} 和 \texttt{B}，引号本身不会显示。
+  \end{itemize}
+\end{frame}
+
 \end{document}

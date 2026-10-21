@@ -11,4 +11,36 @@
 
 \maketitle
 
+\begin{frame}[fragile]{让程序主动“开口”}
+  我们需要知道程序正在执行什么，可以让它把信息打印到控制台。
+  \par\medskip
+  使用 \texttt{System.out.println(...)} 输出一行文字：
+  \begin{lstlisting}[language=Java]
+System.out.println("Hello, Java!");
+  \end{lstlisting}
+  双引号里面的文字会被打印出来，双引号本身不会显示。
+  \par\medskip
+  控制台输出：
+  \begin{lstlisting}[language={}]
+Hello, Java!
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{把输出语句写在 main 中}
+  程序从 \texttt{main} 方法开始执行。先把输出语句写在它的大括号内：
+  \begin{lstlisting}[language=Java]
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("First");
+        System.out.println("Second");
+    }
+}
+  \end{lstlisting}
+  这里的两条语句\textbf{从上到下依次执行}，每次输出后换行：
+  \begin{lstlisting}[language={}]
+First
+Second
+  \end{lstlisting}
+\end{frame}
+
 \end{document}

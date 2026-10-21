@@ -63,4 +63,45 @@ System.out.println("Goodbye!");
   \texttt{Hidden} 不会输出。
 \end{frame}
 
+\begin{frame}[fragile]{变量：保存程序需要的数据}
+  程序有时需要做运算，也需要保存一些数据，比如数值、文本。
+  \par\medskip
+  可以用\textbf{变量}保存这些数据，再通过变量名读取或修改它们。
+  \par\medskip
+  下面的代码写在 \texttt{main} 中：
+  \begin{lstlisting}[language=Java]
+int score = 60;
+System.out.println(score);
+
+score = 70;
+System.out.println(score);
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{int score = 60;}：声明整数变量 \texttt{score}，初始化为 60。
+    \item \texttt{score = 70;}：重新赋值，把 \texttt{score} 中保存的值改为 70。
+    \item 两次 \texttt{println} 依次输出 60 和 70，各占一行。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{变量的声明与赋值}
+  \textbf{声明变量时赋值（初始化）}
+  \par
+  语法：\quad 类型\quad 变量名\quad \texttt{=}\quad 初始值\texttt{;}
+  \begin{lstlisting}[language=Java]
+int score = 60;
+  \end{lstlisting}
+  \medskip
+  \textbf{也可以先声明，再赋值}
+  \par
+  声明：\quad 类型\quad 变量名\texttt{;}
+  \par
+  赋值：\quad 变量名\quad \texttt{=}\quad 值\texttt{;}
+  \begin{lstlisting}[language=Java]
+int score;
+score = 60;
+System.out.println(score);
+  \end{lstlisting}
+  赋值时不用再写类型。
+\end{frame}
+
 \end{document}

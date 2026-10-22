@@ -621,4 +621,42 @@ System.out.println(
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{用 while 计数：打印商品编号}
+  新需求：依次打印第 1～5 件商品的编号。
+  \begin{lstlisting}[language=Java]
+int number = 1;
+while (number <= 5) {
+    System.out.println("Item: " + number);
+    number++;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 初始化：\texttt{int number = 1;}，从 1 开始。
+    \item 继续条件：\texttt{number <= 5}，编号不超过 5。
+    \item 更新：\texttt{number++}，每轮结束后加 1。
+  \end{itemize}
+  \medskip
+  三个部分分散在不同位置；如果忘记 \texttt{number++}，就会一直打印编号 1。
+\end{frame}
+
+\begin{frame}[fragile]{for：把计数循环的三个部分写在一起}
+  \texttt{for} 把初始化、继续条件和更新集中到循环开头，便于检查。
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+for ((*@初始化@*); (*@继续条件@*); (*@更新@*)) {
+    (*@每轮执行的语句@*)
+}
+  \end{lstlisting}
+  同样打印第 1～5 件商品的编号：
+  \begin{lstlisting}[language=Java]
+for (int number = 1; number <= 5; number++) {
+    System.out.println("Item: " + number);
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 初始化只执行一次；每轮先判断条件，再执行循环体。
+    \item 循环体结束后执行更新，再回到条件处；条件为假时结束。
+    \item \texttt{for} 仍需写更新语句，并不会自动帮我们加 1。
+  \end{itemize}
+\end{frame}
+
 \end{document}

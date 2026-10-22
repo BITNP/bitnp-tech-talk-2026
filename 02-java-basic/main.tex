@@ -379,36 +379,37 @@ System.out.println("Total: " + (1 + 2)); // Total: 3
   \end{itemize}
 \end{frame}
 
-\begin{frame}{综合示例：BMI 计算需求}
-  编写一个程序，根据身高和体重计算身体质量指数（BMI）。
+\begin{frame}{综合示例：商品总价计算需求}
+  购买 A、B 两种商品，根据各自的单价和数量计算总价。
   \par\bigskip
   \begin{itemize}
-    \item 用 \texttt{height} 保存身高，单位为米。
-    \item 用 \texttt{weight} 保存体重，单位为千克。
-    \item 直接修改代码中两个变量的初始值，不使用键盘输入。
-    \item 计算 BMI，并在控制台输出带有 \texttt{BMI:} 标识的结果。
+    \item 用 \texttt{priceA}、\texttt{priceB} 保存两种商品的单价，单位为元。
+    \item 用 \texttt{quantityA}、\texttt{quantityB} 保存各自的购买数量。
+    \item 直接修改代码中四个变量的初始值。
+    \item 计算总价，并在控制台打印结果。
   \end{itemize}
   \bigskip
-  \textbf{计算公式：}体重（千克）除以身高（米）的平方。
+  \textbf{计算公式：}总价 = A 的单价 $\times$ 数量 + B 的单价 $\times$ 数量。
   \par\medskip
-  示例数据：身高 1.75 米，体重 70 千克。
+  示例数据：A 每件 12.5 元，买 2 件；B 每件 8 元，买 3 件。
 \end{frame}
 
-\begin{frame}[fragile]{综合示例：BMI 计算实现}
+\begin{frame}[fragile]{综合示例：商品总价计算实现}
   \begin{lstlisting}[language=Java]
 public class Main {
     public static void main(String[] args) {
-        double height = 1.75;
-        double weight = 70.0;
-        double bmi = weight / (height * height);
-        System.out.println("BMI: " + bmi);
+        double priceA = 12.5;
+        double priceB = 8.0;
+        int quantityA = 2;
+        int quantityB = 3;
+        double total = priceA * quantityA + priceB * quantityB;
+        System.out.println("Total: " + total);
     }
 }
   \end{lstlisting}
   \begin{itemize}
-    \item 使用 \texttt{double} 保存身高、体重和计算结果。
-    \item 括号让身高先相乘，再用体重除以这个结果。
-    \item 修改身高和体重，重新运行，就能得到新的 BMI。
+    \item 先分别计算两种商品的金额，再相加得到总价。
+    \item 本例输出 \texttt{Total: 49.0}，即总价为 49 元。
   \end{itemize}
 \end{frame}
 

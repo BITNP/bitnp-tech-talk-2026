@@ -181,4 +181,80 @@ System.out.println(letter);
   \end{itemize}
 \end{frame}
 
+% 转换规则：https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html
+\begin{frame}[fragile]{自动转换与强制转换}
+  \textbf{自动转换}：如 \texttt{int} 转为 \texttt{long} 或 \texttt{double}，Java 会自动完成。
+  \begin{lstlisting}[language=Java]
+int count = 10;
+double value = count;
+System.out.println(value); // 10.0
+  \end{lstlisting}
+  \textbf{强制转换}：浮点数转整数，或整数变量转为范围更小的类型时，
+  需要显式写出 \texttt{(目标类型)}。
+  \begin{lstlisting}[language=Java]
+double price = 19.9;
+int whole = (int) price;
+System.out.println(whole); // 19
+  \end{lstlisting}
+  \begin{itemize}
+    \item 上例转为整数时舍去小数部分，不是四舍五入。
+    \item 强制转换可能丢失信息；自动转换也不一定保留全部精度。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{算术运算符：加、减、乘、除与取余}
+  我们可以对数字做运算，把结果保存到变量中，或直接打印出来。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{cllc}
+      \textbf{符号} & \textbf{运算} & \textbf{表达式示例} & \textbf{结果} \\
+      \hline
+      \texttt{+} & 加法 & \texttt{7 + 2} & 9 \\
+      \texttt{-} & 减法 & \texttt{7 - 2} & 5 \\
+      \texttt{*} & 乘法 & \texttt{7 * 2} & 14 \\
+      \texttt{/} & 除法 & \texttt{7 / 2} & 3 \\
+      \texttt{\%} & 取余 & \texttt{7 \% 2} & 1 \\
+    \end{tabular}
+  \end{center}
+  \begin{lstlisting}[language=Java]
+int sum = 7 + 2;
+System.out.println(sum);   // 9
+  \end{lstlisting}
+  \texttt{\%} 求除法的余数，常被称为“取模”；这里先看正整数。
+\end{frame}
+
+\begin{frame}[fragile]{超出整数范围：结果可能变成负数}
+  \texttt{byte} 的范围是 $-128 \sim 127$，无法保存 128。
+  \begin{lstlisting}[language=Java]
+byte number = 127;
+System.out.println(number + 1); // 128
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{byte} 参与这里的加法时，先提升为 \texttt{int}，得到 128。
+    \item 强制转回 \texttt{byte} 时只保留低 8 位，结果变为 $-128$。
+    \item 转换不会自动检查范围或报错；应选择范围足够大的类型。
+  \end{itemize}
+  \medskip
+  \texttt{short} 对应的边界是 32767：加 1 后转回 \texttt{short} 得到 $-32768$。
+\end{frame}
+
+% 整数除法：https://docs.oracle.com/javase/specs/jls/se25/html/jls-15.html#jls-15.17.2
+\begin{frame}[fragile]{整数除法：先转换，再相除}
+  两个整数相除，结果仍是整数，小数部分向零截断。
+  \begin{lstlisting}[language=Java]
+int total = 7;
+int count = 2;
+System.out.println(total / count);         // 3
+System.out.println((double) total / count); // 3.5
+  \end{lstlisting}
+  想保留小数，先把其中一个操作数转成 \texttt{double}，再做除法。
+  \par\medskip
+  \textbf{只把结果赋给 double，或除完再转换，都来不及：}
+  \begin{lstlisting}[language=Java]
+double result = total / count;
+System.out.println(result);                // 3.0
+System.out.println((double) (total / count)); // 3.0
+  \end{lstlisting}
+\end{frame}
+
 \end{document}

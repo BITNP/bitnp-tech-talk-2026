@@ -413,4 +413,145 @@ public class Main {
   \end{itemize}
 \end{frame}
 
+\begin{frame}{新需求：满足条件时才打折}
+  现在增加一个需求：总价\textbf{超过 40 元}时打八折。
+  \par
+  也就是：当 \texttt{total > 40} 时，让 \texttt{total} 乘以 0.8；否则保持不变。
+\end{frame}
+
+\begin{frame}[fragile]{if：满足条件时才执行}
+  \textbf{if 语法：条件为 true 时执行，否则跳过。}
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+if ((*@条件@*)) {
+    (*@条件成立时执行的语句@*)
+}
+  \end{lstlisting}
+  条件必须是 \texttt{boolean}。例如：总价超过 40 元时打八折。
+  \begin{lstlisting}[language=Java]
+double total = 49.0;
+if (total > 40) {
+    total = total * 0.8;
+}
+System.out.println("Total: " + total); // Total: 39.2
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{新需求：打折与未打折时输出不同文字}
+  如果打折了，输出文字也要变化：
+  \begin{itemize}
+    \item 打折时，输出 \texttt{Discounted total:} 和折后总价。
+    \item 未打折时，输出 \texttt{Total:} 和正常总价。
+  \end{itemize}
+  \bigskip
+  原来的写法只在 \texttt{if} 中修改价格，最后总会执行外面的同一条输出语句，
+  因而无法区分这两种文字。
+  \par\bigskip
+  自然的想法是：\textbf{如果打折了，就按折扣文本打印；否则，按正常文本打印。}
+  \par\medskip
+  用 \texttt{else} 表示“否则”，让程序在两条分支中选择一条执行。
+\end{frame}
+
+\begin{frame}[fragile]{if--else：在两条分支中选择一条}
+  条件为 \texttt{true} 时执行 \texttt{if} 分支，为 \texttt{false} 时执行 \texttt{else} 分支。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.35\textwidth}
+      \textbf{语法}
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+if ((*@条件@*)) {
+    (*@条件成立时执行@*)
+} else {
+    (*@条件不成立时执行@*)
+}
+  \end{lstlisting}
+    \end{column}
+    \begin{column}{0.62\textwidth}
+      \textbf{折扣示例}
+  \begin{lstlisting}[language=Java]
+double total = 49.0;
+if (total > 40) {
+    total = total * 0.8;
+    System.out.println(
+        "Discounted total: " + total);
+} else {
+    System.out.println(
+        "Total: " + total);
+}
+  \end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{新需求：按总价划分价格档次}
+  假设总价非负，我们希望根据金额输出对应的价格档次。
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{ll}
+      \textbf{总价范围} & \textbf{档次} \\
+      \hline
+      $0 \leq \texttt{total} \leq 40$ & 便宜（\texttt{Cheap}） \\
+      $40 < \texttt{total} \leq 100$ & 适中（\texttt{Moderate}） \\
+      $\texttt{total} > 100$ & 昂贵（\texttt{Expensive}） \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  40 元属于“便宜”，100 元属于“适中”，每个总价只属于一个档次。
+\end{frame}
+
+\begin{frame}[fragile]{先用三个独立的 if 实现}
+  \begin{lstlisting}[language=Java]
+double total = 80.0;
+if (total <= 40) {
+    System.out.println("Cheap");
+}
+if (total > 40 && total <= 100) {
+    System.out.println("Moderate");
+}
+if (total > 100) {
+    System.out.println("Expensive");
+}
+  \end{lstlisting}
+  这三个判断在逻辑上是一组：对\textbf{同一个不变的总价}，恰好只有一个条件成立。
+  \par\medskip
+  但三个独立的 \texttt{if} 仍会从上到下，逐个判断条件。
+\end{frame}
+
+\begin{frame}[fragile]{修改总价后，后面的 if 可能再次成立}
+  假设超过 100 元打五折，并把这个判断放在另外两个判断之间：
+  \begin{lstlisting}[language=Java]
+double total = 180.0;
+if (total <= 40) {
+    System.out.println("Cheap");
+}
+if (total > 100) {
+    total = total * 0.5;
+    System.out.println("Discounted");
+}
+if (total > 40 && total <= 100) {
+    System.out.println("Moderate");
+}
+  \end{lstlisting}
+  180 元变成 90 元后，又满足“适中”条件，两个分支都执行了。
+\end{frame}
+
+\begin{frame}[fragile]{else if：一组条件，只执行一个分支}
+  我们需要把多个判断连成一组：\textbf{一旦某个条件成立，后面的条件就不再判断。}
+  \par\medskip
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+if ((*@条件 1@*)) {
+    (*@条件 1 成立时执行的语句@*)
+} else if ((*@条件 2@*)) {
+    (*@条件 2 成立时执行的语句@*)
+} else {
+    (*@以上条件都不成立时执行的语句@*)
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 从上到下判断，只执行\textbf{第一个成立条件}对应的分支。
+    \item 即使分支中修改了变量，也不会继续判断后面的 \texttt{else if}。
+    \item 最后的 \texttt{else} 可以省略；省略后可能一个分支也不执行。
+  \end{itemize}
+\end{frame}
+
 \end{document}

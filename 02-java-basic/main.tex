@@ -223,6 +223,24 @@ System.out.println(sum);   // 9
   \texttt{\%} 求除法的余数，常被称为“取模”；这里先看正整数。
 \end{frame}
 
+\begin{frame}[fragile]{括号可以改变运算顺序}
+  默认先计算乘法、除法和取余，再计算加法、减法。
+  \par\medskip
+  \textbf{没有括号：先乘，再加}
+  \begin{lstlisting}[language=Java]
+int result = 2 + 3 * 4;
+System.out.println(result); // 14
+  \end{lstlisting}
+  先算 \texttt{3 * 4} 得到 12，再算 \texttt{2 + 12} 得到 14。
+  \par\medskip
+  \textbf{加上括号：先计算括号里面的部分}
+  \begin{lstlisting}[language=Java]
+result = (2 + 3) * 4;
+System.out.println(result); // 20
+  \end{lstlisting}
+  先算 \texttt{2 + 3} 得到 5，再算 \texttt{5 * 4} 得到 20。
+\end{frame}
+
 \begin{frame}[fragile]{超出整数范围：结果可能变成负数}
   \texttt{byte} 的范围是 $-128 \sim 127$，无法保存 128。
   \begin{lstlisting}[language=Java]

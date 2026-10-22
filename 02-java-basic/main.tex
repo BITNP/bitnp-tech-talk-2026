@@ -321,4 +321,44 @@ boolean failed = !(score >= 60);                // false
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{字符串：保存文本信息}
+  字符串可以理解为一串 \texttt{char}，用来保存文本信息。
+  \par\medskip
+  使用 \texttt{String} 声明变量，用\textbf{双引号}包住文字：
+  \begin{lstlisting}[language=Java]
+String name = "Alice";
+name = "Bob";
+System.out.println(name); // Bob
+  \end{lstlisting}
+  \texttt{String} 的首字母要大写，它不属于八种基本数据类型。
+  \par\medskip
+  \textbf{有无双引号，含义不同：}
+  \begin{lstlisting}[language=Java]
+int age = 18;
+System.out.println(age);   // 18
+System.out.println("age"); // age
+  \end{lstlisting}
+  \texttt{age} 读取变量的值；\texttt{"age"} 表示文字本身。
+\end{frame}
+
+\begin{frame}[fragile]{用 + 拼接字符串}
+  \texttt{+} 可以把字符串连接起来；数值参与拼接时会转换为文本。
+  \begin{lstlisting}[language=Java]
+String name = "Alice";
+int age = 18;
+String message = name + " is " + age + " years old.";
+System.out.println(message); // Alice is 18 years old.
+  \end{lstlisting}
+  \textbf{注意区分数值加法和字符串拼接：}
+  \begin{lstlisting}[language=Java]
+System.out.println(1 + 2);           // 3
+System.out.println("Total: " + 1 + 2);   // Total: 12
+System.out.println("Total: " + (1 + 2)); // Total: 3
+  \end{lstlisting}
+  \begin{itemize}
+    \item 连续的 \texttt{+} 从左向右组合，遇到字符串就进行拼接。
+    \item 想先算出数值结果，再拼接文字，就把计算部分放在括号中。
+  \end{itemize}
+\end{frame}
+
 \end{document}

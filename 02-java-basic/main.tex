@@ -257,4 +257,26 @@ System.out.println((double) (total / count)); // 3.0
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{自增、自减与运算后赋值}
+  \textbf{自增与自减}：\texttt{++} 让变量加 1，\texttt{--} 让变量减 1。
+  \begin{lstlisting}[language=Java]
+int count = 5;
+count++; // count is now 6
+count--; // count is now 5
+  \end{lstlisting}
+  \textbf{复合赋值}：把运算结果保存回原变量。以下以 \texttt{int} 变量为例：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{ll}
+      \textbf{简写} & \textbf{对应写法} \\
+      \hline
+      \texttt{count += 2;} & \texttt{count = count + 2;} \\
+      \texttt{count -= 2;} & \texttt{count = count - 2;} \\
+      \texttt{count *= 2;} & \texttt{count = count * 2;} \\
+      \texttt{count /= 2;} & \texttt{count = count / 2;} \\
+      \texttt{count \%= 2;} & \texttt{count = count \% 2;} \\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
 \end{document}

@@ -379,4 +379,37 @@ System.out.println("Total: " + (1 + 2)); // Total: 3
   \end{itemize}
 \end{frame}
 
+\begin{frame}{综合示例：BMI 计算需求}
+  编写一个程序，根据身高和体重计算身体质量指数（BMI）。
+  \par\bigskip
+  \begin{itemize}
+    \item 用 \texttt{height} 保存身高，单位为米。
+    \item 用 \texttt{weight} 保存体重，单位为千克。
+    \item 直接修改代码中两个变量的初始值，不使用键盘输入。
+    \item 计算 BMI，并在控制台输出带有 \texttt{BMI:} 标识的结果。
+  \end{itemize}
+  \bigskip
+  \textbf{计算公式：}体重（千克）除以身高（米）的平方。
+  \par\medskip
+  示例数据：身高 1.75 米，体重 70 千克。
+\end{frame}
+
+\begin{frame}[fragile]{综合示例：BMI 计算实现}
+  \begin{lstlisting}[language=Java]
+public class Main {
+    public static void main(String[] args) {
+        double height = 1.75;
+        double weight = 70.0;
+        double bmi = weight / (height * height);
+        System.out.println("BMI: " + bmi);
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 使用 \texttt{double} 保存身高、体重和计算结果。
+    \item 括号让身高先相乘，再用体重除以这个结果。
+    \item 修改身高和体重，重新运行，就能得到新的 BMI。
+  \end{itemize}
+\end{frame}
+
 \end{document}

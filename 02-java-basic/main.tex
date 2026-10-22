@@ -279,4 +279,47 @@ count--; // count is now 5
   \end{center}
 \end{frame}
 
+\begin{frame}[fragile]{比较运算：结果是 boolean}
+  比较两个数值，结果是 \texttt{true} 或 \texttt{false}，可以保存到 \texttt{boolean} 变量中。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.05}
+    \begin{tabular}{cllc}
+      \textbf{运算符} & \textbf{含义} & \textbf{示例} & \textbf{结果} \\
+      \hline
+      \texttt{==} & 等于 & \texttt{7 == 2} & \texttt{false} \\
+      \texttt{!=} & 不等于 & \texttt{7 != 2} & \texttt{true} \\
+      \texttt{>} & 大于 & \texttt{7 > 2} & \texttt{true} \\
+      \texttt{<} & 小于 & \texttt{7 < 2} & \texttt{false} \\
+      \texttt{>=} & 大于或等于 & \texttt{7 >= 7} & \texttt{true} \\
+      \texttt{<=} & 小于或等于 & \texttt{7 <= 2} & \texttt{false} \\
+    \end{tabular}
+  \end{center}
+  \begin{lstlisting}[language=Java]
+boolean passed = 80 >= 60;
+System.out.println(passed); // true
+  \end{lstlisting}
+  注意：\texttt{=} 是赋值，\texttt{==} 才是判断是否相等。
+\end{frame}
+
+\begin{frame}[fragile]{逻辑运算：组合或取反条件}
+  逻辑运算的操作数和结果都是 \texttt{boolean}。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{cll}
+      \textbf{运算符} & \textbf{含义} & \textbf{结果为 true 的条件} \\
+      \hline
+      \texttt{\&\&} & 与 & 两边都为 \texttt{true} \\
+      \texttt{||} & 或 & 至少一边为 \texttt{true} \\
+      \texttt{!} & 非（取反） & 原来的值为 \texttt{false} \\
+    \end{tabular}
+  \end{center}
+  \begin{lstlisting}[language=Java]
+int score = 80;
+boolean inRange = (score >= 0) && (score <= 100); // true
+boolean outside = (score < 0) || (score > 100);   // false
+boolean failed = !(score >= 60);                // false
+  \end{lstlisting}
+  \textbf{短路求值}：\texttt{\&\&} 左边为假、\texttt{||} 左边为真时，不再计算右边。
+\end{frame}
+
 \end{document}

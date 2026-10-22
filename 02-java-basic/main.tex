@@ -554,4 +554,71 @@ if ((*@条件 1@*)) {
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{新需求：余额不足时充值}
+  商品总价 180 元，余额只有 50 元。假设每次充值增加 50 元。
+  \par\medskip
+  先用 \texttt{if}：余额不足，就充值一次。
+  \begin{lstlisting}[language=Java]
+double total = 180.0;
+double balance = 50.0;
+if (balance < total) {
+    balance = balance + 50;
+}
+System.out.println("Balance: " + balance); // 100.0
+  \end{lstlisting}
+  \textbf{问题：充值一次后，余额仍然不够付款。}
+  \par\medskip
+  \texttt{if} 只判断一次，不会自动回头检查余额是否已经足够。
+\end{frame}
+
+\begin{frame}{充值后重新检查，直到余额足够}
+  我们需要的是：\textbf{只要余额不足，就继续充值。}
+  \par\bigskip
+  \begin{enumerate}
+    \item 检查余额是否小于商品总价。
+    \item 如果不足，充值 50 元，然后回到第一步。
+    \item 如果已经足够，结束充值，继续付款。
+  \end{enumerate}
+  \bigskip
+  本例余额变化：$50 \rightarrow 100 \rightarrow 150 \rightarrow 200$ 元。
+  \par\medskip
+  余额达到 200 元时，不再满足“余额不足”，于是停止充值。
+  \par\medskip
+  用 \texttt{while} 表示这种\textbf{条件成立就反复执行}的过程。
+\end{frame}
+
+\begin{frame}[fragile]{while：条件成立就重复执行}
+  每轮先判断条件：为 \texttt{true} 时执行循环体，再回到条件处；为 \texttt{false} 时退出。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.33\textwidth}
+      \textbf{语法}
+      \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+while ((*@条件@*)) {
+    (*@反复执行的语句@*)
+}
+      \end{lstlisting}
+      条件必须是 \texttt{boolean}。
+    \end{column}
+    \begin{column}{0.64\textwidth}
+      \textbf{充值与付款}
+      \begin{lstlisting}[language=Java]
+double total = 180.0;
+double balance = 50.0;
+while (balance < total) {
+    balance = balance + 50;
+}
+balance = balance - total;
+System.out.println(
+    "Remaining: " + balance); // 20.0
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  \begin{itemize}
+    \item 一开始余额就足够时，循环一次也不执行，直接付款。
+    \item 如果余额不足，却不在循环中增加余额，就会一直循环。
+  \end{itemize}
+\end{frame}
+
 \end{document}

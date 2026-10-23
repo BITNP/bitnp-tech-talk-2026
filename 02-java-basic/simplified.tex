@@ -1,0 +1,309 @@
+\documentclass[aspectratio=169]{beamer}
+\input{../talk-common.tex}
+
+\title[技术部第二次分享]{技术部第二次技术分享会}
+\subtitle{Java 基础语法 · 简明版}
+\author{姚雨森}
+\institute{技术部 分管主席}
+\date{2026-10-23}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[fragile]{输出：让程序主动“开口”}
+  怎样知道程序做了什么？先让它把信息打印到控制台。
+  \begin{lstlisting}[language=Java]
+public class Main {
+    public static void main(String[] args) {
+        // Print two lines.
+        System.out.println("Hello, Java!");
+        System.out.println("Let's go shopping!");
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 示例从 \texttt{main} 开始，语句从上到下执行；每次输出后换行。
+    \item \texttt{//} 后的注释给人看，不作为语句执行。
+  \end{itemize}
+  \medskip
+  后面的代码片段都放在 \texttt{main} 的大括号内。
+\end{frame}
+
+\begin{frame}[fragile]{变量：把需要的数据记下来}
+  商品数量可能变化，我们需要保存它，也需要修改它。
+  \begin{lstlisting}[language=Java]
+int quantity = 2;
+System.out.println(quantity); // 2
+
+quantity = quantity + 1;
+System.out.println(quantity); // 3
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{int quantity = 2;}：声明整数变量，并给它一个初始值。
+    \item \texttt{=}：先计算右边，再把结果保存到左边的变量中。
+    \item 读取或重新赋值时，直接使用变量名，不再写类型。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{数据类型：不同信息有不同表达}
+  商品数量、单价、是否有货和商品名，需要表达不同性质的信息。
+  \medskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.45}
+    \begin{tabular}{lll}
+      \textbf{要保存什么} & \textbf{常用类型} & \textbf{值的例子} \\
+      \hline
+      整数数量 & \texttt{int} & \texttt{2} \\
+      带小数的数值 & \texttt{double} & \texttt{12.5} \\
+      是或否 & \texttt{boolean} & \texttt{true} \\
+      单个字符 & \texttt{char} & \texttt{'A'} \\
+      一段文本 & \texttt{String} & \texttt{"Notebook"} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \alert{先想清楚数据是什么，再选择类型。}
+\end{frame}
+
+\begin{frame}[fragile]{数字：整数与小数怎么选}
+  数量通常是整数，测量值、单价等数值可能带小数。
+  \begin{lstlisting}[language=Java]
+int quantity = 2;
+double price = 12.5;
+long totalVisits = 3000000000L;
+  \end{lstlisting}
+  \begin{itemize}
+    \item 常见整数用 \texttt{int}；需要更大范围时可用 \texttt{long}。
+    \item 小数通常用 \texttt{double}；浮点数可能是近似值。
+    \item 还有 \texttt{byte}、\texttt{short}、\texttt{float}，按具体需求再了解。
+  \end{itemize}
+  \medskip
+  类型能表示的范围和精度有限，不需要现在背下全部数值。
+\end{frame}
+
+\begin{frame}[fragile]{boolean：表达“是或否”}
+  商品有没有货？用户是不是会员？这些状态只有两种答案。
+  \begin{lstlisting}[language=Java]
+boolean inStock = true;
+boolean isMember = false;
+
+System.out.println(inStock);  // true
+System.out.println(isMember); // false
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{true} 表示真，\texttt{false} 表示假。
+    \item \texttt{boolean} 只有这两个值，不用数字 0 和 1 代替。
+  \end{itemize}
+  \medskip
+  后面可以根据这些状态，让程序采取不同的动作。
+\end{frame}
+
+\begin{frame}[fragile]{字符与字符串：保存文字}
+  一个等级字母可以用 \texttt{char}，商品名称可以用 \texttt{String}。
+  \begin{lstlisting}[language=Java]
+char grade = 'A';
+String name = "Notebook";
+
+System.out.println(name);   // Notebook
+System.out.println("name"); // name
+  \end{lstlisting}
+  \begin{itemize}
+    \item 字符用单引号，如 \texttt{'A'}；文本用双引号，如 \texttt{"Notebook"}。
+    \item \texttt{name} 读取变量的值，\texttt{"name"} 表示文字本身。
+    \item \texttt{String} 首字母大写，不属于基本数据类型。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{运算：从单价和数量得到总价}
+  买两种商品：分别计算金额，再把结果加起来。
+  \begin{lstlisting}[language=Java]
+double priceA = 12.5;
+double priceB = 8.0;
+int quantityA = 2;
+int quantityB = 3;
+double total = priceA * quantityA + priceB * quantityB;
+System.out.println(total); // 49.0
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{+ - * /} 表示加减乘除，\texttt{\%} 求余数；括号中的部分先算。
+    \item 整数相除：\texttt{7 / 2} 得到 3；\texttt{7.0 / 2} 得到 3.5。
+    \item 也可先转换类型：\texttt{(double) 7 / 2} 得到 3.5。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{字符串拼接：让结果看得懂}
+  只看到一个数字还不够，我们可以给结果加上说明。
+  \begin{lstlisting}[language=Java]
+String name = "Notebook";
+double total = 25.0;
+System.out.println(name + " total: " + total);
+  \end{lstlisting}
+  输出：\quad \texttt{Notebook total: 25.0}
+  \par\bigskip
+  \texttt{+} 遇到字符串时进行拼接。想先计算，就加括号：
+  \begin{lstlisting}[language=Java]
+System.out.println("Count: " + (2 + 3)); // Count: 5
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{条件：把规则变成真假判断}
+  “总价超过 40 元，并且是会员”，可以写成条件表达式。
+  \begin{lstlisting}[language=Java]
+double total = 49.0;
+boolean isMember = true;
+boolean eligible = total > 40 && isMember;
+System.out.println(eligible); // true
+  \end{lstlisting}
+  \begin{itemize}
+    \item 比较：\texttt{> >= < <=}，以及相等 \texttt{==}、不等 \texttt{!=}。
+    \item 组合：\texttt{\&\&} 表示“并且”，\texttt{||} 表示“或者”，\texttt{!} 表示“取反”。
+    \item 判断的结果是 \texttt{true} 或 \texttt{false}。
+  \end{itemize}
+  \medskip
+  注意：\texttt{=} 是赋值；\texttt{==} 才是相等判断。
+\end{frame}
+
+\begin{frame}[fragile]{if / else：根据情况选择动作}
+  新需求：总价超过 40 元就打八折，否则保持原价。
+  \begin{lstlisting}[language=Java]
+double total = 49.0;
+if (total > 40) {
+    total = total * 0.8;
+    System.out.println("Discount applied");
+} else {
+    System.out.println("No discount");
+}
+System.out.println("Total: " + total);
+  \end{lstlisting}
+  \begin{itemize}
+    \item 条件成立执行 \texttt{if} 分支，否则执行 \texttt{else} 分支。
+    \item 大括号圈出同一分支的操作；只需“满足才做”时，可以省略 \texttt{else}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{else if：多个情况选择一种}
+  新需求：根据总价，把订单分成三个档次。
+  \begin{lstlisting}[language=Java]
+double total = 80.0;
+if (total > 100) {
+    System.out.println("Large order");
+} else if (total > 40) {
+    System.out.println("Medium order");
+} else {
+    System.out.println("Small order");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 从上到下判断，只执行\textbf{第一个成立条件}对应的分支。
+    \item 本例输出 \texttt{Medium order}；所有条件都不成立时执行 \texttt{else}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{while：一次不够，就继续做}
+  模拟余额不足时每次增加 50 元，直到足够支付 180 元。
+  \begin{lstlisting}[language=Java]
+int balance = 50;
+int total = 180;
+while (balance < total) {
+    balance = balance + 50;
+}
+System.out.println(balance); // 200
+  \end{lstlisting}
+  \begin{center}
+    余额：\quad $50 \rightarrow 100 \rightarrow 150 \rightarrow 200$ \quad 停止
+  \end{center}
+  \begin{itemize}
+    \item 每轮先判断；条件成立就执行，再回到条件处。
+    \item 一开始就足够时，一次也不执行；余额始终不变则可能一直循环。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{for：有规律地重复}
+  新需求：依次打印第 1～5 件商品的编号。
+  \begin{lstlisting}[language=Java]
+for (int number = 1; number <= 5; number++) {
+    System.out.println("Item: " + number);
+}
+  \end{lstlisting}
+  \begin{enumerate}
+    \item 起点：\texttt{int number = 1}，只在开始时执行一次。
+    \item 条件：\texttt{number <= 5}，每轮开始前检查。
+    \item 更新：\texttt{number++}，每轮执行完后将编号加一。
+  \end{enumerate}
+  \medskip
+  \alert{先初始化，再反复执行“判断 → 循环体 → 更新”。}
+\end{frame}
+
+\begin{frame}{分支与循环：什么时候用哪一个}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.65}
+    \begin{tabular}{lll}
+      \textbf{需求} & \textbf{常用写法} & \textbf{购物中的例子} \\
+      \hline
+      根据条件选择动作 & \texttt{if / else} & 满足条件才打折 \\
+      多个情况选择一种 & \texttt{else if} & 按金额划分档次 \\
+      条件成立就继续 & \texttt{while} & 余额不足就继续增加 \\
+      按计数规律重复 & \texttt{for} & 打印第 1～5 件商品编号 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \texttt{while} 和 \texttt{for} 常能互相改写，选择能把过程表达清楚的写法。
+  \par\medskip
+  \alert{分支决定“做哪一件”，循环决定“是否继续做”。}
+\end{frame}
+
+\begin{frame}[fragile]{循环 + 判断：筛选符合要求的数字}
+  小练习：打印 1～1000 中能被 7 整除的数。
+  \begin{lstlisting}[language=Java]
+for (int number = 1; number <= 1000; number++) {
+    if (number % 7 == 0) {
+        System.out.println(number);
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{for}：依次检查 1～1000。
+    \item \texttt{number \% 7 == 0}：除以 7 的余数为 0。
+    \item \texttt{if}：只打印符合条件的数。
+  \end{itemize}
+  \medskip
+  输出：7、14、21、……、994，每个数占一行。
+\end{frame}
+
+\begin{frame}[fragile]{再加一个变量，就能统计数量}
+  新需求：除了打印，还要知道一共有多少个。
+  \begin{lstlisting}[language=Java]
+int count = 0;
+for (int number = 1; number <= 1000; number++) {
+    if (number % 7 == 0) {
+        System.out.println(number);
+        count++;
+    }
+}
+System.out.println("Count: " + count); // Count: 142
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{count} 在循环前初始化，每找到一个就加一。
+    \item 如果每轮都把它重设为 0，就无法保留前面累计的结果。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{遇到问题时，想到这些工具}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{ll}
+      \textbf{我想做什么} & \textbf{可以用什么} \\
+      \hline
+      看见程序的结果 & 输出 \\
+      保存和更新数据 & 变量 \\
+      表达不同性质的信息 & 数据类型 \\
+      计算数值、组织文字 & 运算、字符串拼接 \\
+      根据情况执行不同操作 & 分支 \\
+      重复执行一段操作 & 循环 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \alert{先想清楚数据、条件和重复过程，再查具体写法。}
+\end{frame}
+
+\end{document}

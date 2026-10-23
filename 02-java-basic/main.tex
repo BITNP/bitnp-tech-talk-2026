@@ -659,4 +659,77 @@ for (int number = 1; number <= 5; number++) {
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{switch：根据一个值选择分支}
+  当多个分支都在判断\textbf{同一个表达式等于哪个值}时，可以使用 \texttt{switch}。
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+switch ((*@表达式@*)) {
+    case (*@常量值 1@*):
+        (*@对应的语句@*)
+        break;
+    case (*@常量值 2@*):
+        (*@对应的语句@*)
+        break;
+    default:
+        (*@没有匹配值时执行的语句@*)
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{case} 指定匹配值，不能写成 \texttt{case total > 40:}。
+    \item \texttt{break} 结束当前 \texttt{switch}；\texttt{default} 可以省略。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{switch 示例：根据编号选择配送方式}
+  \begin{lstlisting}[language=Java]
+int delivery = 2;
+switch (delivery) {
+    case 1:
+        System.out.println("Pickup");
+        break;
+    case 2:
+        System.out.println("Express");
+        break;
+    default:
+        System.out.println("Unknown delivery");
+}
+  \end{lstlisting}
+  本例输出 \texttt{Express}。\textbf{若省略 break}，会贯穿执行后续分支语句，
+  不再检查后面的 \texttt{case} 是否匹配。
+\end{frame}
+
+\begin{frame}[fragile]{do--while：先执行，再判断条件}
+  \texttt{while} 先判断条件；\texttt{do--while} 先执行一次循环体，再判断是否继续。
+  \par\medskip
+  \begin{lstlisting}[language=Java,escapeinside={(*@}{@*)}]
+do {
+    (*@反复执行的语句@*)
+} while ((*@条件@*));
+  \end{lstlisting}
+  \begin{itemize}
+    \item 先执行循环体，再计算 \texttt{boolean} 条件。
+    \item 条件为 \texttt{true} 时回到循环体，为 \texttt{false} 时结束。
+    \item 循环体\textbf{至少执行一次}，适合“先做一次，再决定是否重复”。
+    \item 注意末尾的\textbf{分号}：\texttt{while (条件);}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{do--while 示例：至少打印一次编号}
+  假设要求先打印一个编号，再判断是否需要继续。
+  \begin{lstlisting}[language=Java]
+int number = 1;
+int limit = 3;
+do {
+    System.out.println("Item: " + number);
+    number++;
+} while (number <= limit);
+  \end{lstlisting}
+  本例依次打印编号 1、2、3。
+  \par\bigskip
+  如果把 \texttt{limit} 改为 0：
+  \begin{itemize}
+    \item \texttt{do--while} 仍然会打印编号 1，然后才判断条件并结束。
+    \item 若改用 \texttt{while (number <= limit)}，循环一次也不会执行。
+  \end{itemize}
+\end{frame}
+
 \end{document}

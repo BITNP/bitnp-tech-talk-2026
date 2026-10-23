@@ -732,4 +732,71 @@ do {
   \end{itemize}
 \end{frame}
 
+\begin{frame}{练习：打印 1000 以内能被 7 整除的数}
+  \textbf{需求：}打印 1～1000 中所有能被 7 整除的整数，每个数占一行。
+  \par\bigskip
+  \textbf{思路：}
+  \begin{enumerate}
+    \item 用 \texttt{for} 循环，依次检查 1 到 1000。
+    \item 用 \texttt{number \% 7 == 0} 判断除以 7 的余数是否为 0。
+    \item 条件成立就打印，否则继续检查下一个数。
+  \end{enumerate}
+  \bigskip
+  预期输出：7、14、21、……、994。
+  \par\medskip
+  这里需要把 \texttt{if} 放在 \texttt{for} 的循环体内，让每个数都经过判断。
+\end{frame}
+
+\begin{frame}[fragile]{实现：在循环中判断是否能被 7 整除}
+  \begin{lstlisting}[language=Java]
+public class Main {
+    public static void main(String[] args) {
+        for (int number = 1; number <= 1000; number++) {
+            if (number % 7 == 0) {
+                System.out.println(number);
+            }
+        }
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 外层 \texttt{for} 控制依次检查哪些数字。
+    \item 内层 \texttt{if} 决定当前数字是否需要打印。
+    \item 不论是否打印，本轮结束后都会执行 \texttt{number++}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{更新需求：一共打印了多少个数}
+  除了打印 1～1000 中能被 7 整除的数，我们还想知道\textbf{一共有多少个}。
+  \par\bigskip
+  \begin{enumerate}
+    \item 在循环\textbf{外面}声明计数变量 \texttt{count}，初始化为 0。
+    \item 找到符合条件的数时，打印这个数，并执行 \texttt{count++}。
+    \item 循环结束后，打印 \texttt{count}，得到总数。
+  \end{enumerate}
+  \bigskip
+  \textbf{为什么放在循环外？}
+  \par\medskip
+  计数需要保留前面各轮的结果。如果每轮都执行 \texttt{int count = 0;}，
+  就会反复从 0 开始，无法累计。
+\end{frame}
+
+\begin{frame}[fragile]{实现：打印数字并累计个数}
+  \begin{lstlisting}[language=Java]
+public class Main {
+    public static void main(String[] args) {
+        int count = 0;
+        for (int number = 1; number <= 1000; number++) {
+            if (number % 7 == 0) {
+                System.out.println(number);
+                count++;
+            }
+        }
+        System.out.println("Count: " + count);
+    }
+}
+  \end{lstlisting}
+  \texttt{count++} 只在打印时执行；最后输出 \texttt{Count: 142}。
+\end{frame}
+
 \end{document}

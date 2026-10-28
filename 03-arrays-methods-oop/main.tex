@@ -359,4 +359,71 @@ static double square(double x) {
   每次调用都会进入被调用的方法，\alert{返回后从本次调用的位置继续执行}。
 \end{frame}
 
+\begin{frame}[fragile]{一件商品，需要保存多种信息}
+  现在除了价格，还要记录每件商品的名称和库存。
+  \par\medskip
+  可以先用三个数组分别保存：
+  \begin{lstlisting}[language=Java]
+String[] names = {"Notebook", "Pen", "Eraser"};
+double[] prices = {12.0, 8.0, 3.0};
+int[] stocks = {10, 20, 30};
+  \end{lstlisting}
+  \begin{itemize}
+    \item 索引 0：\texttt{Notebook}，价格 12 元，库存 10 件。
+    \item 索引 1：\texttt{Pen}，价格 8 元，库存 20 件。
+    \item 索引 2：\texttt{Eraser}，价格 3 元，库存 30 件。
+  \end{itemize}
+  \medskip
+  我们约定：\alert{三个数组中相同索引的数据，属于同一件商品}。
+\end{frame}
+
+\begin{frame}[fragile]{只交换名称，商品信息就对应错了}
+  想把 \texttt{Pen} 排在 \texttt{Notebook} 前面，却只交换了名称：
+  \begin{lstlisting}[language=Java]
+String temp = names[0];
+names[0] = names[1];
+names[1] = temp;
+  \end{lstlisting}
+  \centering
+  {\renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{clcc}
+    索引 & 名称 & 价格（元） & 库存（件） \\
+    \hline
+    0 & \texttt{Pen} & 12.0 & 10 \\
+    1 & \texttt{Notebook} & 8.0 & 20 \\
+    2 & \texttt{Eraser} & 3.0 & 30 \\
+  \end{tabular}\par}
+  \medskip
+  \raggedright
+  \texttt{Pen} 被配上了 \texttt{Notebook} 的价格和库存，但程序不会因此报错。
+  \par\medskip
+  调整顺序时，三个数组必须同步修改；\alert{商品信息之间的对应关系，全靠我们维护}。
+\end{frame}
+
+\begin{frame}{用类描述商品，把相关数据组织在一起}
+  名称、价格和库存，本来就在描述同一件商品。
+  我们希望移动一件商品时，这些信息也能\alert{作为一个整体}移动。
+  \par\bigskip
+  用 \texttt{Product} 类描述：\textbf{每件商品都有名称、价格和库存}。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{一个商品对象}
+        名称：\texttt{Notebook}\par
+        价格：12 元\par
+        库存：10 件
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{另一个商品对象}
+        名称：\texttt{Pen}\par
+        价格：8 元\par
+        库存：20 件
+      \end{block}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \textbf{类}描述共同的结构；\textbf{对象（实例）}保存某一件具体商品的数据。
+\end{frame}
+
 \end{document}

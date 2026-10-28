@@ -1,5 +1,6 @@
 \documentclass[aspectratio=169]{beamer}
 \input{../talk-common.tex}
+\usepackage{tikz}
 
 \title[技术部第三次分享]{技术部第三次技术分享会}
 \subtitle{数组、方法与面向对象}
@@ -42,6 +43,55 @@ System.out.println(total);
   只需要对\alert{一组同类型的数据进行批量计算}。
   \par\medskip
   我们需要把这些价格\alert{放在一起，并通过编号访问}，这就要用到\textbf{数组}。
+\end{frame}
+
+\begin{frame}[fragile]{数组的声明与初始化：两种写法}
+  \texttt{int[]} 表示整数数组类型，\texttt{prices} 是数组变量名。
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{给出初始元素}
+      \begin{lstlisting}[language=Java]
+int[] prices = {12, 8, 25};
+      \end{lstlisting}
+      由初始元素个数确定长度。
+      \par
+      这里有 3 个元素。
+      \par\bigskip
+      \centering
+      \begin{tikzpicture}[x=1.15cm,y=1cm]
+        \node[anchor=east,text=TalkMuted] at (-0.1,0.95) {索引};
+        \foreach \value [count=\i from 0] in {12,8,25} {
+          \draw[draw=TalkAccent,fill=TalkSurface]
+            (\i,0) rectangle (\i+1,0.65);
+          \node[text=TalkText] at (\i+0.5,0.325) {\value};
+          \node[text=TalkMuted] at (\i+0.5,0.95) {\i};
+        }
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{指定数组长度}
+      \begin{lstlisting}[language=Java]
+int[] prices = new int[3];
+      \end{lstlisting}
+      方括号中的 3 指定长度。
+      \par
+      整数数组的元素默认是 0。
+      \par\bigskip
+      \centering
+      \begin{tikzpicture}[x=1.15cm,y=1cm]
+        \node[anchor=east,text=TalkMuted] at (-0.1,0.95) {索引};
+        \foreach \i in {0,1,2} {
+          \draw[draw=TalkAccent,fill=TalkSurface]
+            (\i,0) rectangle (\i+1,0.65);
+          \node[text=TalkText] at (\i+0.5,0.325) {0};
+          \node[text=TalkMuted] at (\i+0.5,0.95) {\i};
+        }
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \bigskip
+  每个格子代表一个元素；索引从 \alert{0} 开始，三个元素的索引是 0、1、2。
 \end{frame}
 
 \end{document}

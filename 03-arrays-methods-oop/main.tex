@@ -1,0 +1,47 @@
+\documentclass[aspectratio=169]{beamer}
+\input{../talk-common.tex}
+
+\title[技术部第三次分享]{技术部第三次技术分享会}
+\subtitle{数组、方法与面向对象}
+\author{姚雨森}
+\institute{技术部 分管主席}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[fragile]{三件商品：用变量保存价格}
+  购买三件商品，价格分别为 12 元、8 元和 25 元，计算总价。
+  \par\medskip
+  下面的代码写在 \texttt{main} 中：
+  \begin{lstlisting}[language=Java]
+int price1 = 12;
+int price2 = 8;
+int price3 = 25;
+
+int total = price1 + price2 + price3;
+System.out.println(total);
+  \end{lstlisting}
+  \begin{itemize}
+    \item 每件商品的价格保存在一个变量中。
+    \item 把三个价格相加，输出总价 \texttt{45}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{商品变成三十件，怎么办}
+  现在有 \textbf{30 件商品}，需要计算总价，并找出价格低于 10 元的商品。
+  \par\medskip
+  \begin{itemize}
+    \item 保存价格：要从 \texttt{price1} 一直声明到 \texttt{price30}。
+    \item 计算总价：要把 30 个变量逐个写进求和表达式。
+    \item 筛选商品：要对每个价格重复写判断语句。
+  \end{itemize}
+  \medskip
+  已经学过的循环能帮忙吗？循环变量 \texttt{i} 的变化，
+  \textbf{不能自动切换} \texttt{price1}、\texttt{price2} 等变量名。
+  \par\medskip
+  我们需要把这些价格\alert{放在一起，并通过编号访问}，这就要用到\textbf{数组}。
+\end{frame}
+
+\end{document}

@@ -94,4 +94,41 @@ int[] prices = new int[3];
   每个格子代表一个元素；索引从 \alert{0} 开始，三个元素的索引是 0、1、2。
 \end{frame}
 
+\begin{frame}[fragile]{通过索引读取和修改数组元素}
+  使用\textbf{数组名[索引]}访问指定元素；\texttt{prices[1]} 表示第二个元素。
+  \par\medskip
+  \begin{lstlisting}[language=Java]
+int[] prices = {12, 8, 25};
+System.out.println(prices[1]);  // 8
+int savedPrice = prices[1];
+prices[1] = 10;
+System.out.println(prices[1]);  // 10
+System.out.println(savedPrice); // 8
+  \end{lstlisting}
+  \begin{itemize}
+    \item \textbf{读取}：可以直接打印元素，也可以用它参与计算。
+    \item \textbf{保存}：\texttt{int savedPrice = prices[1];} 把当前的值存入新变量。
+    \item \textbf{修改}：\texttt{prices[1] = 10;} 把第二个元素改为 10。
+  \end{itemize}
+  \medskip
+  \texttt{savedPrice} 保存的是当时复制的整数值，\alert{不会随数组元素的修改而改变}。
+\end{frame}
+
+\begin{frame}[fragile]{用 for 循环计算总价}
+  遍历三个价格，把每个价格累加到总价中。
+  \begin{lstlisting}[language=Java]
+int[] prices = {12, 8, 25};
+int total = 0;
+for (int i = 0; i < 3; i++) {
+    total += prices[i];
+}
+System.out.println(total);
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{i} 依次为 0、1、2，\texttt{prices[i]} 依次取出 12、8、25。
+    \item 每轮执行 \texttt{total += prices[i];}，累加当前价格。
+    \item 循环结束后，打印总价 \texttt{45}。
+  \end{itemize}
+\end{frame}
+
 \end{document}

@@ -258,4 +258,74 @@ public class Main {
   \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{参数按位置对应，顺序不能随意交换}
+  定义一个接收两个参数的方法：
+  \begin{lstlisting}[language=Java]
+static double sum(int a, double b) {
+    double result = a + b;
+    return result;
+}
+  \end{lstlisting}
+  在 \texttt{main} 中调用：
+  \begin{lstlisting}[language=Java]
+double total = sum(3, 2.5);
+System.out.println(total); // 5.5
+  \end{lstlisting}
+  \begin{itemize}
+    \item 第一个实参 \texttt{3} 传给 \texttt{int a}，第二个实参 \texttt{2.5} 传给 \texttt{double b}。
+    \item 实参按\alert{位置}对应形参，不会根据类型自动调整顺序。
+    \item \texttt{sum(2.5, 3)} 无法编译：\texttt{2.5} 不能直接传给 \texttt{int a}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{不同方法可以有同名的局部变量}
+  下面两个方法并列定义在同一个类中：
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{lstlisting}[language=Java]
+static double first() {
+    double value = 10.0;
+    return value;
+}
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{lstlisting}[language=Java]
+static double second() {
+    double value = 20.0;
+    return value;
+}
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  在 \texttt{main} 中依次调用，两个方法都能正常运行：
+  \begin{lstlisting}[language=Java]
+System.out.println(first());  // 10.0
+System.out.println(second()); // 20.0
+  \end{lstlisting}
+  \begin{itemize}
+    \item \textbf{作用域}是可以通过变量名访问这个变量的代码范围。
+    \item 两个 \texttt{value} 是各自方法中的局部变量，名字相同也互不冲突。
+    \item \texttt{main} 不能直接访问它们，但可以接收方法返回的值。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{抽象：知道怎么用，不必知道怎么实现}
+  调用一个方法，需要了解它的\alert{输入、返回结果和功能约定}。
+  \par\medskip
+  以 \texttt{double sum(int a, double b)} 为例，约定它返回两个参数的和：
+  \begin{itemize}
+    \item \textbf{传入什么}：先传一个 \texttt{int}，再传一个 \texttt{double}。
+    \item \textbf{得到什么}：得到一个 \texttt{double} 类型的结果，值为两者之和。
+    \item \textbf{如何使用}：调用方法，再保存、打印或继续使用返回值。
+  \end{itemize}
+  \begin{lstlisting}[language=Java]
+double total = sum(3, 2.5);
+System.out.println(total); // 5.5
+  \end{lstlisting}
+  调用者不需要知道内部变量叫什么、计算分几步完成。
+  只要实现遵守约定，就可以通过调用获得预期结果。
+\end{frame}
+
 \end{document}

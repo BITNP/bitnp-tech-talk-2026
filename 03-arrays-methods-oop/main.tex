@@ -131,4 +131,23 @@ System.out.println(total);
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{用 length 获取数组长度}
+  \texttt{prices.length} 表示数组中元素的个数，这里是 \texttt{3}。
+  \par\medskip
+  把循环条件中的 \texttt{i < 3} 改为 \texttt{i < prices.length}：
+  \begin{lstlisting}[language=Java]
+int[] prices = {12, 8, 25};
+int total = 0;
+for (int i = 0; i < prices.length; i++) {
+    total += prices[i];
+}
+System.out.println(total);
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{length} 后面没有括号。
+    \item 索引从 0 到 \texttt{length - 1}，所以循环条件使用 \texttt{<}。
+    \item 增减初始化列表中的价格时，不需要再修改循环条件。
+  \end{itemize}
+\end{frame}
+
 \end{document}

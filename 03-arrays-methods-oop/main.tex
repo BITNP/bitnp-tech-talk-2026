@@ -426,4 +426,72 @@ names[1] = temp;
   \textbf{类}描述共同的结构；\textbf{对象（实例）}保存某一件具体商品的数据。
 \end{frame}
 
+\begin{frame}[fragile]{定义类：把相关的量写在一起}
+  使用 \texttt{class 类名 \{}\,\texttt{...}\,\texttt{\}} 定义一个类。
+  将下面的代码保存为 \texttt{Product.java}：
+  \begin{lstlisting}[language=Java]
+class Product {
+    String name;
+    double price;
+    int stock;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{Product} 是类名，也可以作为变量的类型。
+    \item 类中声明的这些量称为\textbf{字段（成员变量）}。
+    \item 每个 \texttt{Product} 对象都有自己的 \texttt{name}、\texttt{price} 和 \texttt{stock}。
+  \end{itemize}
+  \medskip
+  这段定义描述商品有哪些数据；具体商品的数据要保存在创建出的\alert{对象}中。
+\end{frame}
+
+\begin{frame}[fragile]{用商品对象替代三个分散的数组}
+  下面的代码写在同一目录下 \texttt{Main.java} 的 \texttt{main} 中：
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.55\textwidth}
+      \begin{lstlisting}[language=Java]
+Product notebook = new Product();
+notebook.name = "Notebook";
+notebook.price = 12.0;
+notebook.stock = 10;
+Product pen = new Product();
+pen.name = "Pen";
+pen.price = 8.0;
+pen.stock = 20;
+Product eraser = new Product();
+eraser.name = "Eraser";
+eraser.price = 3.0;
+eraser.stock = 30;
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.41\textwidth}
+      \begin{itemize}
+        \item \texttt{new Product()} 创建一个商品对象。
+        \item 用“\textbf{对象变量.字段名}”访问或修改这个对象的数据。
+        \item 三件商品分别保存各自的名称、价格和库存。
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{调整商品顺序，只需交换对象}
+  接着把三个商品对象放进一个 \texttt{Product[]} 数组：
+  \begin{lstlisting}[language=Java]
+Product[] products = {notebook, pen, eraser};
+
+Product temp = products[0];
+products[0] = products[1];
+products[1] = temp;
+  \end{lstlisting}
+  此时，索引 0 对应的是 \texttt{pen}，它仍保存自己的价格和库存：
+  \begin{lstlisting}[language=Java]
+System.out.println(products[0].name);  // Pen
+System.out.println(products[0].price); // 8.0
+System.out.println(products[0].stock); // 20
+  \end{lstlisting}
+  \medskip
+  每个数组元素对应\alert{一个完整的商品对象}，不必再同步交换三个数组中的数据。
+\end{frame}
+
 \end{document}

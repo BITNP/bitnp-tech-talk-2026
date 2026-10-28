@@ -224,8 +224,38 @@ System.out.println(total);           // 37.0
     \item 执行 \texttt{return} 后回到调用处，用返回的值继续计算或赋值。
     \item 调用时不写参数类型；参数的数量、顺序和类型要与定义匹配。
   \end{itemize}
-  \medskip
-  \texttt{return} 负责\alert{返回结果}，\texttt{println} 负责\alert{打印结果}；返回不会自动打印。
+\end{frame}
+
+\begin{frame}[fragile]{完整程序：调用后返回原处继续执行}
+  保存为 \texttt{Main.java}，程序从 \texttt{main} 开始执行。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.66\textwidth}
+      \begin{lstlisting}[language=Java]
+public class Main {
+  public static void main(String[] args) {
+    double value = calculate(2.0);
+    System.out.println(value);
+  }
+
+  static double calculate(double x) {
+    double result = x * x + 4 * x + 10;
+    return result;
+  }
+}
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.30\textwidth}
+      \textbf{执行顺序}
+      \begin{enumerate}
+        \item 进入 \texttt{main}。
+        \item 调用 \texttt{calculate}，传入 \texttt{2.0}。
+        \item 计算得到 \texttt{result = 22.0}。
+        \item 返回 \texttt{main}，将结果赋给 \texttt{value}。
+        \item 继续打印 \texttt{22.0}。
+      \end{enumerate}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \end{document}

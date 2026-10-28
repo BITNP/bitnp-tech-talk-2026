@@ -534,4 +534,26 @@ System.out.println("Created: " + name);
   构造方法用于\alert{完成对象的初始化}，可以赋值，也可以进行计算或条件判断。
 \end{frame}
 
+\begin{frame}[fragile]{对象也可以作为方法参数}
+  用类名作为参数类型，让方法接收一个商品对象。
+  在 \texttt{Main} 类中定义：
+  \begin{lstlisting}[language=Java]
+static double stockValue(Product product) {
+    double result = product.price * product.stock;
+    return result;
+}
+  \end{lstlisting}
+  在 \texttt{main} 中创建商品，并把它传给方法：
+  \begin{lstlisting}[language=Java]
+Product pen = new Product("Pen", 8.0, 20);
+double value = stockValue(pen);
+System.out.println(value); // 160.0
+  \end{lstlisting}
+  \begin{itemize}
+    \item 参数 \texttt{product} 的类型是 \texttt{Product}，调用时传入对象变量 \texttt{pen}。
+    \item 方法通过 \texttt{product.price} 和 \texttt{product.stock} 读取这件商品的数据。
+    \item 库存总价值 = 单价 $\times$ 库存数量，这里是 $8 \times 20 = 160$ 元。
+  \end{itemize}
+\end{frame}
+
 \end{document}

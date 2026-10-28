@@ -494,4 +494,44 @@ System.out.println(products[0].stock); // 20
   每个数组元素对应\alert{一个完整的商品对象}，不必再同步交换三个数组中的数据。
 \end{frame}
 
+\begin{frame}[fragile]{构造方法：创建对象时就把数据填好}
+  把字段赋值写进\textbf{构造方法}，创建对象时直接传入初始数据。
+  \begin{lstlisting}[language=Java]
+class Product {
+    String name;
+    double price;
+    int stock;
+    Product(String initialName, double initialPrice,
+            int initialStock) {
+        name = initialName;
+        price = initialPrice;
+        stock = initialStock;
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 构造方法与类\alert{同名}，不写返回类型，也不写 \texttt{void}。
+    \item 执行 \texttt{new Product(...)} 时，会调用匹配的构造方法。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{创建时传入参数，构造方法完成初始化}
+  在 \texttt{main} 中创建商品，不再逐条给字段赋值：
+  \begin{lstlisting}[language=Java]
+Product notebook = new Product("Notebook", 12.0, 10);
+Product pen = new Product("Pen", 8.0, 20);
+Product eraser = new Product("Eraser", 3.0, 30);
+  \end{lstlisting}
+  参数按顺序传给构造方法，创建出的对象已经保存名称、价格和库存。
+  \par\medskip
+  \textbf{构造方法里也可以执行其他语句}，例如在字段赋值后打印创建提示：
+  \begin{lstlisting}[language=Java]
+// At the end of the constructor:
+System.out.println("Created: " + name);
+  \end{lstlisting}
+  每次通过这个构造方法创建商品，都会执行这条提示语句。
+  \par\medskip
+  构造方法用于\alert{完成对象的初始化}，可以赋值，也可以进行计算或条件判断。
+\end{frame}
+
 \end{document}

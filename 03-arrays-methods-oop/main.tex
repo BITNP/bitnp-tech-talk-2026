@@ -328,4 +328,35 @@ System.out.println(total); // 5.5
   只要实现遵守约定，就可以通过调用获得预期结果。
 \end{frame}
 
+\begin{frame}[fragile]{方法也可以调用另一个方法}
+  同一个类中，\texttt{calculate} 调用 \texttt{square} 来计算平方。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.64\textwidth}
+      \begin{lstlisting}[language=Java]
+static double calculate(double x) {
+    double squared = square(x);
+    double result = squared + 4 * x + 10;
+    return result;
+}
+
+static double square(double x) {
+    double result = x * x;
+    return result;
+}
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{调用与返回顺序}
+      \begin{enumerate}
+        \item \texttt{calculate} 接收 \texttt{x = 2.0}。
+        \item 调用 \texttt{square(x)}，传入 \texttt{2.0}。
+        \item \texttt{square} 返回 \texttt{4.0}，存入 \texttt{squared}。
+        \item 回到 \texttt{calculate}，继续计算并返回 \texttt{22.0}。
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+  每次调用都会进入被调用的方法，\alert{返回后从本次调用的位置继续执行}。
+\end{frame}
+
 \end{document}

@@ -650,4 +650,89 @@ System.out.println(cheaper); // false: 12.0 < 8.0
   \texttt{stockValue()} 中的 \texttt{price * stock} 也可写为 \texttt{this.price * this.stock}。
 \end{frame}
 
+\begin{frame}[fragile]{this 区分字段与同名参数}
+  构造方法的参数可以与字段同名，用 \texttt{this} 明确访问当前对象的字段：
+  \begin{lstlisting}[language=Java]
+Product(String name, double price, int stock) {
+    this.name = name;
+    this.price = price;
+    this.stock = stock;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 左侧 \texttt{this.price} 是当前商品对象的字段。
+    \item 右侧 \texttt{price} 是构造方法接收到的参数。
+    \item \texttt{this.price = price;} 把参数的值保存到当前对象中。
+  \end{itemize}
+  \medskip
+  如果写成 \texttt{price = price;}，两边都指参数，只是给参数自己赋值，
+  \alert{不会给对象的字段赋值}。
+\end{frame}
+
+\begin{frame}[fragile]{static 成员属于类，实例成员属于对象}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{实例成员：对应某个对象}
+      \begin{itemize}
+        \item 每件商品有自己的价格、库存。
+        \item 实例方法通过对象调用，内部有 \texttt{this}。
+      \end{itemize}
+      \begin{lstlisting}[language=Java]
+double p = pen.price;
+double v = pen.stockValue();
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{静态成员：属于类}
+      \begin{itemize}
+        \item 静态字段由同一个类的实例共享。
+        \item 静态方法通过类名调用，内部没有 \texttt{this}。
+      \end{itemize}
+      \begin{lstlisting}[language=Java]
+int n = Product.createdCount;
+Main.stockValue(pen);
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  例如，在 \texttt{Product} 类中声明 \texttt{static int createdCount = 0;}，
+  在构造方法中执行 \texttt{createdCount++;}，统计累计创建的商品对象数量。
+  \par\medskip
+  静态方法需要对象数据时，可以\alert{通过参数显式传入对象}。
+\end{frame}
+
+\begin{frame}[fragile]{静态字段：为每件商品分配编号}
+  下面只保留编号相关代码，演示每创建一个商品就分配一个新编号：
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{lstlisting}[language=Java]
+class Product {
+  static int nextId = 1;
+  int id;
+  Product() {
+    id = nextId;
+    nextId++;
+  }
+}
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      在 \texttt{main} 中依次创建：
+      \begin{lstlisting}[language=Java]
+Product a = new Product();
+Product b = new Product();
+System.out.println(a.id); // 1
+System.out.println(b.id); // 2
+      \end{lstlisting}
+      此时 \texttt{Product.nextId} 为 3，
+      留给下一个新对象。
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+    \item \texttt{static int nextId}：所有商品共享同一个计数器，不会随每次创建重置。
+    \item \texttt{int id}：每个商品各自保存编号，计数器增加不会改变已有编号。
+    \item 若 \texttt{nextId} 不加 \texttt{static}，每个新对象都会从 1 开始，编号就重复了。
+  \end{itemize}
+\end{frame}
+
 \end{document}

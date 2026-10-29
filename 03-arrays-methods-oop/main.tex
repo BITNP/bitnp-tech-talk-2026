@@ -556,4 +556,59 @@ System.out.println(value); // 160.0
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{把商品的数据和相关操作放在一起}
+  商品已经保存了价格和库存，计算库存总价值也是与商品有关的操作。
+  \par\medskip
+  如果相关操作都放在其他类中，每次调用都需要把商品传进去：
+  \begin{lstlisting}[language=Java]
+double value = stockValue(pen);
+  \end{lstlisting}
+  可以把这个操作定义在 \texttt{Product} 类中，让商品对象提供它：
+  \begin{lstlisting}[language=Java]
+double value = pen.stockValue();
+  \end{lstlisting}
+  \begin{itemize}
+    \item \textbf{字段}保存商品的数据，\textbf{实例方法}提供处理这些数据的操作。
+    \item \texttt{pen.stockValue()} 表示计算 \texttt{pen} 这件商品的库存总价值。
+    \item 数据与相关操作归在同一个类中，便于查找、使用和维护。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{完整定义：Product.java}
+  \begin{lstlisting}[language=Java]
+class Product {
+  String name;
+  double price;
+  int stock;
+  Product(String productName, double unitPrice, int quantity) {
+    name = productName;
+    price = unitPrice;
+    stock = quantity;
+  }
+  double stockValue() {
+    double result = price * stock;
+    return result;
+  }
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{完整调用：Main.java}
+  两个文件放在同一目录，\texttt{main} 通过具体对象调用实例方法。
+  \begin{lstlisting}[language=Java]
+public class Main {
+  public static void main(String[] args) {
+    Product pen = new Product("Pen", 8.0, 20);
+    Product notebook = new Product("Notebook", 12.0, 10);
+    System.out.println(pen.stockValue());      // 160.0
+    System.out.println(notebook.stockValue()); // 120.0
+  }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 实例方法不写 \texttt{static}，也不再显式接收 \texttt{Product} 参数。
+    \item 点号前的对象决定使用谁的字段；不同对象使用各自的价格和库存。
+  \end{itemize}
+\end{frame}
+
 \end{document}

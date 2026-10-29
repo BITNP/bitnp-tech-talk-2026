@@ -735,4 +735,87 @@ System.out.println(b.id); // 2
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{直接修改字段，可以绕过业务规则}
+  商品库存应该大于或等于 0，但目前外部可以直接赋值：
+  \begin{lstlisting}[language=Java]
+Product pen = new Product("Pen", 8.0, 20);
+pen.stock = -10;
+System.out.println(pen.stock); // -10
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{-10} 是合法的 \texttt{int}，这条赋值语句不会因为库存为负而报错。
+    \item 即使另写了检查库存的方法，外部仍可以绕过它直接修改字段。
+    \item 我们需要限制直接访问，让修改经过\alert{统一的检查入口}。
+  \end{itemize}
+  \medskip
+  \textbf{访问权限修饰符}用来控制哪些代码可以访问字段、方法等成员。
+\end{frame}
+
+\begin{frame}[fragile]{private：限制类外直接访问字段}
+  将 \texttt{Product} 的库存字段声明改为：
+  \begin{lstlisting}[language=Java]
+private int stock;
+  \end{lstlisting}
+  \texttt{Product} 类内部仍能访问它，例如构造方法中的赋值：
+  \begin{lstlisting}[language=Java]
+this.stock = stock;
+  \end{lstlisting}
+  但在 \texttt{Main} 中，下面两条语句都会编译失败：
+  \begin{lstlisting}[language=Java]
+pen.stock = -10;
+System.out.println(pen.stock);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{public：通过公开方法修改库存}
+  在 \texttt{Product} 中提供 \texttt{public} 方法，允许外部调用；库存字段保持私有。
+  \begin{lstlisting}[language=Java]
+public boolean purchase(int quantity) {
+    if (quantity <= 0 || quantity > stock) {
+        return false;
+    }
+    stock -= quantity;
+    return true;
+}
+  \end{lstlisting}
+  在 \texttt{main} 中调用，假设 \texttt{pen} 当前库存为 20：
+  \begin{lstlisting}[language=Java]
+boolean success = pen.purchase(2);
+System.out.println(success); // true
+  \end{lstlisting}
+  成功后库存从 20 变为 18；数量不合法或库存不足时返回 \texttt{false}，库存不变。
+\end{frame}
+
+\begin{frame}[fragile]{getter 和 setter：读取与设置字段}
+  在 \texttt{Product} 类中，为私有字段 \texttt{stock} 提供方法：
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.41\textwidth}
+      \textbf{getter：返回字段的值}
+      \begin{lstlisting}[language=Java]
+public int getStock() {
+    return stock;
+}
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \textbf{setter：检查后更新字段}
+      \begin{lstlisting}[language=Java]
+public void setStock(int stock) {
+    if (stock >= 0) {
+        this.stock = stock;
+    }
+}
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \begin{lstlisting}[language=Java]
+pen.setStock(20);
+System.out.println(pen.getStock()); // 20
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{void} 表示不返回值；这里负数输入被忽略。
+    \item getter、setter 是普通方法的命名约定，不必为每个字段提供 setter。
+  \end{itemize}
+\end{frame}
+
 \end{document}

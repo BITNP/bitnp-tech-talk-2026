@@ -611,4 +611,43 @@ public class Main {
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{比较两件商品，方法里需要区分谁是谁}
+  给 \texttt{Product} 增加一个比较单价的实例方法，期望这样调用：
+  \begin{lstlisting}[language=Java]
+Product pen = new Product("Pen", 8.0, 20);
+Product notebook = new Product("Notebook", 12.0, 10);
+boolean cheaper = pen.isCheaperThan(notebook);
+System.out.println(cheaper); // true
+  \end{lstlisting}
+  这次调用表示：\textbf{这支笔是否比这本笔记本便宜？}
+  \par\medskip
+  \begin{itemize}
+    \item 点号前的 \texttt{pen}：当前调用方法的对象，单价为 8 元。
+    \item 括号中的 \texttt{notebook}：传入的另一个对象，单价为 12 元。
+    \item 方法需要分别读取\alert{当前对象}和\alert{另一个对象}的价格。
+  \end{itemize}
+  \medskip
+  在实例方法内部，可以用 \texttt{this} 表示\textbf{当前对象}。
+\end{frame}
+
+\begin{frame}[fragile]{this 表示当前调用方法的对象}
+  在 \texttt{Product} 类中加入这个实例方法：
+  \begin{lstlisting}[language=Java]
+boolean isCheaperThan(Product other) {
+    boolean result = this.price < other.price;
+    return result;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 调用 \texttt{pen.isCheaperThan(notebook)} 时，\texttt{this} 指向 \texttt{pen}，
+      \texttt{other} 指向 \texttt{notebook}，比较的是 $8 < 12$。
+    \item 交换调用对象，\texttt{this} 和参数所指的对象也随之改变：
+  \end{itemize}
+  \begin{lstlisting}[language=Java]
+boolean cheaper = notebook.isCheaperThan(pen);
+System.out.println(cheaper); // false: 12.0 < 8.0
+  \end{lstlisting}
+  \texttt{stockValue()} 中的 \texttt{price * stock} 也可写为 \texttt{this.price * this.stock}。
+\end{frame}
+
 \end{document}

@@ -311,23 +311,6 @@ System.out.println(second()); // 20.0
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{抽象：知道怎么用，不必知道怎么实现}
-  调用一个方法，需要了解它的\alert{输入、返回结果和功能约定}。
-  \par\medskip
-  以 \texttt{double sum(int a, double b)} 为例，约定它返回两个参数的和：
-  \begin{itemize}
-    \item \textbf{传入什么}：先传一个 \texttt{int}，再传一个 \texttt{double}。
-    \item \textbf{得到什么}：得到一个 \texttt{double} 类型的结果，值为两者之和。
-    \item \textbf{如何使用}：调用方法，再保存、打印或继续使用返回值。
-  \end{itemize}
-  \begin{lstlisting}[language=Java]
-double total = sum(3, 2.5);
-System.out.println(total); // 5.5
-  \end{lstlisting}
-  调用者不需要知道内部变量叫什么、计算分几步完成。
-  只要实现遵守约定，就可以通过调用获得预期结果。
-\end{frame}
-
 \begin{frame}[fragile]{方法也可以调用另一个方法}
   同一个类中，\texttt{calculate} 调用 \texttt{square} 来计算平方。
   \par\medskip
@@ -357,6 +340,23 @@ static double square(double x) {
     \end{column}
   \end{columns}
   每次调用都会进入被调用的方法，\alert{返回后从本次调用的位置继续执行}。
+\end{frame}
+
+\begin{frame}[fragile]{抽象：知道怎么用，不必知道怎么实现}
+  调用一个方法，需要了解它的\alert{输入、返回结果和功能约定}。
+  \par\medskip
+  以 \texttt{double sum(int a, double b)} 为例，约定它返回两个参数的和：
+  \begin{itemize}
+    \item \textbf{传入什么}：先传一个 \texttt{int}，再传一个 \texttt{double}。
+    \item \textbf{得到什么}：得到一个 \texttt{double} 类型的结果，值为两者之和。
+    \item \textbf{如何使用}：调用方法，再保存、打印或继续使用返回值。
+  \end{itemize}
+  \begin{lstlisting}[language=Java]
+double total = sum(3, 2.5);
+System.out.println(total); // 5.5
+  \end{lstlisting}
+  调用者不需要知道内部变量叫什么、计算分几步完成。
+  只要实现遵守约定，就可以通过调用获得预期结果。
 \end{frame}
 
 \begin{frame}[fragile]{一件商品，需要保存多种信息}

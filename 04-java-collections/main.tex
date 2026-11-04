@@ -44,4 +44,76 @@ System.out.println(prices.length); // 3
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{ArrayList：可以增减元素的列表}
+  可以把 \texttt{ArrayList} 理解为\alert{可以变化长度的数组}，直接添加或删除元素。
+  \begin{lstlisting}[language=Java]
+// import java.util.ArrayList;
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+System.out.println(products.size()); // 2
+System.out.println(products.get(0)); // Apple
+products.set(0, "Bread");
+products.remove(1);
+System.out.println(products.size()); // 1
+  \end{lstlisting}
+  \texttt{add} 添加，\texttt{get} 读取，\texttt{set} 修改，\texttt{remove} 删除。
+  \par\medskip
+  下标仍从 \texttt{0} 开始；元素数量用 \texttt{size()} 获取。
+\end{frame}
+
+\begin{frame}[fragile]{尖括号指定列表中的元素类型}
+  \texttt{ArrayList<String>} 表示这个列表用来存放 \texttt{String} 类型的元素。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+String first = products.get(0);
+// products.add(12); // Type mismatch
+  \end{lstlisting}
+  \begin{itemize}
+    \item 尖括号中的类型叫\alert{类型参数}，这种写法称为\alert{泛型}。
+    \item 必须填写\textbf{引用类型}，例如 \texttt{String}、\texttt{Student} 等类。
+    \item \texttt{int}、\texttt{double} 等\textbf{基本类型}不能直接填进去。
+  \end{itemize}
+  \begin{lstlisting}[language=Java]
+// ArrayList<int> prices = new ArrayList<>(); // Invalid
+  \end{lstlisting}
+  那么，要保存一组整数，应该用什么类型？
+\end{frame}
+
+\begin{frame}[fragile]{包装类与自动装箱、拆箱}
+  \alert{包装类}封装基本类型的值，如 \texttt{int} 对应 \texttt{Integer}。
+  \par\medskip
+  基本类型转为包装对象叫\textbf{装箱}，取出基本类型值叫\textbf{拆箱}。
+  \par\medskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{手动装箱、拆箱}
+      \begin{lstlisting}[language=Java]
+ArrayList<Integer> prices =
+    new ArrayList<>();
+Integer boxed =
+    Integer.valueOf(12);
+prices.add(boxed);
+int price =
+    prices.get(0).intValue();
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{自动装箱、拆箱}
+      \begin{lstlisting}[language=Java]
+ArrayList<Integer> prices =
+    new ArrayList<>();
+
+prices.add(12); // Boxing
+
+int price = prices.get(0);
+// Unboxing
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  手动转换太繁琐，Java 支持自动转换；元素类型仍然是 \texttt{Integer}。
+\end{frame}
+
 \end{document}

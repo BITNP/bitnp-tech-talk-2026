@@ -81,39 +81,30 @@ String first = products.get(0);
   那么，要保存一组整数，应该用什么类型？
 \end{frame}
 
-\begin{frame}[fragile]{包装类与自动装箱、拆箱}
-  \alert{包装类}封装基本类型的值，如 \texttt{int} 对应 \texttt{Integer}。
-  \par\medskip
-  基本类型转为包装对象叫\textbf{装箱}，取出基本类型值叫\textbf{拆箱}。
-  \par\medskip
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.48\textwidth}
-      \textbf{手动装箱、拆箱}
-      \begin{lstlisting}[language=Java]
-ArrayList<Integer> prices =
-    new ArrayList<>();
-Integer boxed =
-    Integer.valueOf(12);
-prices.add(boxed);
-int price =
-    prices.get(0).intValue();
-      \end{lstlisting}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{自动装箱、拆箱}
-      \begin{lstlisting}[language=Java]
-ArrayList<Integer> prices =
-    new ArrayList<>();
-
-prices.add(12); // Boxing
-
+\begin{frame}[fragile]{存放整数时，使用 Integer}
+  保存 \texttt{int} 数据时，写成 \texttt{ArrayList<Integer>}；
+  保存 \texttt{double} 数据时，使用 \texttt{ArrayList<Double>}。
+  \begin{lstlisting}[language=Java]
+ArrayList<Integer> prices = new ArrayList<>();
+prices.add(12);
 int price = prices.get(0);
-// Unboxing
-      \end{lstlisting}
-    \end{column}
-  \end{columns}
+  \end{lstlisting}
+  \par\medskip
+  \begingroup
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{llll}
+      \textbf{基本类型} & \textbf{对应的类} & \textbf{基本类型} & \textbf{对应的类} \\
+      \hline
+      \texttt{byte} & \texttt{Byte} & \texttt{float} & \texttt{Float} \\
+      \texttt{short} & \texttt{Short} & \texttt{double} & \texttt{Double} \\
+      \texttt{int} & \texttt{Integer} & \texttt{char} & \texttt{Character} \\
+      \texttt{long} & \texttt{Long} & \texttt{boolean} & \texttt{Boolean} \\
+    \end{tabular}
+    \par
+  \endgroup
   \medskip
-  手动转换太繁琐，Java 支持自动转换；元素类型仍然是 \texttt{Integer}。
+  这些对应关系涉及\textbf{包装类}，这里先记住用法。
 \end{frame}
 
 \end{document}

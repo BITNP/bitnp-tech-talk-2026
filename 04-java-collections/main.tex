@@ -11,4 +11,37 @@
 
 \maketitle
 
+\begin{frame}[fragile]{回顾数组：长度需要提前确定}
+  数组把一组同类型的数据放在一起，通过从 \texttt{0} 开始的下标访问。
+  \begin{lstlisting}[language=Java]
+int[] prices = new int[3];
+prices[0] = 12;
+prices[1] = 8;
+prices[2] = 25;
+System.out.println(prices.length); // 3
+  \end{lstlisting}
+  \begin{itemize}
+    \item 数组一旦创建，长度就固定了；可以修改元素，不能直接增加位置。
+    \item 预留太少，后续数据放不下；预留太多，又有空余位置需要管理。
+    \item 商品不断增加或下架时，我们希望能\alert{直接添加、删除元素}，
+      让保存的数据数量随需求变化。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{除了位置编号，我们还需要数据的标签}
+  数组用下标表示\textbf{位置}，但我们有时更想用一个\textbf{标签}找到数据。
+  \par\bigskip
+  \begin{itemize}
+    \item 按位置访问：第 \texttt{0} 件商品的价格是多少？
+    \item 按标签查找：商品编号 \texttt{P1001} 对应的价格是多少？
+    \item 这种用于查找的标签称为\alert{键（key）}，对应的数据称为\alert{值（value）}。
+  \end{itemize}
+  \bigskip
+  数组也能配合查找代码完成任务，但我们希望有更直接的存储方式：
+  \begin{itemize}
+    \item \textbf{数量可变的列表}：方便添加、删除元素，不必自己安排数组长度。
+    \item \textbf{键与值的映射}：根据商品编号等标签，保存和查询对应的数据。
+  \end{itemize}
+\end{frame}
+
 \end{document}

@@ -62,6 +62,40 @@ System.out.println(products.size()); // 1
   下标仍从 \texttt{0} 开始；元素数量用 \texttt{size()} 获取。
 \end{frame}
 
+\begin{frame}[fragile]{get、set、add：对应数组上的哪些操作}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{数组：用下标读取和赋值}
+      \begin{lstlisting}[language=Java]
+String[] products = {"Apple"};
+
+String first = products[0];
+
+products[0] = "Bread";
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{ArrayList：调用对应的方法}
+      \begin{lstlisting}[language=Java]
+ArrayList<String> products =
+    new ArrayList<>();
+products.add("Apple");
+String first = products.get(0);
+products.set(0, "Bread");
+products.add("Milk");
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  \begin{itemize}
+    \item \texttt{get(i)} 对应数组的 \texttt{products[i]}：读取已有位置。
+    \item \texttt{set(i, value)} 对应数组的下标赋值：替换元素，数量不变。
+    \item \texttt{add(value)} 在末尾新增元素，数量加一；数组没有直接追加的操作。
+  \end{itemize}
+  \medskip
+  空列表要先用 \texttt{add} 添加元素，不能用 \texttt{set(0, ...)} 创建第一个元素。
+\end{frame}
+
 \begin{frame}[fragile]{尖括号指定列表中的元素类型}
   \texttt{ArrayList<String>} 表示这个列表用来存放 \texttt{String} 类型的元素。
   \begin{lstlisting}[language=Java]

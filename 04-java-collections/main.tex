@@ -235,41 +235,41 @@ for (int i = 0; i < products.size(); i++) {
   \end{itemize}
 \end{frame}
 
-% \begin{frame}[fragile]{增强 for：直接取得每一个元素}
-%   只需要\textbf{元素本身}时，增强 \texttt{for} 可以省去下标操作。
-%   \begin{lstlisting}[language=Java]
-% ArrayList<String> products = new ArrayList<>();
-% products.add("Apple");
-% products.add("Milk");
-% for (String product : products) {
-%     System.out.println(product);
-% }
-% // Apple
-% // Milk
-%   \end{lstlisting}
-%   \begin{itemize}
-%     \item 冒号右边是要遍历的列表 \texttt{products}。
-%     \item 冒号左边声明变量 \texttt{product}，每轮取得一个元素。
-%     \item 按列表顺序访问元素；同样的写法也适用于数组。
-%   \end{itemize}
-% \end{frame}
+\begin{frame}[fragile]{增强 for：直接取得每一个元素}
+  只需要\textbf{元素本身}时，增强 \texttt{for} 可以省去下标操作。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+for (String product : products) {
+    System.out.println(product);
+}
+// Apple
+// Milk
+  \end{lstlisting}
+  \begin{itemize}
+    \item 冒号右边是要遍历的列表 \texttt{products}。
+    \item 冒号左边声明变量 \texttt{product}，每轮取得一个元素。
+    \item 按列表顺序访问元素；同样的写法也适用于数组。
+  \end{itemize}
+\end{frame}
 
-% \begin{frame}[fragile]{增强 for 中，不要直接增删原列表}
-%   遍历过程中直接增删原列表，可能抛出 \texttt{ConcurrentModificationException}。
-%   \begin{lstlisting}[language=Java]
-% // Incorrect: do not modify the list this way.
-% for (String product : products) {
-%     if (product.equals("Milk")) {
-%         products.remove(product);
-%     }
-% }
-%   \end{lstlisting}
-%   \begin{itemize}
-%     \item 没有抛出异常，也不能说明这种写法可靠。
-%     \item 如果只需删除一个已知值，可以\alert{直接调用} \texttt{products.remove("Milk")}，
-%       不必遍历。
-%     \item 需要筛选多个元素时，可以先把要保留的元素放入\textbf{另一个列表}。
-%   \end{itemize}
-% \end{frame}
+\begin{frame}[fragile]{增强 for 中，不要直接增删原列表}
+  遍历过程中直接增删原列表，可能抛出 \texttt{ConcurrentModificationException}。
+  \begin{lstlisting}[language=Java]
+// Incorrect: do not modify the list this way.
+for (String product : products) {
+    if (product.equals("Milk")) {
+        products.remove(product);
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 没有抛出异常，也不能说明这种写法可靠。
+    \item 如果只需删除一个已知值，可以\alert{直接调用} \texttt{products.remove("Milk")}，
+      不必遍历。
+    \item 需要筛选多个元素时，可以先把要保留的元素放入\textbf{另一个列表}。
+  \end{itemize}
+\end{frame}
 
 \end{document}

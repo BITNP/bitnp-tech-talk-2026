@@ -52,17 +52,39 @@ ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
 products.add("Milk");
 System.out.println(products.size()); // 2
-System.out.println(products.get(0)); // Apple
-products.set(0, "Bread");
-products.remove(1);
-System.out.println(products.size()); // 1
   \end{lstlisting}
-  \texttt{add} 添加，\texttt{get} 读取，\texttt{set} 修改，\texttt{remove} 删除。
+  方法签名：\texttt{boolean add(E element)}、\texttt{int size()}。
+  \par\medskip
+  \texttt{E} 代表列表的元素类型；方法名前是返回类型，括号内是参数。
   \par\medskip
   下标仍从 \texttt{0} 开始；元素数量用 \texttt{size()} 获取。
 \end{frame}
 
-\begin{frame}[fragile]{get、set、add：对应数组上的哪些操作}
+\begin{frame}[fragile]{add：末尾追加或指定位置插入}
+  \texttt{boolean add(E element)}：追加到末尾，成功后返回 \texttt{true}。
+  \par
+  \texttt{void add(int index, E element)}：在指定位置插入，无返回值。
+  \par\medskip
+  \texttt{E} 表示元素类型；本例使用 \texttt{String}。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Bread");
+products.add(1, "Milk");
+System.out.println(products); // [Apple, Milk, Bread]
+  \end{lstlisting}
+  \begin{itemize}
+    \item 插入后，原位置及后面的元素向后移动，数量加一。
+    \item 插入位置允许从 \texttt{0} 到 \texttt{size()}；\texttt{size()} 表示末尾。
+    \item \texttt{add} 新增元素，\texttt{set} 替换已有元素。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{get、set：读取与修改已有位置}
+  \texttt{E get(int index)}：返回指定位置的元素。
+  \par
+  \texttt{E set(int index, E element)}：替换元素，返回原来的元素。
+  \par\medskip
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.48\textwidth}
       \textbf{数组：用下标读取和赋值}
@@ -82,7 +104,6 @@ ArrayList<String> products =
 products.add("Apple");
 String first = products.get(0);
 products.set(0, "Bread");
-products.add("Milk");
       \end{lstlisting}
     \end{column}
   \end{columns}
@@ -90,9 +111,7 @@ products.add("Milk");
   \begin{itemize}
     \item \texttt{get(i)} 对应数组的 \texttt{products[i]}：读取已有位置。
     \item \texttt{set(i, value)} 对应数组的下标赋值：替换元素，数量不变。
-    \item \texttt{add(value)} 在末尾新增元素，数量加一；数组没有直接追加的操作。
   \end{itemize}
-  \medskip
   空列表要先用 \texttt{add} 添加元素，不能用 \texttt{set(0, ...)} 创建第一个元素。
 \end{frame}
 
@@ -112,12 +131,14 @@ String first = products.get(0);
   \begin{lstlisting}[language=Java]
 // ArrayList<int> prices = new ArrayList<>(); // Invalid
   \end{lstlisting}
-  那么，要保存一组整数，应该用什么类型？
+  {\small\ttfamily boolean add(String element)\quad String get(int index)}
+  \par
 \end{frame}
 
 \begin{frame}[fragile]{存放整数时，使用 Integer}
-  保存 \texttt{int} 数据时，写成 \texttt{ArrayList<Integer>}；
-  保存 \texttt{double} 数据时，使用 \texttt{ArrayList<Double>}。
+  整数列表使用 \texttt{ArrayList<Integer>}。
+  \par
+  {\small\ttfamily boolean add(Integer element)\quad Integer get(int index)}
   \begin{lstlisting}[language=Java]
 ArrayList<Integer> prices = new ArrayList<>();
 prices.add(12);
@@ -142,7 +163,7 @@ int price = prices.get(0);
 \end{frame}
 
 \begin{frame}[fragile]{按下标删除：后面的元素会向前补位}
-  \texttt{remove(index)} 删除指定位置的元素，列表的元素数量减一。
+  \texttt{E remove(int index)}：删除指定位置的元素，并返回被删元素。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
@@ -160,7 +181,7 @@ System.out.println(products.size()); // 2
 \end{frame}
 
 \begin{frame}[fragile]{按值删除：只删除第一个匹配的元素}
-  知道商品名称时，可以直接使用 \texttt{remove(value)}。
+  \texttt{boolean remove(Object o)}：按值删除，返回是否删除成功。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
@@ -179,7 +200,9 @@ System.out.println(found);    // false
 \end{frame}
 
 \begin{frame}[fragile]{整数列表：删除下标，还是删除数值}
-  对 \texttt{ArrayList<Integer>}，直接传入整数会被当作\alert{下标}。
+  \texttt{E remove(int index)}：按下标删除。
+  \par
+  \texttt{boolean remove(Object o)}：按值删除。
   \begin{lstlisting}[language=Java]
 ArrayList<Integer> prices = new ArrayList<>();
 prices.add(12);
@@ -194,11 +217,12 @@ System.out.println(prices); // [12]
     \item \texttt{remove(1)}：删除下标为 \texttt{1} 的元素，本例中是 \texttt{8}。
     \item \texttt{remove(Integer.valueOf(1))}：删除数值为 \texttt{1} 的元素。
   \end{itemize}
-  \medskip
-  先记住这两种写法，不需要展开包装类的转换细节。
 \end{frame}
 
 \begin{frame}[fragile]{查找元素：是否存在，第一次出现在哪里}
+  \texttt{boolean contains(Object o)}：判断是否存在。
+  \par
+  \texttt{int indexOf(Object o)}：返回首次出现的下标，未找到返回 \texttt{-1}。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
@@ -217,7 +241,7 @@ System.out.println(products.indexOf("Tea"));   // -1
 \end{frame}
 
 \begin{frame}[fragile]{通过下标遍历列表}
-  需要同时使用\textbf{位置和元素}时，用下标逐个读取。
+  \texttt{int size()} 返回元素数量；\texttt{E get(int index)} 按下标读取。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
@@ -236,7 +260,6 @@ for (int i = 0; i < products.size(); i++) {
 \end{frame}
 
 \begin{frame}[fragile]{增强 for：直接取得每一个元素}
-  只需要\textbf{元素本身}时，增强 \texttt{for} 可以省去下标操作。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
 products.add("Apple");
@@ -255,7 +278,9 @@ for (String product : products) {
 \end{frame}
 
 \begin{frame}[fragile]{增强 for 中，不要直接增删原列表}
-  遍历过程中直接增删原列表，可能抛出 \texttt{ConcurrentModificationException}。
+  \texttt{boolean remove(Object o)}：按值删除。
+  \par
+  遍历时直接增删可能抛出 \texttt{ConcurrentModificationException}。
   \begin{lstlisting}[language=Java]
 // Incorrect: do not modify the list this way.
 for (String product : products) {

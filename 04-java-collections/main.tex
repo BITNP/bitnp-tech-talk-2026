@@ -336,4 +336,231 @@ HashMap<String, Integer> prices = new HashMap<>();
   和 \texttt{ArrayList} 一样，键和值的类型参数都必须使用\textbf{引用类型}。
 \end{frame}
 
+\begin{frame}[fragile]{put：保存一组键与值}
+  \texttt{V put(K key, V value)}：保存对应关系，返回这个键原来的值。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+Integer old = prices.put("P1001", 12);
+prices.put("P1002", 8);
+System.out.println(old); // null
+  \end{lstlisting}
+  \begin{itemize}
+    \item 第一个参数是键，第二个参数是值，顺序不能交换。
+    \item 本例中，\texttt{K} 是 \texttt{String}，\texttt{V} 是 \texttt{Integer}。
+    \item 新键没有旧值，返回 \texttt{null}；不需要返回值时可以不接收。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{同一个键再次 put：替换原来的值}
+  \texttt{V put(K key, V value)}；\texttt{int size()} 返回键值对的数量。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+prices.put("P1002", 8);
+Integer old = prices.put("P1001", 15);
+System.out.println(old);           // 12
+System.out.println(prices.size()); // 2
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{P1001} 的价格从 \texttt{12} 变成 \texttt{15}。
+    \item 键不会重复保存，因此键值对数量仍为 \texttt{2}。
+    \item 与列表的 \texttt{add} 不同，\texttt{put} 既可以新增，也可以更新。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{get：用键读取对应的值}
+  \texttt{V get(Object key)}：返回对应的值；键不存在时返回 \texttt{null}。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+Integer price = prices.get("P1001");
+Integer missing = prices.get("P9999");
+System.out.println(price);   // 12
+System.out.println(missing); // null
+  \end{lstlisting}
+  \begin{itemize}
+    \item 传入的是商品编号，不是位置下标。
+    \item \texttt{Object key} 表示接收对象；使用时应传入与键类型匹配的值。
+    \item 不要把可能为 \texttt{null} 的结果直接赋给 \texttt{int}，否则可能出现空指针异常。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{containsKey：先判断商品编号是否存在}
+  \texttt{boolean containsKey(Object key)}：判断是否保存了这个键。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+String id = "P9999";
+if (prices.containsKey(id)) {
+    System.out.println(prices.get(id));
+} else {
+    System.out.println("Product not found");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 适合“找到就处理，否则提示不存在”的场景。
+    \item \texttt{containsKey} 判断的是键，不是值。
+    \item \texttt{HashMap} 允许值为 \texttt{null}，所以 \texttt{get} 返回 \texttt{null} 不一定表示键不存在。
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}[fragile]{getOrDefault：键不存在时使用默认值}
+%   \texttt{V getOrDefault(Object key, V defaultValue)}
+%   \par\medskip
+%   适合计数：某个单词尚未记录时，先把次数当作 \texttt{0}。
+%   \begin{lstlisting}[language=Java]
+% HashMap<String, Integer> counts = new HashMap<>();
+% counts.put("apple", 2);
+% System.out.println(counts.getOrDefault("apple", 0)); // 2
+% System.out.println(counts.getOrDefault("milk", 0));  // 0
+% System.out.println(counts.containsKey("milk"));     // false
+%   \end{lstlisting}
+%   \begin{itemize}
+%     \item 默认值只用于本次读取，不会自动加入映射。
+%     \item 键存在且值为 \texttt{null} 时，仍返回 \texttt{null}，不会改用默认值。
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}[fragile]{remove：根据键删除整组对应关系}
+  \texttt{V remove(Object key)}：删除键值对，返回原来的值。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+prices.put("P1002", 8);
+Integer removed = prices.remove("P1001");
+System.out.println(removed);                    // 12
+System.out.println(prices.containsKey("P1001")); // false
+System.out.println(prices.remove("P9999"));      // null
+  \end{lstlisting}
+  \begin{itemize}
+    \item 传入要删除的\alert{键}，不是价格，也不是下标。
+    \item 删除后，键和对应的值一起从映射中移除。
+    \item 键不存在时返回 \texttt{null}，映射保持不变。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{keySet：遍历所有键}
+  \texttt{Set<K> keySet()}：返回由所有键组成的集合，可以用增强 \texttt{for} 遍历。
+  \begin{lstlisting}[language=Java]
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+prices.put("P1002", 8);
+for (String id : prices.keySet()) {
+    System.out.println(id);
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 每轮取得一个商品编号；这里的 \texttt{K} 是 \texttt{String}。
+    \item \texttt{Set} 表示不重复元素的集合，后面会简要介绍。
+    \item \alert{HashMap 不保证遍历顺序}，不能依赖插入顺序或键的排序。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{entrySet：同时遍历键和值}
+  \texttt{Set<Map.Entry<K, V>> entrySet()}
+  \par
+  每个 \texttt{Map.Entry} 是一个键值对：\texttt{K getKey()}、\texttt{V getValue()}。
+  \begin{lstlisting}[language=Java]
+// import java.util.Map;
+HashMap<String, Integer> prices = new HashMap<>();
+prices.put("P1001", 12);
+prices.put("P1002", 8);
+for (Map.Entry<String, Integer> entry : prices.entrySet()) {
+    String id = entry.getKey();
+    Integer price = entry.getValue();
+    System.out.println(id + ": " + price);
+}
+  \end{lstlisting}
+  同时需要商品编号与价格时，用这种写法。
+  \par\medskip
+  和列表一样，不要在增强 \texttt{for} 中直接对原映射新增或删除键值对。
+\end{frame}
+
+\begin{frame}[fragile]{练习：统计每个单词出现的次数}
+  给定一组单词，用 \texttt{HashMap<String, Integer>} 保存“单词 → 次数”。
+  \begin{lstlisting}[language=Java]
+String[] words = {"apple", "milk", "apple", "bread", "milk"};
+  \end{lstlisting}
+  \begin{itemize}
+    \item 遍历单词数组，每次处理一个单词。
+    \item 读取这个单词已有的次数；未出现过时按 \texttt{0} 处理。
+    \item 次数加一，再保存到映射中。
+    \item 遍历键值对，输出每个单词及其次数，不要求输出顺序。
+  \end{itemize}
+  \medskip
+  预期结果：\texttt{apple} 为 \texttt{2} 次，\texttt{milk} 为 \texttt{2} 次，
+  \texttt{bread} 为 \texttt{1} 次。
+  \par\medskip
+  提示：\texttt{V getOrDefault(Object key, V defaultValue)}、\texttt{V put(K key, V value)}。
+\end{frame}
+
+\begin{frame}[fragile]{词频统计：读取旧次数，再更新}
+  \begin{lstlisting}[language=Java]
+String[] words = {"apple", "milk", "apple", "bread", "milk"};
+HashMap<String, Integer> counts = new HashMap<>();
+for (String word : words) {
+    int count = counts.getOrDefault(word, 0);
+    counts.put(word, count + 1);
+}
+for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 第一次遇到 \texttt{apple}：读取默认值 \texttt{0}，保存为 \texttt{1}。
+    \item 第二次遇到 \texttt{apple}：读取旧值 \texttt{1}，更新为 \texttt{2}。
+  \end{itemize}
+  \medskip
+  {\small\ttfamily V getOrDefault(Object key, V defaultValue)\quad V put(K key, V value)}
+\end{frame}
+
+\begin{frame}[fragile]{HashSet：只保存不重复的元素}
+  不需要对应的值，只想记录“哪些商品已经出现过”，可以使用 \texttt{HashSet}。
+  \par\medskip
+  \texttt{boolean add(E element)}：新加入返回 \texttt{true}，已存在返回 \texttt{false}。
+  \begin{lstlisting}[language=Java]
+// import java.util.HashSet;
+HashSet<String> ids = new HashSet<>();
+System.out.println(ids.add("P1001")); // true
+System.out.println(ids.add("P1001")); // false
+ids.add("P1002");
+System.out.println(ids.size());      // 2
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{int size()} 返回不重复元素的数量。
+    \item 没有下标，不能用 \texttt{get(0)} 读取；也不保证遍历顺序。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{HashSet：判断存在、删除与遍历}
+  \texttt{boolean contains(Object o)}：判断元素是否存在。
+  \par
+  \texttt{boolean remove(Object o)}：删除元素，返回是否删除成功。
+  \begin{lstlisting}[language=Java]
+HashSet<String> ids = new HashSet<>();
+ids.add("P1001");
+ids.add("P1002");
+System.out.println(ids.contains("P1001")); // true
+System.out.println(ids.remove("P1001"));  // true
+System.out.println(ids.remove("P9999"));  // false
+for (String id : ids) {
+    System.out.println(id); // P1002
+}
+  \end{lstlisting}
+  需要去重或判断成员是否存在时，用集合表达这个需求。
+\end{frame}
+
+\begin{frame}{根据需求选择存储方式}
+  \begin{itemize}
+    \item \textbf{ArrayList：保存元素序列}\\
+      按下标访问，允许重复，方便添加和删除。例如商品清单。
+    \item \textbf{HashMap：保存键与值的对应关系}\\
+      通过键查询或更新值。例如商品编号对应价格、单词对应次数。
+    \item \textbf{HashSet：保存不重复的元素}\\
+      去重、判断成员是否存在。例如已经签到的学号。
+  \end{itemize}
+  \bigskip
+  先想清楚\alert{要保存什么、怎样查找和修改}，再选择合适的容器。
+\end{frame}
+
 \end{document}

@@ -141,4 +141,135 @@ int price = prices.get(0);
   这些对应关系涉及\textbf{包装类}，这里先记住用法。
 \end{frame}
 
+\begin{frame}[fragile]{按下标删除：后面的元素会向前补位}
+  \texttt{remove(index)} 删除指定位置的元素，列表的元素数量减一。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+products.add("Bread");
+products.remove(1);
+System.out.println(products);        // [Apple, Bread]
+System.out.println(products.get(1)); // Bread
+System.out.println(products.size()); // 2
+  \end{lstlisting}
+  \begin{itemize}
+    \item 删除前，\texttt{Milk} 的下标是 \texttt{1}，\texttt{Bread} 的下标是 \texttt{2}。
+    \item 删除后，\texttt{Bread} 的下标变为 \texttt{1}，不会留下空位。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{按值删除：只删除第一个匹配的元素}
+  知道商品名称时，可以直接使用 \texttt{remove(value)}。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+products.add("Apple");
+boolean removed = products.remove("Apple");
+System.out.println(removed);  // true
+System.out.println(products); // [Milk, Apple]
+boolean found = products.remove("Tea");
+System.out.println(found);    // false
+  \end{lstlisting}
+  \begin{itemize}
+    \item 有重复元素时，只删除从前往后找到的\alert{第一个}。
+    \item 找到并删除返回 \texttt{true}；没有找到返回 \texttt{false}，列表不变。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{整数列表：删除下标，还是删除数值}
+  对 \texttt{ArrayList<Integer>}，直接传入整数会被当作\alert{下标}。
+  \begin{lstlisting}[language=Java]
+ArrayList<Integer> prices = new ArrayList<>();
+prices.add(12);
+prices.add(8);
+prices.add(1);
+prices.remove(1);
+System.out.println(prices); // [12, 1]
+prices.remove(Integer.valueOf(1));
+System.out.println(prices); // [12]
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{remove(1)}：删除下标为 \texttt{1} 的元素，本例中是 \texttt{8}。
+    \item \texttt{remove(Integer.valueOf(1))}：删除数值为 \texttt{1} 的元素。
+  \end{itemize}
+  \medskip
+  先记住这两种写法，不需要展开包装类的转换细节。
+\end{frame}
+
+\begin{frame}[fragile]{查找元素：是否存在，第一次出现在哪里}
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+products.add("Apple");
+System.out.println(products.contains("Milk")); // true
+System.out.println(products.contains("Tea"));  // false
+System.out.println(products.indexOf("Apple")); // 0
+System.out.println(products.indexOf("Tea"));   // -1
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{contains(value)}：只想知道元素是否存在。
+    \item \texttt{indexOf(value)}：需要第一个匹配元素的下标。
+    \item \texttt{-1} 表示没有找到，\alert{不能}把它作为下标传给 \texttt{get}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{通过下标遍历列表}
+  需要同时使用\textbf{位置和元素}时，用下标逐个读取。
+  \begin{lstlisting}[language=Java]
+ArrayList<String> products = new ArrayList<>();
+products.add("Apple");
+products.add("Milk");
+for (int i = 0; i < products.size(); i++) {
+    System.out.println(i + ": " + products.get(i));
+}
+// 0: Apple
+// 1: Milk
+  \end{lstlisting}
+  \begin{itemize}
+    \item 数组中的 \texttt{length}，在这里换成 \texttt{size()}。
+    \item 数组中的 \texttt{products[i]}，在这里换成 \texttt{products.get(i)}。
+    \item 循环条件是 \texttt{i < products.size()}，不能写成小于等于。
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}[fragile]{增强 for：直接取得每一个元素}
+%   只需要\textbf{元素本身}时，增强 \texttt{for} 可以省去下标操作。
+%   \begin{lstlisting}[language=Java]
+% ArrayList<String> products = new ArrayList<>();
+% products.add("Apple");
+% products.add("Milk");
+% for (String product : products) {
+%     System.out.println(product);
+% }
+% // Apple
+% // Milk
+%   \end{lstlisting}
+%   \begin{itemize}
+%     \item 冒号右边是要遍历的列表 \texttt{products}。
+%     \item 冒号左边声明变量 \texttt{product}，每轮取得一个元素。
+%     \item 按列表顺序访问元素；同样的写法也适用于数组。
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}[fragile]{增强 for 中，不要直接增删原列表}
+%   遍历过程中直接增删原列表，可能抛出 \texttt{ConcurrentModificationException}。
+%   \begin{lstlisting}[language=Java]
+% // Incorrect: do not modify the list this way.
+% for (String product : products) {
+%     if (product.equals("Milk")) {
+%         products.remove(product);
+%     }
+% }
+%   \end{lstlisting}
+%   \begin{itemize}
+%     \item 没有抛出异常，也不能说明这种写法可靠。
+%     \item 如果只需删除一个已知值，可以\alert{直接调用} \texttt{products.remove("Milk")}，
+%       不必遍历。
+%     \item 需要筛选多个元素时，可以先把要保留的元素放入\textbf{另一个列表}。
+%   \end{itemize}
+% \end{frame}
+
 \end{document}

@@ -44,7 +44,22 @@ System.out.println(prices.length); // 3
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{ArrayList：可以增减元素的列表}
+\begin{frame}{容器：存储数据与增删查改}
+  容器都用于\alert{组织和存储数据}，区别在于数据的组织方式和操作行为。
+  \par\bigskip
+  \begin{itemize}
+    \item \textbf{增}：加入新的数据。
+    \item \textbf{删}：移除不再需要的数据。
+    \item \textbf{查}：读取数据，或判断数据是否存在。
+    \item \textbf{改}：更新已经保存的数据。
+  \end{itemize}
+  \bigskip
+  学习每个容器时，先问\textbf{怎样组织和定位数据}，再看\textbf{如何增删查改}。
+  \par\medskip
+  这些是理解操作的共同问题，不保证每个容器都有四个独立的方法。
+\end{frame}
+
+\begin{frame}[fragile]{ArrayList：按下标组织元素序列}
   可以把 \texttt{ArrayList} 理解为\alert{可以变化长度的数组}，直接添加或删除元素。
   \begin{lstlisting}[language=Java]
 // import java.util.ArrayList;
@@ -60,7 +75,7 @@ System.out.println(products.size()); // 2
   下标仍从 \texttt{0} 开始；元素数量用 \texttt{size()} 获取。
 \end{frame}
 
-\begin{frame}[fragile]{add：末尾追加或指定位置插入}
+\begin{frame}[fragile]{ArrayList 的增：追加或指定位置插入}
   \texttt{boolean add(E element)}：追加到末尾，成功后返回 \texttt{true}。
   \par
   \texttt{void add(int index, E element)}：在指定位置插入，无返回值。
@@ -80,7 +95,7 @@ System.out.println(products); // [Apple, Milk, Bread]
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{get、set：读取与修改已有位置}
+\begin{frame}[fragile]{ArrayList 的查与改：get 和 set}
   \texttt{E get(int index)}：返回指定位置的元素。
   \par
   \texttt{E set(int index, E element)}：替换元素，返回原来的元素。
@@ -162,7 +177,7 @@ int price = prices.get(0);
   这些对应关系涉及\textbf{包装类}，这里先记住用法。
 \end{frame}
 
-\begin{frame}[fragile]{按下标删除：后面的元素会向前补位}
+\begin{frame}[fragile]{ArrayList 的删：按下标删除}
   \texttt{E remove(int index)}：删除指定位置的元素，并返回被删元素。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
@@ -180,7 +195,7 @@ System.out.println(products.size()); // 2
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{按值删除：只删除第一个匹配的元素}
+\begin{frame}[fragile]{ArrayList 的删：按值删除第一个匹配项}
   \texttt{boolean remove(Object o)}：按值删除，返回是否删除成功。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
@@ -199,7 +214,7 @@ System.out.println(found);    // false
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{整数列表：删除下标，还是删除数值}
+\begin{frame}[fragile]{ArrayList 的删：区分整数下标与数值}
   \texttt{E remove(int index)}：按下标删除。
   \par
   \texttt{boolean remove(Object o)}：按值删除。
@@ -219,7 +234,7 @@ System.out.println(prices); // [12]
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{查找元素：是否存在，第一次出现在哪里}
+\begin{frame}[fragile]{ArrayList 的查：是否存在、出现在哪里}
   \texttt{boolean contains(Object o)}：判断是否存在。
   \par
   \texttt{int indexOf(Object o)}：返回首次出现的下标，未找到返回 \texttt{-1}。
@@ -240,7 +255,7 @@ System.out.println(products.indexOf("Tea"));   // -1
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{通过下标遍历列表}
+\begin{frame}[fragile]{ArrayList 的遍历：通过下标逐个读取}
   \texttt{int size()} 返回元素数量；\texttt{E get(int index)} 按下标读取。
   \begin{lstlisting}[language=Java]
 ArrayList<String> products = new ArrayList<>();
@@ -297,7 +312,25 @@ for (String product : products) {
   \end{itemize}
 \end{frame}
 
-\begin{frame}{按商品编号查价格：需要键与值的映射}
+\begin{frame}{ArrayList 回顾：按下标完成增删查改}
+  保存有位置顺序的元素，允许重复；\texttt{get}、\texttt{set} 用下标定位。
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      \textbf{操作} & \textbf{方法} & \textbf{行为} \\
+      \hline
+      增 & \texttt{add} & 追加或插入，数量加一 \\
+      删 & \texttt{remove} & 按下标或值删除 \\
+      查 & \texttt{get / contains / indexOf} & 读取、判断存在、查位置 \\
+      改 & \texttt{set} & 替换已有位置，数量不变 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  遍历让我们逐个读取元素；\texttt{size()} 告诉我们保存了多少个元素。
+\end{frame}
+
+\begin{frame}{HashMap：存储数据，通过键定位}
   \texttt{ArrayList} 按\textbf{位置}访问元素；但商品编号并不是列表下标。
   \par\bigskip
   \begin{center}
@@ -313,7 +346,7 @@ for (String product : products) {
   \medskip
   \begin{itemize}
     \item 我们想问“\texttt{P1002} 的价格是多少”，而不是“第几个元素是多少”。
-    \item \alert{HashMap} 保存键与值的对应关系，通过键查找对应的值。
+    \item \alert{HashMap} 同样存储数据，改用键来定位对应的值。
     \item 每个键只对应一个值；不同的键可以对应相同的值。
   \end{itemize}
 \end{frame}
@@ -336,7 +369,7 @@ HashMap<String, Integer> prices = new HashMap<>();
   和 \texttt{ArrayList} 一样，键和值的类型参数都必须使用\textbf{引用类型}。
 \end{frame}
 
-\begin{frame}[fragile]{put：保存一组键与值}
+\begin{frame}[fragile]{HashMap 的增：put 新的键}
   \texttt{V put(K key, V value)}：保存对应关系，返回这个键原来的值。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -351,7 +384,7 @@ System.out.println(old); // null
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{同一个键再次 put：替换原来的值}
+\begin{frame}[fragile]{HashMap 的改：put 已有的键}
   \texttt{V put(K key, V value)}；\texttt{int size()} 返回键值对的数量。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -368,7 +401,7 @@ System.out.println(prices.size()); // 2
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{get：用键读取对应的值}
+\begin{frame}[fragile]{HashMap 的查：get 按键读取值}
   \texttt{V get(Object key)}：返回对应的值；键不存在时返回 \texttt{null}。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -385,7 +418,7 @@ System.out.println(missing); // null
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{containsKey：先判断商品编号是否存在}
+\begin{frame}[fragile]{HashMap 的查：containsKey 判断键存在}
   \texttt{boolean containsKey(Object key)}：判断是否保存了这个键。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -404,7 +437,7 @@ if (prices.containsKey(id)) {
   \end{itemize}
 \end{frame}
 
-% \begin{frame}[fragile]{getOrDefault：键不存在时使用默认值}
+% \begin{frame}[fragile]{HashMap 的查：getOrDefault 提供默认值}
 %   \texttt{V getOrDefault(Object key, V defaultValue)}
 %   \par\medskip
 %   适合计数：某个单词尚未记录时，先把次数当作 \texttt{0}。
@@ -416,12 +449,12 @@ if (prices.containsKey(id)) {
 % System.out.println(counts.containsKey("milk"));     // false
 %   \end{lstlisting}
 %   \begin{itemize}
-%     \item 默认值只用于本次读取，不会自动加入映射。
+%     \item 这是\textbf{查}，不会自动增加键值对；保存数据仍需调用 \texttt{put}。
 %     \item 键存在且值为 \texttt{null} 时，仍返回 \texttt{null}，不会改用默认值。
 %   \end{itemize}
 % \end{frame}
 
-\begin{frame}[fragile]{remove：根据键删除整组对应关系}
+\begin{frame}[fragile]{HashMap 的删：remove 按键删除}
   \texttt{V remove(Object key)}：删除键值对，返回原来的值。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -439,7 +472,7 @@ System.out.println(prices.remove("P9999"));      // null
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{keySet：遍历所有键}
+\begin{frame}[fragile]{HashMap 的遍历：keySet 读取所有键}
   \texttt{Set<K> keySet()}：返回由所有键组成的集合，可以用增强 \texttt{for} 遍历。
   \begin{lstlisting}[language=Java]
 HashMap<String, Integer> prices = new HashMap<>();
@@ -456,7 +489,7 @@ for (String id : prices.keySet()) {
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{entrySet：同时遍历键和值}
+\begin{frame}[fragile]{HashMap 的遍历：entrySet 读取键值对}
   \texttt{Set<Map.Entry<K, V>> entrySet()}
   \par
   每个 \texttt{Map.Entry} 是一个键值对：\texttt{K getKey()}、\texttt{V getValue()}。
@@ -476,15 +509,33 @@ for (Map.Entry<String, Integer> entry : prices.entrySet()) {
   和列表一样，不要在增强 \texttt{for} 中直接对原映射新增或删除键值对。
 \end{frame}
 
-\begin{frame}[fragile]{练习：统计每个单词出现的次数}
+\begin{frame}{HashMap 回顾：按键完成增删查改}
+  保存键值对应关系；键唯一，值可以重复，通过键定位数据。
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      \textbf{操作} & \textbf{方法} & \textbf{行为} \\
+      \hline
+      增 & \texttt{put} 新键 & 新增一组键值对 \\
+      删 & \texttt{remove} & 按键移除键值对 \\
+      查 & \texttt{get / containsKey} & 读取值、判断键存在 \\
+      改 & \texttt{put} 已有键 & 替换对应的值 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \texttt{put} 同时承担\alert{增和改}，具体行为取决于键是否已经存在。
+\end{frame}
+
+\begin{frame}[fragile]{练习：用查、增、改统计词频}
   给定一组单词，用 \texttt{HashMap<String, Integer>} 保存“单词 → 次数”。
   \begin{lstlisting}[language=Java]
 String[] words = {"apple", "milk", "apple", "bread", "milk"};
   \end{lstlisting}
   \begin{itemize}
     \item 遍历单词数组，每次处理一个单词。
-    \item 读取这个单词已有的次数；未出现过时按 \texttt{0} 处理。
-    \item 次数加一，再保存到映射中。
+    \item \textbf{查}：读取已有次数；未出现过时按 \texttt{0} 处理。
+    \item 次数加一，\textbf{新增}这个单词，或\textbf{修改}它已有的次数。
     \item 遍历键值对，输出每个单词及其次数，不要求输出顺序。
   \end{itemize}
   \medskip
@@ -507,14 +558,14 @@ for (Map.Entry<String, Integer> entry : counts.entrySet()) {
 }
   \end{lstlisting}
   \begin{itemize}
-    \item 第一次遇到 \texttt{apple}：读取默认值 \texttt{0}，保存为 \texttt{1}。
-    \item 第二次遇到 \texttt{apple}：读取旧值 \texttt{1}，更新为 \texttt{2}。
+    \item 第一次遇到 \texttt{apple}：\textbf{查}到默认值 \texttt{0}，\textbf{新增}次数 \texttt{1}。
+    \item 第二次遇到 \texttt{apple}：\textbf{查}到旧值 \texttt{1}，\textbf{修改}次数为 \texttt{2}。
   \end{itemize}
   \medskip
   {\small\ttfamily V getOrDefault(Object key, V defaultValue)\quad V put(K key, V value)}
 \end{frame}
 
-\begin{frame}[fragile]{HashSet：只保存不重复的元素}
+\begin{frame}[fragile]{HashSet 的增：只保存不重复的元素}
   不需要对应的值，只想记录“哪些商品已经出现过”，可以使用 \texttt{HashSet}。
   \par\medskip
   \texttt{boolean add(E element)}：新加入返回 \texttt{true}，已存在返回 \texttt{false}。
@@ -532,7 +583,7 @@ System.out.println(ids.size());      // 2
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{HashSet：判断存在、删除与遍历}
+\begin{frame}[fragile]{HashSet 的查与删：contains 和 remove}
   \texttt{boolean contains(Object o)}：判断元素是否存在。
   \par
   \texttt{boolean remove(Object o)}：删除元素，返回是否删除成功。
@@ -550,17 +601,42 @@ for (String id : ids) {
   需要去重或判断成员是否存在时，用集合表达这个需求。
 \end{frame}
 
-\begin{frame}{根据需求选择存储方式}
-  \begin{itemize}
-    \item \textbf{ArrayList：保存元素序列}\\
-      按下标访问，允许重复，方便添加和删除。例如商品清单。
-    \item \textbf{HashMap：保存键与值的对应关系}\\
-      通过键查询或更新值。例如商品编号对应价格、单词对应次数。
-    \item \textbf{HashSet：保存不重复的元素}\\
-      去重、判断成员是否存在。例如已经签到的学号。
-  \end{itemize}
+\begin{frame}{HashSet 回顾：按元素判断存在与否}
+  同样用于存储数据，但只保留不重复的元素，没有下标或单独的值。
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      \textbf{操作} & \textbf{方法} & \textbf{行为} \\
+      \hline
+      增 & \texttt{add} & 已存在时不重复加入 \\
+      删 & \texttt{remove} & 删除指定元素 \\
+      查 & \texttt{contains} & 判断元素是否存在 \\
+      改 & 无直接替换方法 & 删除旧元素，再添加新元素 \\
+    \end{tabular}
+  \end{center}
   \bigskip
-  先想清楚\alert{要保存什么、怎样查找和修改}，再选择合适的容器。
+  替换时，新元素若已存在，就会与已有元素合并为一个，数量可能减少。
+\end{frame}
+
+\begin{frame}{都用于存储数据，组织方式决定操作行为}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{llll}
+      & \textbf{ArrayList} & \textbf{HashMap} & \textbf{HashSet} \\
+      \hline
+      组织方式 & 元素序列 & 键值对应 & 不重复元素 \\
+      定位依据 & 下标 & 键 & 元素本身 \\
+      增 & \texttt{add} & \texttt{put} 新键 & \texttt{add} \\
+      删 & \texttt{remove} & \texttt{remove} & \texttt{remove} \\
+      查 & \texttt{get / contains} & \texttt{get / containsKey} & \texttt{contains} \\
+      改 & \texttt{set} & \texttt{put} 已有键 & 先删后增 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  先确定\alert{怎样组织和定位数据}，再用\alert{增删查改}理解方法的作用。
+  \par\medskip
+  相同的方法名可能有不同的行为；相同的操作也可能使用不同的方法。
 \end{frame}
 
 \end{document}

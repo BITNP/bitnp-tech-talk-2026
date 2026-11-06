@@ -44,6 +44,26 @@ System.out.println(prices.length); // 3
   \end{itemize}
 \end{frame}
 
+\begin{frame}{两种定位方式：索引与键}
+  本次学习两类容器，它们都存储数据，但定位数据的方式不同。
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      & \textbf{List：列表} & \textbf{Map：映射} \\
+      \hline
+      定位依据 & 索引（下标），表示位置 & 键，表示数据的标签 \\
+      例子 & 第 \texttt{0} 件商品 & 编号 \texttt{P1001} 的商品 \\
+      本次使用 & \texttt{ArrayList} & \texttt{HashMap} \\
+      其他实现 & \texttt{LinkedList} & \texttt{TreeMap / LinkedHashMap} \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \texttt{List}、\texttt{Map} 是\textbf{接口}，约定操作；具体的类提供\textbf{实现}。
+  \par\medskip
+  同一接口可以有多种实现，操作约定相通，但顺序、性能等行为可能不同。
+\end{frame}
+
 \begin{frame}{容器：存储数据与增删查改}
   容器都用于\alert{组织和存储数据}，区别在于数据的组织方式和操作行为。
   \par\bigskip
@@ -484,7 +504,7 @@ for (String id : prices.keySet()) {
   \end{lstlisting}
   \begin{itemize}
     \item 每轮取得一个商品编号；这里的 \texttt{K} 是 \texttt{String}。
-    \item \texttt{Set} 表示不重复元素的集合，后面会简要介绍。
+    \item 返回类型中的 \texttt{Set} 表示不重复元素的集合；这里直接遍历即可。
     \item \alert{HashMap 不保证遍历顺序}，不能依赖插入顺序或键的排序。
   \end{itemize}
 \end{frame}
@@ -565,78 +585,60 @@ for (Map.Entry<String, Integer> entry : counts.entrySet()) {
   {\small\ttfamily V getOrDefault(Object key, V defaultValue)\quad V put(K key, V value)}
 \end{frame}
 
-\begin{frame}[fragile]{HashSet 的增：只保存不重复的元素}
-  不需要对应的值，只想记录“哪些商品已经出现过”，可以使用 \texttt{HashSet}。
-  \par\medskip
-  \texttt{boolean add(E element)}：新加入返回 \texttt{true}，已存在返回 \texttt{false}。
-  \begin{lstlisting}[language=Java]
-// import java.util.HashSet;
-HashSet<String> ids = new HashSet<>();
-System.out.println(ids.add("P1001")); // true
-System.out.println(ids.add("P1001")); // false
-ids.add("P1002");
-System.out.println(ids.size());      // 2
-  \end{lstlisting}
-  \begin{itemize}
-    \item \texttt{int size()} 返回不重复元素的数量。
-    \item 没有下标，不能用 \texttt{get(0)} 读取；也不保证遍历顺序。
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{HashSet 的查与删：contains 和 remove}
-  \texttt{boolean contains(Object o)}：判断元素是否存在。
-  \par
-  \texttt{boolean remove(Object o)}：删除元素，返回是否删除成功。
-  \begin{lstlisting}[language=Java]
-HashSet<String> ids = new HashSet<>();
-ids.add("P1001");
-ids.add("P1002");
-System.out.println(ids.contains("P1001")); // true
-System.out.println(ids.remove("P1001"));  // true
-System.out.println(ids.remove("P9999"));  // false
-for (String id : ids) {
-    System.out.println(id); // P1002
-}
-  \end{lstlisting}
-  需要去重或判断成员是否存在时，用集合表达这个需求。
-\end{frame}
-
-\begin{frame}{HashSet 回顾：按元素判断存在与否}
-  同样用于存储数据，但只保留不重复的元素，没有下标或单独的值。
+\begin{frame}{HashMap 查重：把待检查的数据作为键}
+  同一个学号可能重复提交签到，我们希望发现哪些提交是重复的。
   \par\bigskip
-  \begin{center}
-    \renewcommand{\arraystretch}{1.4}
-    \begin{tabular}{lll}
-      \textbf{操作} & \textbf{方法} & \textbf{行为} \\
-      \hline
-      增 & \texttt{add} & 已存在时不重复加入 \\
-      删 & \texttt{remove} & 删除指定元素 \\
-      查 & \texttt{contains} & 判断元素是否存在 \\
-      改 & 无直接替换方法 & 删除旧元素，再添加新元素 \\
-    \end{tabular}
-  \end{center}
+  \begin{itemize}
+    \item 用学号作为\textbf{键}，用第一次出现的位置作为\textbf{值}。
+    \item \textbf{查}：先用 \texttt{containsKey} 判断这个学号是否已经出现。
+    \item 已经出现：报告重复，并用 \texttt{get} 读取第一次出现的位置。
+    \item 尚未出现：用 \texttt{put} \textbf{新增}记录，留给后续查重。
+  \end{itemize}
   \bigskip
-  替换时，新元素若已存在，就会与已有元素合并为一个，数量可能减少。
+  \texttt{boolean containsKey(Object key)} 判断是否存在。
+  \par\medskip
+  \texttt{V get(Object key)} 读取旧记录。
+  \par
+  \texttt{V put(K key, V value)} 保存记录。
+\end{frame}
+
+\begin{frame}[fragile]{签到查重：先查，再决定是否新增}
+  \begin{lstlisting}[language=Java]
+String[] ids = {"2026001", "2026002", "2026001"};
+HashMap<String, Integer> firstSeen = new HashMap<>();
+for (int i = 0; i < ids.length; i++) {
+    String id = ids[i];
+    if (firstSeen.containsKey(id)) {
+        System.out.println(id + " first at " + firstSeen.get(id));
+    } else {
+        firstSeen.put(id, i);
+    }
+}
+// 2026001 first at 0
+  \end{lstlisting}
+  重复时不覆盖旧值，所以保留的始终是\textbf{第一次出现的下标}。
+  \par\medskip
+  本页方法：\texttt{containsKey} 查存在，\texttt{get} 查位置，\texttt{put} 增记录。
 \end{frame}
 
 \begin{frame}{都用于存储数据，组织方式决定操作行为}
   \begin{center}
     \renewcommand{\arraystretch}{1.35}
-    \begin{tabular}{llll}
-      & \textbf{ArrayList} & \textbf{HashMap} & \textbf{HashSet} \\
+    \begin{tabular}{lll}
+      & \textbf{List：本次用 ArrayList} & \textbf{Map：本次用 HashMap} \\
       \hline
-      组织方式 & 元素序列 & 键值对应 & 不重复元素 \\
-      定位依据 & 下标 & 键 & 元素本身 \\
-      增 & \texttt{add} & \texttt{put} 新键 & \texttt{add} \\
-      删 & \texttt{remove} & \texttt{remove} & \texttt{remove} \\
-      查 & \texttt{get / contains} & \texttt{get / containsKey} & \texttt{contains} \\
-      改 & \texttt{set} & \texttt{put} 已有键 & 先删后增 \\
+      组织方式 & 元素序列 & 键值对应 \\
+      定位依据 & 索引（下标） & 键 \\
+      增 & \texttt{add} & \texttt{put} 新键 \\
+      删 & \texttt{remove} & \texttt{remove} \\
+      查 & \texttt{get / contains} & \texttt{get / containsKey} \\
+      改 & \texttt{set} & \texttt{put} 已有键 \\
     \end{tabular}
   \end{center}
   \bigskip
   先确定\alert{怎样组织和定位数据}，再用\alert{增删查改}理解方法的作用。
   \par\medskip
-  相同的方法名可能有不同的行为；相同的操作也可能使用不同的方法。
+  \texttt{ArrayList} 和 \texttt{HashMap} 各是一种实现，其他实现也遵循对应接口的约定。
 \end{frame}
 
 \end{document}

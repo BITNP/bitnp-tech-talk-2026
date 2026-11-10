@@ -11,4 +11,185 @@
 
 \maketitle
 
+\section{枚举：表示有限的一组选择}
+
+\begin{frame}[fragile]{用整数表示状态，需要记住编号的含义}
+  一个订单可能处于待付款、已付款、已发货或已取消状态。
+  \begin{lstlisting}[language=Java]
+int status = 0;
+
+if (status == 1) {
+    System.out.println("Ready to ship");
+}
+
+status = 7;
+  \end{lstlisting}
+  \begin{itemize}
+    \item 阅读代码时，需要另外查找：\texttt{0} 和 \texttt{1} 分别代表什么？
+    \item \texttt{int} 允许许多整数，但业务只需要四种状态。
+    \item 即使 \texttt{7} 没有业务含义，赋值语句仍能通过类型检查。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{换成字符串更直观，但仍然可能写错}
+  \begin{lstlisting}[language=Java]
+String status = "PENDING";
+status = "PAID";
+
+status = "PAIID";
+status = "paid";
+  \end{lstlisting}
+  \begin{itemize}
+    \item 名称比编号容易理解，但任何字符串都可以赋给 \texttt{status}。
+    \item 拼写错误、大小写不一致，都可能让后面的判断失效。
+    \item 我们希望同时表达\alert{每个选项的含义}和\alert{允许使用的选项}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{枚举：为有限的一组选择定义类型}
+  订单状态只需要以下四个选项：
+  \par\bigskip
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{ll}
+      \textbf{含义} & \textbf{枚举常量名称} \\
+      \hline
+      待付款 & \texttt{PENDING} \\
+      已付款 & \texttt{PAID} \\
+      已发货 & \texttt{SHIPPED} \\
+      已取消 & \texttt{CANCELLED} \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \textbf{枚举（enum）}将这些选项列在一起，定义一个专门的类型。
+  \par\medskip
+  星期、方向、任务状态等有限选项，也可以用枚举表达。
+\end{frame}
+
+\begin{frame}[fragile]{使用 enum 定义订单状态类型}
+  将下面的定义放在 \texttt{OrderStatus.java} 中：
+  \begin{lstlisting}[language=Java]
+public enum OrderStatus {
+    PENDING,
+    PAID,
+    SHIPPED,
+    CANCELLED
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{enum} 用于声明枚举；\texttt{OrderStatus} 是新类型的名称。
+    \item 花括号中列出枚举常量，使用逗号分隔。
+    \item 类型名称通常使用大驼峰；常量通常使用大写字母和下划线。
+    \item 使用常量时写成\alert{类型名.常量名}，例如 \texttt{OrderStatus.PAID}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{像其他类型一样声明变量和赋值}
+  以下语句写在 \texttt{Main.java} 的 \texttt{main} 方法中，
+  两个源文件放在同一目录。
+  \begin{lstlisting}[language=Java]
+OrderStatus status = OrderStatus.PENDING;
+System.out.println(status); // PENDING
+
+status = OrderStatus.PAID;
+System.out.println(status); // PAID
+  \end{lstlisting}
+  \begin{itemize}
+    \item 左边的 \texttt{OrderStatus} 指定变量类型。
+    \item 右边的 \texttt{OrderStatus.PENDING} 是该类型的一个常量。
+    \item 变量可以重新赋值；这里是改为保存另一个枚举常量。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{类型检查帮助我们排除无效的赋值}
+  下面的错误写法用于说明类型限制，\alert{不能通过编译}：
+  \begin{lstlisting}[language=Java]
+OrderStatus status = OrderStatus.PENDING;
+
+status = 1;                  // Wrong type
+status = "PAID";             // Wrong type
+status = OrderStatus.PAIID;   // No such constant
+  \end{lstlisting}
+  \begin{itemize}
+    \item 枚举常量有自己的类型；字符串 \texttt{"PAID"} 并不是它。
+    \item 拼错常量名称时，编译器就能指出问题。
+    \item 另一种枚举类型的常量，即使同名，也不能赋给这个变量。
+  \end{itemize}
+  \medskip
+  补充：枚举变量也可以为 \texttt{null}，表示没有引用枚举常量；
+  本例始终给它赋明确的状态。
+\end{frame}
+
+\begin{frame}[fragile]{使用 == 判断是否为某个枚举常量}
+  \begin{lstlisting}[language=Java]
+OrderStatus status = OrderStatus.PAID;
+
+if (status == OrderStatus.PAID) {
+    System.out.println("Ready to ship");
+}
+
+if (status != OrderStatus.CANCELLED) {
+    System.out.println("Order is not cancelled");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{==} 判断是否为同一个枚举常量；\texttt{!=} 判断是否不同。
+    \item 直接比较枚举值，不需要先转换成编号或字符串。
+    \item 字符串内容比较仍使用 \texttt{equals}，不要把这里的规则照搬过去。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{枚举作为参数：明确方法接收哪一种状态}
+  假设本例规定：只有待付款的订单可以取消。
+  \par\medskip
+  在 \texttt{Main} 类中定义方法：
+  \begin{lstlisting}[language=Java]
+static boolean canCancel(OrderStatus status) {
+    return status == OrderStatus.PENDING;
+}
+  \end{lstlisting}
+  在 \texttt{main} 方法中调用：
+  \begin{lstlisting}[language=Java]
+boolean first = canCancel(OrderStatus.PENDING); // true
+boolean second = canCancel(OrderStatus.SHIPPED); // false
+  \end{lstlisting}
+  \medskip
+  参数的类型说明需要什么数据；方法体决定这组数据对应的业务规则。
+\end{frame}
+
+% \begin{frame}[fragile]{枚举作为返回值：让调用方继续判断}
+%   为演示返回值，假设新订单统一从待付款状态开始。
+%   \par\medskip
+%   在 \texttt{Main} 类中定义方法：
+%   \begin{lstlisting}[language=Java]
+% static OrderStatus initialStatus() {
+%     return OrderStatus.PENDING;
+% }
+%   \end{lstlisting}
+%   在 \texttt{main} 方法中使用返回值：
+%   \begin{lstlisting}[language=Java]
+% OrderStatus status = initialStatus();
+% if (canCancel(status)) {
+%     System.out.println("Cancellation is allowed");
+% }
+%   \end{lstlisting}
+%   \medskip
+%   返回类型写 \texttt{OrderStatus}，调用方就可以用同类型变量接收结果。
+% \end{frame}
+
+% \begin{frame}{枚举限定可选值，业务规则仍由程序实现}
+%   \begin{itemize}
+%     \item \textbf{定义类型：}用 \texttt{enum} 列出有限的一组常量。
+%     \item \textbf{保存与比较：}用枚举变量保存选项，用 \texttt{==} 判断常量。
+%     \item \textbf{连接方法：}枚举可以作为参数，也可以作为返回值。
+%   \end{itemize}
+%   \bigskip
+%   \begin{block}{思考：下面这次赋值能通过编译吗？}
+%     已发货的订单变量重新赋为 \texttt{OrderStatus.PENDING}。
+%   \end{block}
+%   \medskip
+%   能：两个常量属于同一种类型。
+%   枚举限定有哪些状态，\alert{不会自动限制状态之间如何转换}。
+% \end{frame}
+
 \end{document}

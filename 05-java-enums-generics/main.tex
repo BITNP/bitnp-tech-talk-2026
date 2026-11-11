@@ -192,4 +192,190 @@ boolean second = canCancel(OrderStatus.SHIPPED); // false
 %   枚举限定有哪些状态，\alert{不会自动限制状态之间如何转换}。
 % \end{frame}
 
+\section{错误处理：报告失败并由调用方处理}
+
+\begin{frame}[fragile]{商品价格需要满足非负的要求}
+  回顾：通过 setter 修改商品的价格。本例价格用整数表示，单位为分。
+  \begin{lstlisting}[language=Java]
+public class Product {
+    private int price;
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 字段设为 \texttt{private}，类外通过 \texttt{setPrice} 修改它。
+    \item 目前调用 \texttt{setPrice(-10)}，仍然会把价格改为负数。
+    \item 我们希望\alert{拒绝非法价格，并让调用方知道操作失败}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{使用 throw 抛出异常，拒绝非法参数}
+  将 \texttt{Product} 中的 setter 改为：
+  \begin{lstlisting}[language=Java]
+public void setPrice(int price) {
+    if (price < 0) {
+        throw new IllegalArgumentException(
+            "Price must be non-negative");
+    }
+    this.price = price;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{IllegalArgumentException} 表示参数不符合方法的要求。
+    \item \texttt{new} 创建异常对象；字符串说明失败的原因。
+    \item \texttt{throw} 抛出异常，本次调用不能正常完成。
+    \item 检查在赋值之前：负数不会写入字段，\texttt{0} 则是合法价格。
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{抛出异常后，不会继续执行后面的赋值}
+%   \begin{columns}[T,onlytextwidth]
+%     \begin{column}{0.47\textwidth}
+%       \begin{block}{传入 1000：满足要求}
+%         \begin{enumerate}
+%           \item 判断价格是否小于 \texttt{0}：否。
+%           \item 将 \texttt{1000} 写入字段。
+%           \item 方法正常结束，回到调用方。
+%         \end{enumerate}
+%       \end{block}
+%     \end{column}
+%     \begin{column}{0.49\textwidth}
+%       \begin{block}{传入 -10：不满足要求}
+%         \begin{enumerate}
+%           \item 判断价格是否小于 \texttt{0}：是。
+%           \item 创建并抛出异常。
+%           \item 跳过赋值，异常向调用方传播。
+%         \end{enumerate}
+%       \end{block}
+%     \end{column}
+%   \end{columns}
+%   \bigskip
+%   \alert{异常表示这次操作失败}，不是正常返回的结果。
+%   \par\medskip
+%   当前 setter 在检查失败时没有修改字段，原价格得以保留。
+% \end{frame}
+
+\begin{frame}{异常类型帮助我们识别失败原因}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{ll}
+      \textbf{异常类型} & \textbf{典型原因} \\
+      \hline
+      \texttt{IllegalArgumentException} & 参数不符合要求 \\
+      \texttt{NumberFormatException} & 文本不能转换为要求的数值 \\
+      \texttt{NullPointerException} & 对 \texttt{null} 进行需要对象的操作 \\
+      \texttt{IndexOutOfBoundsException} & 索引超出允许范围 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \begin{itemize}
+    \item 参数校验失败时，可以主动抛出合适的异常。
+    \item 调用库方法或执行其他操作时，也可能出现异常。
+    \item 类型说明问题的类别，异常消息提供本次失败的具体信息。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{异常没有被处理，调用方也不能照常继续}
+  在 \texttt{main} 方法中调用修改后的 setter：
+  \begin{lstlisting}[language=Java]
+Product product = new Product();
+product.setPrice(1000);
+product.setPrice(-10);
+System.out.println("Price updated");
+  \end{lstlisting}
+  \begin{itemize}
+    \item 第一次设置成功；第二次在 setter 中抛出异常。
+    \item 异常传播到 \texttt{main}，最后的输出语句不会执行。
+    \item 始终没有匹配的处理时，当前线程终止；本例程序随之结束。
+  \end{itemize}
+  \medskip
+  控制台会给出异常类型、消息和调用堆栈；
+  可以从中找到自己代码的文件名与行号。
+\end{frame}
+
+\begin{frame}[fragile]{在调用方使用 try-catch 处理设置失败}
+  以下代码写在 \texttt{main} 方法中：
+  \begin{lstlisting}[language=Java]
+Product product = new Product();
+product.setPrice(1000);
+try {
+    product.setPrice(-10);
+    System.out.println("Price updated");
+} catch (IllegalArgumentException e) {
+    System.out.println(e.getMessage());
+}
+System.out.println("Continue");
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{try} 中放置可能失败的操作。
+    \item \texttt{catch} 捕获匹配的异常，变量 \texttt{e} 接收异常对象。
+    \item \texttt{e.getMessage()} 取得异常消息，此处用它给出失败提示。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{对照两条路径：正常执行与异常处理}
+  将上一页的 \texttt{-10} 分别改为 \texttt{2000} 和 \texttt{-10}：
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{传入 2000：正常完成}
+        \begin{enumerate}
+          \item 设置价格成功。
+          \item 输出 \texttt{Price updated}。
+          \item 跳过 \texttt{catch}。
+          \item 输出 \texttt{Continue}。
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{传入 -10：进入异常处理}
+        \begin{enumerate}
+          \item setter 抛出异常。
+          \item 跳过 \texttt{try} 中剩余语句。
+          \item 进入匹配的 \texttt{catch}，输出原因。
+          \item 输出 \texttt{Continue}。
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \bigskip
+  本例处理后，继续执行整个 \texttt{try-catch} 后面的语句，
+  \alert{不会回到出错位置接着执行}。
+\end{frame}
+
+\begin{frame}{setter 检查规则，调用方处理失败}
+  \begin{itemize}
+    \item \textbf{setter：}检查价格，拒绝负数，并抛出异常报告失败。
+    \item \textbf{调用方：}根据场景提示用户、重新输入，或取消这次操作。
+    \item \textbf{自己的代码写错时：}修正非法参数的来源，避免反复触发同一问题。
+  \end{itemize}
+  \bigskip
+  \begin{block}{捕获异常不会自动修复数据，也不会自动重试}
+    本例价格仍为原来的 \texttt{1000}，是因为 setter 先检查、后赋值。
+    异常机制本身不会撤销此前已经完成的修改。
+  \end{block}
+  \medskip
+  不要写空的 \texttt{catch} 来隐藏失败；在能作出合理处理的位置捕获异常。
+\end{frame}
+
+\begin{frame}{补充：有些异常要求捕获或显式声明}
+  \begin{itemize}
+    \item Java 对部分异常有编译要求：调用方必须捕获，
+      或在方法上用 \texttt{throws} 声明可能向外传播。
+    \item 本例的 \texttt{IllegalArgumentException} 没有这项强制要求，
+      也可以使用 \texttt{try-catch} 处理。
+  \end{itemize}
+  \bigskip
+  \begin{block}{区分两个关键字}
+    \texttt{throw}：实际抛出异常。\par\medskip
+    \texttt{throws}：写在方法声明中，说明可能向外传播的异常，
+    不代表已经处理了异常。
+  \end{block}
+  \medskip
+  课后了解：受检异常与非受检异常的分类，以及 \texttt{throws} 的使用。
+\end{frame}
+
 \end{document}

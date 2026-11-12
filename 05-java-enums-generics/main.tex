@@ -604,4 +604,77 @@ Box<String> box = new Box<>("Hello");
   泛型的重点：\alert{定义时保留类型参数，使用时指定类型，并由编译器检查}。
 \end{frame}
 
+\section{常用标准库：字符串处理}
+
+\begin{frame}[fragile]{字符串：长度、访问与比较}
+  以下示例统一使用 \texttt{String s = "Java";}：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.length()} & 获取长度 & \texttt{4} \\
+      \texttt{s.charAt(1)} & 读取指定下标的字符 & \texttt{'a'} \\
+      \texttt{s.equals("Java")} & 比较内容是否相同 & \texttt{true} \\
+      \texttt{s.equals("java")} & 内容比较区分大小写 & \texttt{false} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item 下标从 \texttt{0} 开始；\texttt{charAt} 的下标必须小于长度。
+    \item 字符串内容用 \texttt{equals} 比较，\texttt{==} 判断是否引用同一对象。
+  \end{itemize}
+  \medskip
+  {\footnotesize 长度和下标按 UTF-16 代码单元计数，部分字符占两个位置。
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
+\begin{frame}[fragile]{字符串：查找与截取}
+  以下示例仍使用 \texttt{String s = "Java";}：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.contains("av")} & 是否包含指定文本 & \texttt{true} \\
+      \texttt{s.indexOf("a")} & 首次出现的位置 & \texttt{1} \\
+      \texttt{s.startsWith("Ja")} & 是否以指定文本开头 & \texttt{true} \\
+      \texttt{s.endsWith("va")} & 是否以指定文本结尾 & \texttt{true} \\
+      \texttt{s.substring(1, 3)} & 截取下标区间 $[1,3)$ & \texttt{"av"} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{indexOf} 未找到时返回 \texttt{-1}，例如 \texttt{s.indexOf("x")}。
+    \item \texttt{substring(begin, end)} 左闭右开，且需满足\par
+      \texttt{0 <= begin <= end <= s.length()}。
+  \end{itemize}
+  \medskip
+  {\footnotesize\href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
+\begin{frame}[fragile]{字符串：整理、替换与拆分}
+  前四行使用 \texttt{String s = " Java ";}，引号内两端各有一个空格。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.strip()} & 去除首尾空白 & \texttt{"Java"} \\
+      \texttt{s.replace("a", "o")} & 替换所有匹配文本 & \texttt{" Jovo "} \\
+      \texttt{s.toUpperCase()} & 转为大写 & \texttt{" JAVA "} \\
+      \texttt{s.toLowerCase()} & 转为小写 & \texttt{" java "} \\
+      \texttt{"a,b".split(",")} & 拆分为字符串数组 & \texttt{\{"a", "b"\}} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item 不修改原字符串；需使用返回值，例如 \texttt{s = s.strip();}。
+    \item \texttt{split} 的参数是正则表达式，本例只使用逗号分隔。
+  \end{itemize}
+  \medskip
+  {\footnotesize\texttt{strip()} 需要 Java 11 或更新版本；大小写转换使用默认区域设置。
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
 \end{document}

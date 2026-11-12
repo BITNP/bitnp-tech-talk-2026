@@ -677,4 +677,52 @@ Box<String> box = new Box<>("Hello");
   \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
 \end{frame}
 
+\section{常用标准库：文本与数值转换}
+
+\begin{frame}{类型转换：在文本与数值之间转换}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果与类型} \\
+      \hline
+      \texttt{Integer.parseInt("42")} & 文本转整数 & \texttt{42}（\texttt{int}） \\
+      \texttt{Double.parseDouble("12.5")} & 文本转浮点数 & \texttt{12.5}（\texttt{double}） \\
+      \texttt{String.valueOf(42)} & 整数转文本 & \texttt{"42"}（\texttt{String}） \\
+      \texttt{String.valueOf(12.5)} & 浮点数转文本 & \texttt{"12.5"}（\texttt{String}） \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{"42"} 是文本，\texttt{42} 是数值；两者参与运算的行为不同。
+    \item \texttt{"42" + 1} 得到 \texttt{"421"}；解析后再加 \texttt{1} 得到 \texttt{43}。
+    \item 这些方法直接通过类名调用，不需要先创建包装类对象。
+  \end{itemize}
+  \medskip
+  {\footnotesize 官方文档：
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html}{Integer}、
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html}{Double}、
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String}}
+\end{frame}
+
+\begin{frame}[fragile]{解析可能失败：用异常处理无效输入}
+  \begin{lstlisting}[language=Java]
+String input = "12x";
+try {
+    int quantity = Integer.parseInt(input.strip());
+    System.out.println(quantity);
+} catch (NumberFormatException e) {
+    System.out.println("Please enter a valid integer");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{parseInt} 遇到 \texttt{"12x"}、\texttt{"12.5"} 或超出 \texttt{int} 范围的文本，
+      会抛出 \texttt{NumberFormatException}。
+    \item 先用 \texttt{strip()} 清理首尾空白；这里不会自动重试。
+    \item \texttt{"-10"} 可以成功解析；数量是否允许为负，仍需另行检查。
+  \end{itemize}
+  \medskip
+  {\footnotesize\texttt{Double.parseDouble} 也可能因无效格式抛出该异常；
+  浮点数超出范围可能得到无穷大，不能用解析成功代替数值范围检查。}
+\end{frame}
+
 \end{document}

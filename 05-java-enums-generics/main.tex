@@ -725,4 +725,28 @@ try {
   浮点数超出范围可能得到无穷大，不能用解析成功代替数值范围检查。}
 \end{frame}
 
+\section{常用标准库：数学计算}
+
+\begin{frame}{数学工具：使用 Math 完成常见计算}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果与类型} \\
+      \hline
+      \texttt{Math.abs(-8)} & 绝对值 & \texttt{8}（\texttt{int}） \\
+      \texttt{Math.min(3, 7)} & 两个数中较小的值 & \texttt{3}（\texttt{int}） \\
+      \texttt{Math.max(3, 7)} & 两个数中较大的值 & \texttt{7}（\texttt{int}） \\
+      \texttt{Math.sqrt(9)} & 平方根 & \texttt{3.0}（\texttt{double}） \\
+      \texttt{Math.pow(2, 3)} & 幂：$2^3$ & \texttt{8.0}（\texttt{double}） \\
+      \texttt{Math.round(2.5)} & 舍入到最接近的整数 & \texttt{3}（\texttt{long}） \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{round} 遇到恰好在中间的值时，向正无穷方向取整：\par
+      \texttt{Math.round(-2.5)} 得到 \texttt{-2}，并非 \texttt{-3}。
+    \item 返回类型取决于方法及参数；\texttt{round(double)} 返回 \texttt{long}。
+  \end{itemize}
+\end{frame}
+
 \end{document}

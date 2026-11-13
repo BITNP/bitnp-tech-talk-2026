@@ -1,0 +1,756 @@
+\documentclass[aspectratio=169]{beamer}
+\input{../talk-common.tex}
+
+\title[技术部第五次分享]{技术部第五次技术分享会}
+\subtitle{枚举、泛型与常用标准库}
+\author{姚雨森}
+\institute{技术部 分管主席}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{枚举：表示有限的一组选择}
+
+\begin{frame}[fragile]{用整数返回价格档次，需要约定编号含义}
+  本例价格以分为单位，假设传入非负整数：低于 10 元为便宜，
+  10 元至不足 100 元为一般，100 元及以上为昂贵。
+  \begin{lstlisting}[language=Java]
+static int classifyPrice(int price) {
+    if (price < 1000) {
+        return 0;
+    }
+    if (price < 10000) {
+        return 1;
+    }
+    return 2;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 调用方必须记住：\texttt{0}、\texttt{1}、\texttt{2} 分别代表哪个档次。
+    \item 返回类型 \texttt{int} 不能限定只有这三个结果，误写 \texttt{return 7;} 也能编译。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{改用字符串返回档次，仍然可能拼错}
+  \begin{lstlisting}[language=Java]
+static String classifyPrice(int price) {
+    if (price < 1000) {
+        return "CHEAP";
+    }
+    if (price < 10000) {
+        return "REGULAR";
+    }
+    return "EXPENSIVE";
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 名称比编号直观，但 \texttt{"CHEPA"}、\texttt{"cheap"} 也是合法字符串。
+    \item 我们希望返回值只能从\alert{便宜、一般、昂贵}这三个选项中选择。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{枚举：为三个价格档次定义专门的类型}
+  本例的分档规则是教学约定，不是通用的价格标准。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lll}
+      \textbf{含义} & \textbf{价格范围（元）} & \textbf{枚举常量名称} \\
+      \hline
+      便宜 & $0 \leq p < 10$ & \texttt{CHEAP} \\
+      一般 & $10 \leq p < 100$ & \texttt{REGULAR} \\
+      昂贵 & $p \geq 100$ & \texttt{EXPENSIVE} \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \textbf{枚举（enum）}列出有限的一组常量，定义一个专门的类型。
+  \par\medskip
+  价格数值有很多种，但本例的\alert{分类结果只有三个选项}。
+\end{frame}
+
+\begin{frame}[fragile]{使用 enum 定义价格档次类型}
+  将下面的定义放在 \texttt{PriceLevel.java} 中：
+  \begin{lstlisting}[language=Java]
+public enum PriceLevel {
+    CHEAP,
+    REGULAR,
+    EXPENSIVE
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{enum} 用于声明枚举；\texttt{PriceLevel} 是新类型的名称。
+    \item 花括号中列出枚举常量，使用逗号分隔。
+    \item 类型名称通常使用大驼峰；常量通常使用大写字母和下划线。
+    \item 使用常量时写成\alert{类型名.常量名}，例如 \texttt{PriceLevel.CHEAP}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{用枚举作为返回类型，明确分类结果}
+  用下面的方法替换之前的整数或字符串版本，定义在 \texttt{Main} 类中：
+  \begin{lstlisting}[language=Java]
+static PriceLevel classifyPrice(int price) {
+    if (price < 1000) {
+        return PriceLevel.CHEAP;
+    }
+    if (price < 10000) {
+        return PriceLevel.REGULAR;
+    }
+    return PriceLevel.EXPENSIVE;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 传入的是价格数值，返回的是 \texttt{PriceLevel} 类型的分类结果。
+    \item 分档逻辑不变，三个分支分别返回一个有明确含义的枚举常量。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{调用分类方法，用枚举变量接收结果}
+  以下语句写在 \texttt{main} 中；两个源文件放在同一目录。
+  \begin{lstlisting}[language=Java]
+PriceLevel level = classifyPrice(1250);
+System.out.println(level); // REGULAR
+
+level = classifyPrice(700);
+System.out.println(level); // CHEAP
+
+level = classifyPrice(12000);
+System.out.println(level); // EXPENSIVE
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{1250} 分就是 12.50 元，落在一般档次。
+    \item 左边的 \texttt{PriceLevel} 指定变量类型，与方法的返回类型一致。
+    \item 变量可以重新赋值，这里依次接收不同价格对应的档次。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{类型检查帮助我们排除无效的赋值}
+  下面的错误写法用于说明类型限制，\alert{不能通过编译}：
+  \begin{lstlisting}[language=Java]
+PriceLevel level = PriceLevel.CHEAP;
+
+level = 0;                 // Wrong type
+level = "CHEAP";           // Wrong type
+level = PriceLevel.CHEPA;   // No such constant
+  \end{lstlisting}
+  \begin{itemize}
+    \item 枚举常量有自己的类型；字符串 \texttt{"CHEAP"} 并不是它。
+    \item 拼错常量名称时，编译器就能指出问题。
+    \item 另一种枚举类型的常量，即使同名，也不能赋给这个变量。
+  \end{itemize}
+  \medskip
+  补充：枚举变量也可以为 \texttt{null}，表示没有引用枚举常量；
+  本例始终给它赋明确的档次。
+\end{frame}
+
+\begin{frame}[fragile]{使用 == 判断商品属于哪个价格档次}
+  \begin{lstlisting}[language=Java]
+PriceLevel level = classifyPrice(700);
+
+if (level == PriceLevel.CHEAP) {
+    System.out.println("Cheap product");
+}
+
+if (level != PriceLevel.EXPENSIVE) {
+    System.out.println("Not expensive");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{==} 判断是否为同一个枚举常量；\texttt{!=} 判断是否不同。
+    \item 直接比较枚举值，不需要先转换成编号或字符串。
+    \item 字符串内容比较仍使用 \texttt{equals}，不要把这里的规则照搬过去。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{枚举也可以作为方法参数}
+  在 \texttt{Main} 类中定义方法，判断传入的档次是否为昂贵：
+  \begin{lstlisting}[language=Java]
+static boolean isExpensive(PriceLevel level) {
+    return level == PriceLevel.EXPENSIVE;
+}
+  \end{lstlisting}
+  在 \texttt{main} 中先分类，再使用分类结果：
+  \begin{lstlisting}[language=Java]
+PriceLevel level = classifyPrice(12000);
+boolean result = isExpensive(level);
+System.out.println(result); // true
+  \end{lstlisting}
+  \medskip
+  \texttt{classifyPrice} 从价格得到档次；
+  \texttt{isExpensive} 接收档次并作出判断。
+\end{frame}
+
+\section{错误处理：报告失败并由调用方处理}
+
+\begin{frame}[fragile]{商品价格需要满足非负的要求}
+  回顾：通过 setter 修改商品的价格。本例价格用整数表示，单位为分。
+  \begin{lstlisting}[language=Java]
+public class Product {
+    private int price;
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item 字段设为 \texttt{private}，类外通过 \texttt{setPrice} 修改它。
+    \item 目前调用 \texttt{setPrice(-10)}，仍然会把价格改为负数。
+    \item 我们希望\alert{拒绝非法价格，并让调用方知道操作失败}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{使用 throw 抛出异常，拒绝非法参数}
+  将 \texttt{Product} 中的 setter 改为：
+  \begin{lstlisting}[language=Java]
+public void setPrice(int price) {
+    if (price < 0) {
+        throw new IllegalArgumentException(
+            "Price must be non-negative");
+    }
+    this.price = price;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{IllegalArgumentException} 表示参数不符合方法的要求。
+    \item \texttt{new} 创建异常对象；字符串说明失败的原因。
+    \item \texttt{throw} 抛出异常，本次调用不能正常完成。
+    \item 检查在赋值之前：负数不会写入字段，\texttt{0} 则是合法价格。
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{抛出异常后，不会继续执行后面的赋值}
+%   \begin{columns}[T,onlytextwidth]
+%     \begin{column}{0.47\textwidth}
+%       \begin{block}{传入 1000：满足要求}
+%         \begin{enumerate}
+%           \item 判断价格是否小于 \texttt{0}：否。
+%           \item 将 \texttt{1000} 写入字段。
+%           \item 方法正常结束，回到调用方。
+%         \end{enumerate}
+%       \end{block}
+%     \end{column}
+%     \begin{column}{0.49\textwidth}
+%       \begin{block}{传入 -10：不满足要求}
+%         \begin{enumerate}
+%           \item 判断价格是否小于 \texttt{0}：是。
+%           \item 创建并抛出异常。
+%           \item 跳过赋值，异常向调用方传播。
+%         \end{enumerate}
+%       \end{block}
+%     \end{column}
+%   \end{columns}
+%   \bigskip
+%   \alert{异常表示这次操作失败}，不是正常返回的结果。
+%   \par\medskip
+%   当前 setter 在检查失败时没有修改字段，原价格得以保留。
+% \end{frame}
+
+\begin{frame}{异常类型帮助我们识别失败原因}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{ll}
+      \textbf{异常类型} & \textbf{典型原因} \\
+      \hline
+      \texttt{IllegalArgumentException} & 参数不符合要求 \\
+      \texttt{NumberFormatException} & 文本不能转换为要求的数值 \\
+      \texttt{NullPointerException} & 对 \texttt{null} 进行需要对象的操作 \\
+      \texttt{IndexOutOfBoundsException} & 索引超出允许范围 \\
+    \end{tabular}
+  \end{center}
+  \bigskip
+  \begin{itemize}
+    \item 参数校验失败时，可以主动抛出合适的异常。
+    \item 调用库方法或执行其他操作时，也可能出现异常。
+    \item 类型说明问题的类别，异常消息提供本次失败的具体信息。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{异常没有被处理，调用方也不能照常继续}
+  在 \texttt{main} 方法中调用修改后的 setter：
+  \begin{lstlisting}[language=Java]
+Product product = new Product();
+product.setPrice(1000);
+product.setPrice(-10);
+System.out.println("Price updated");
+  \end{lstlisting}
+  \begin{itemize}
+    \item 第一次设置成功；第二次在 setter 中抛出异常。
+    \item 异常传播到 \texttt{main}，最后的输出语句不会执行。
+    \item 始终没有匹配的处理时，当前线程终止；本例程序随之结束。
+  \end{itemize}
+  \medskip
+  控制台会给出异常类型、消息和调用堆栈；
+  可以从中找到自己代码的文件名与行号。
+\end{frame}
+
+\begin{frame}[fragile]{在调用方使用 try-catch 处理设置失败}
+  以下代码写在 \texttt{main} 方法中：
+  \begin{lstlisting}[language=Java]
+Product product = new Product();
+product.setPrice(1000);
+try {
+    product.setPrice(-10);
+    System.out.println("Price updated");
+} catch (IllegalArgumentException e) {
+    System.out.println(e.getMessage());
+}
+System.out.println("Continue");
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{try} 中放置可能失败的操作。
+    \item \texttt{catch} 捕获匹配的异常，变量 \texttt{e} 接收异常对象。
+    \item \texttt{e.getMessage()} 取得异常消息，此处用它给出失败提示。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{对照两条路径：正常执行与异常处理}
+  将上一页的 \texttt{-10} 分别改为 \texttt{2000} 和 \texttt{-10}：
+  \par\bigskip
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{传入 2000：正常完成}
+        \begin{enumerate}
+          \item 设置价格成功。
+          \item 输出 \texttt{Price updated}。
+          \item 跳过 \texttt{catch}。
+          \item 输出 \texttt{Continue}。
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{传入 -10：进入异常处理}
+        \begin{enumerate}
+          \item setter 抛出异常。
+          \item 跳过 \texttt{try} 中剩余语句。
+          \item 进入匹配的 \texttt{catch}，输出原因。
+          \item 输出 \texttt{Continue}。
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \bigskip
+  本例处理后，继续执行整个 \texttt{try-catch} 后面的语句，
+  \alert{不会回到出错位置接着执行}。
+\end{frame}
+
+\begin{frame}{setter 检查规则，调用方处理失败}
+  \begin{itemize}
+    \item \textbf{setter：}检查价格，拒绝负数，并抛出异常报告失败。
+    \item \textbf{调用方：}根据场景提示用户、重新输入，或取消这次操作。
+    \item \textbf{自己的代码写错时：}修正非法参数的来源，避免反复触发同一问题。
+  \end{itemize}
+  \bigskip
+  \begin{block}{捕获异常不会自动修复数据，也不会自动重试}
+    本例价格仍为原来的 \texttt{1000}，是因为 setter 先检查、后赋值。
+    异常机制本身不会撤销此前已经完成的修改。
+  \end{block}
+  \medskip
+  不要写空的 \texttt{catch} 来隐藏失败；在能作出合理处理的位置捕获异常。
+\end{frame}
+
+\begin{frame}{补充：有些异常要求捕获或显式声明}
+  \begin{itemize}
+    \item Java 对部分异常有编译要求：调用方必须捕获，
+      或在方法上用 \texttt{throws} 声明可能向外传播。
+    \item 本例的 \texttt{IllegalArgumentException} 没有这项强制要求，
+      也可以使用 \texttt{try-catch} 处理。
+  \end{itemize}
+  \bigskip
+  \begin{block}{区分两个关键字}
+    \texttt{throw}：实际抛出异常。\par\medskip
+    \texttt{throws}：写在方法声明中，说明可能向外传播的异常，
+    不代表已经处理了异常。
+  \end{block}
+  \medskip
+  课后了解：受检异常与非受检异常的分类，以及 \texttt{throws} 的使用。
+\end{frame}
+
+\section{泛型：让同一份定义适用于不同类型}
+
+\begin{frame}[fragile]{回顾：列表的尖括号指定元素类型}
+  第四次分享中，我们已经使用过泛型：
+  \begin{lstlisting}[language=Java]
+// import java.util.ArrayList;
+ArrayList<String> names = new ArrayList<>();
+names.add("Alice");
+String name = names.get(0);
+
+ArrayList<Integer> scores = new ArrayList<>();
+scores.add(90);
+int score = scores.get(0);
+  \end{lstlisting}
+  \begin{itemize}
+    \item 都是 \texttt{ArrayList}，但一个保存字符串，另一个保存整数。
+    \item 尖括号中的类型，让编译器检查添加的数据和读取结果的类型。
+    \item \textbf{泛型（generics）}让同一份定义可以适用于不同类型。
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{普通参数传入值，类型参数指定类型}
+%   \begin{columns}[T,onlytextwidth]
+%     \begin{column}{0.47\textwidth}
+%       \begin{block}{普通参数：这次处理哪个值？}
+%         \texttt{setPrice(1000)}\par\medskip
+%         \texttt{setPrice(2000)}\par\medskip
+%         同一个方法处理不同价格，\par
+%         参数类型始终为 \texttt{int}。
+%       \end{block}
+%     \end{column}
+%     \begin{column}{0.49\textwidth}
+%       \begin{block}{类型参数：这里使用哪种类型？}
+%         \texttt{ArrayList<String>}\par\medskip
+%         \texttt{ArrayList<Product>}\par\medskip
+%         列表的添加、读取逻辑相通，\par
+%         元素类型由使用者指定。
+%       \end{block}
+%     \end{column}
+%   \end{columns}
+%   \bigskip
+%   如果需要一个只保存一个值的盒子，也希望它能用于字符串、商品等类型，
+%   而不必分别编写一套盒子类。
+% \end{frame}
+
+\begin{frame}[fragile]{定义 Box<T>：用类型参数表示保存的类型}
+  先在 \texttt{Box.java} 中定义保存和读取操作：
+  \begin{lstlisting}[language=Java]
+public class Box<T> {
+    private T value;
+
+    public Box(T value) {
+        this.value = value;
+    }
+
+    public T get() {
+        return value;
+    }
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{<T>} 声明类型参数；\texttt{T} 用于字段、构造参数和返回类型。
+    \item 定义时先用 \texttt{T} 表示类型，使用时再指定具体类型。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{使用 Box<String>：保存和读取字符串}
+  以下语句写在 \texttt{main} 中，\texttt{Box.java} 与入口文件放在同一目录：
+  \begin{lstlisting}[language=Java]
+Box<String> box = new Box<String>("Hello");
+String text = box.get();
+System.out.println(text); // Hello
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{Box<String>} 将这里的类型参数指定为 \texttt{String}。
+    \item 编译器据此检查构造时传入的值，并确定 \texttt{get()} 的返回类型。
+    \item 读取结果可以直接赋给 \texttt{String} 变量，不需要手工类型转换。
+  \end{itemize}
+  \medskip
+  可以按“这里的 \texttt{T} 对应 \texttt{String}”理解类型检查，
+  不必为字符串另外定义一个盒子类。
+\end{frame}
+
+\begin{frame}[fragile]{使用 Box<Product>：同一份定义保存商品}
+  继续使用前面的 \texttt{Product} 类：
+  \begin{lstlisting}[language=Java]
+Product product = new Product();
+product.setPrice(1000);
+
+Box<Product> box = new Box<Product>(product);
+Product saved = box.get();
+saved.setPrice(2000);
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{Box} 的源码保持一致，这次指定的类型是 \texttt{Product}。
+    \item 构造时传入商品，读取时得到 \texttt{Product} 类型的结果。
+    \item 自己定义的类，也可以作为泛型的类型实参。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{为 Box<T> 增加交换内容的操作}
+  将下面的方法加入 \texttt{Box<T>} 类中，与 \texttt{get()} 并列：
+  \begin{lstlisting}[language=Java]
+public void swapWith(Box<T> other) {
+    T temp = this.value;
+    this.value = other.value;
+    other.value = temp;
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{other} 是另一个保存同种类型数据的盒子。
+    \item 用 \texttt{T} 类型的临时变量暂存当前值，再交换两个字段的内容。
+    \item 方法定义在 \texttt{Box} 类内部，可以访问另一个盒子的私有字段。
+  \end{itemize}
+  \medskip
+  交换过程不依赖具体数据类型；本例假设传入的 \texttt{other} 非 \texttt{null}。
+\end{frame}
+
+\begin{frame}[fragile]{调用 swapWith：观察交换前后的内容}
+  以下语句写在 \texttt{main} 中：
+  \begin{lstlisting}[language=Java]
+Box<String> first = new Box<>("Apple");
+Box<String> second = new Box<>("Banana");
+System.out.println(first.get());  // Apple
+System.out.println(second.get()); // Banana
+
+first.swapWith(second);
+
+System.out.println(first.get());  // Banana
+System.out.println(second.get()); // Apple
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{this} 对应 \texttt{first}，参数 \texttt{other} 接收 \texttt{second}。
+    \item 交换的是两个盒子保存的值；变量仍然指向各自原来的盒子。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{同一段交换代码可以用于不同类型}
+  对整数盒子，仍然使用相同的 \texttt{swapWith} 方法：
+  \begin{lstlisting}[language=Java]
+Box<Integer> first = new Box<>(10);
+Box<Integer> second = new Box<>(20);
+first.swapWith(second);
+System.out.println(first.get());  // 20
+System.out.println(second.get()); // 10
+  \end{lstlisting}
+  \begin{itemize}
+    \item 字符串、整数和商品盒子，都可以复用这段交换逻辑。
+    \item 对 \texttt{Box<Integer>}，参数 \texttt{Box<T>} 对应 \texttt{Box<Integer>}。
+    \item 类型仍需匹配：整数盒子不能与字符串盒子交换。
+  \end{itemize}
+  \medskip
+  \alert{泛型既能描述保存的数据，也能描述与具体类型无关的操作。}
+\end{frame}
+
+% \begin{frame}[fragile]{泛型让类型不匹配在编译时暴露}
+%   已有一个保存字符串的盒子：
+%   \begin{lstlisting}[language=Java]
+% Box<String> box = new Box<String>("Hello");
+% String text = box.get(); // OK
+%   \end{lstlisting}
+%   下面两行分别是错误示例，\alert{不能通过编译}：
+%   \begin{lstlisting}[language=Java]
+% Box<String> wrong = new Box<String>(123);
+% Integer number = box.get();
+%   \end{lstlisting}
+%   \begin{itemize}
+%     \item 第一行需要字符串，却传入了整数。
+%     \item 第二行读取的是字符串，却试图赋给 \texttt{Integer} 变量。
+%     \item 编译器根据类型参数检查两端，帮助我们提前发现类型不匹配。
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}[fragile]{类型实参使用引用类型：Integer 而非 int}
+  保存整数时，写成 \texttt{Box<Integer>}：
+  \begin{lstlisting}[language=Java]
+Box<Integer> box = new Box<Integer>(42);
+int number = box.get();
+System.out.println(number); // 42
+  \end{lstlisting}
+  \begin{itemize}
+    \item 泛型的类型实参不能直接使用 \texttt{int}、\texttt{double} 等基本类型。
+    \item 对应的包装类包括 \texttt{Integer}、\texttt{Double} 和 \texttt{Boolean}。
+    \item 本例传入 \texttt{42} 时自动装箱，读取并赋给 \texttt{int} 时自动拆箱。
+  \end{itemize}
+  \medskip
+  与第四次分享中的 \texttt{ArrayList<Integer>} 使用相同的规则；
+  \texttt{Box<int>} 是错误写法。
+\end{frame}
+
+\begin{frame}[fragile]{T 是参数名，尖括号中也可以有多个参数}
+  回顾已经使用过的键值映射：
+  \begin{lstlisting}[language=Java]
+// import java.util.HashMap;
+HashMap<String, Integer> stock = new HashMap<>();
+stock.put("P1001", 8);
+Integer count = stock.get("P1001");
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{T} 是常用的类型参数名，不是固定关键字；声明和使用应保持一致。
+    \item 类型可以有多个参数，用逗号分隔，例如 \texttt{HashMap<K, V>}。
+    \item 这里 \texttt{K} 对应键的类型 \texttt{String}，
+      \texttt{V} 对应值的类型 \texttt{Integer}。
+  \end{itemize}
+  \medskip
+  \texttt{Box<T>} 只有一个类型参数；需要几个参数，由类型定义决定。
+\end{frame}
+
+\begin{frame}[fragile]{右侧的 <> 可以省略重复的类型书写}
+  显式写出构造时使用的类型：
+  \begin{lstlisting}[language=Java]
+Box<String> box = new Box<String>("Hello");
+  \end{lstlisting}
+  可以简写为：
+  \begin{lstlisting}[language=Java]
+Box<String> box = new Box<>("Hello");
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{<>} 称为菱形语法，编译器根据上下文推断类型实参。
+    \item 简写后的类型检查与前面的写法一致。
+    \item \texttt{new Box<>(...)} 中仍保留尖括号，不要写成省略泛型的原始类型。
+  \end{itemize}
+  \medskip
+  泛型的重点：\alert{定义时保留类型参数，使用时指定类型，并由编译器检查}。
+\end{frame}
+
+\section{常用标准库：字符串处理}
+
+\begin{frame}[fragile]{字符串：长度、访问与比较}
+  以下示例统一使用 \texttt{String s = "Java";}：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.length()} & 获取长度 & \texttt{4} \\
+      \texttt{s.charAt(1)} & 读取指定下标的字符 & \texttt{'a'} \\
+      \texttt{s.equals("Java")} & 比较内容是否相同 & \texttt{true} \\
+      \texttt{s.equals("java")} & 内容比较区分大小写 & \texttt{false} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item 下标从 \texttt{0} 开始；\texttt{charAt} 的下标必须小于长度。
+    \item 字符串内容用 \texttt{equals} 比较，\texttt{==} 判断是否引用同一对象。
+  \end{itemize}
+  \medskip
+  {\footnotesize 长度和下标按 UTF-16 代码单元计数，部分字符占两个位置。
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
+\begin{frame}[fragile]{字符串：查找与截取}
+  以下示例仍使用 \texttt{String s = "Java";}：
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.contains("av")} & 是否包含指定文本 & \texttt{true} \\
+      \texttt{s.indexOf("a")} & 首次出现的位置 & \texttt{1} \\
+      \texttt{s.startsWith("Ja")} & 是否以指定文本开头 & \texttt{true} \\
+      \texttt{s.endsWith("va")} & 是否以指定文本结尾 & \texttt{true} \\
+      \texttt{s.substring(1, 3)} & 截取下标区间 $[1,3)$ & \texttt{"av"} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{indexOf} 未找到时返回 \texttt{-1}，例如 \texttt{s.indexOf("x")}。
+    \item \texttt{substring(begin, end)} 左闭右开，且需满足\par
+      \texttt{0 <= begin <= end <= s.length()}。
+  \end{itemize}
+  \medskip
+  {\footnotesize\href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
+\begin{frame}[fragile]{字符串：整理、替换与拆分}
+  前四行使用 \texttt{String s = " Java ";}，引号内两端各有一个空格。
+  \begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果} \\
+      \hline
+      \texttt{s.strip()} & 去除首尾空白 & \texttt{"Java"} \\
+      \texttt{s.replace("a", "o")} & 替换所有匹配文本 & \texttt{" Jovo "} \\
+      \texttt{s.toUpperCase()} & 转为大写 & \texttt{" JAVA "} \\
+      \texttt{s.toLowerCase()} & 转为小写 & \texttt{" java "} \\
+      \texttt{"a,b".split(",")} & 拆分为字符串数组 & \texttt{\{"a", "b"\}} \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item 不修改原字符串；需使用返回值，例如 \texttt{s = s.strip();}。
+    \item \texttt{split} 的参数是正则表达式，本例只使用逗号分隔。
+  \end{itemize}
+  \medskip
+  {\footnotesize\texttt{strip()} 需要 Java 11 或更新版本；大小写转换使用默认区域设置。
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String 官方文档}}
+\end{frame}
+
+\section{常用标准库：文本与数值转换}
+
+\begin{frame}{类型转换：在文本与数值之间转换}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果与类型} \\
+      \hline
+      \texttt{Integer.parseInt("42")} & 文本转整数 & \texttt{42}（\texttt{int}） \\
+      \texttt{Double.parseDouble("12.5")} & 文本转浮点数 & \texttt{12.5}（\texttt{double}） \\
+      \texttt{String.valueOf(42)} & 整数转文本 & \texttt{"42"}（\texttt{String}） \\
+      \texttt{String.valueOf(12.5)} & 浮点数转文本 & \texttt{"12.5"}（\texttt{String}） \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{"42"} 是文本，\texttt{42} 是数值；两者参与运算的行为不同。
+    \item \texttt{"42" + 1} 得到 \texttt{"421"}；解析后再加 \texttt{1} 得到 \texttt{43}。
+    \item 这些方法直接通过类名调用，不需要先创建包装类对象。
+  \end{itemize}
+  \medskip
+  {\footnotesize 官方文档：
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html}{Integer}、
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html}{Double}、
+  \href{https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html}{String}}
+\end{frame}
+
+\begin{frame}[fragile]{解析可能失败：用异常处理无效输入}
+  \begin{lstlisting}[language=Java]
+String input = "12x";
+try {
+    int quantity = Integer.parseInt(input.strip());
+    System.out.println(quantity);
+} catch (NumberFormatException e) {
+    System.out.println("Please enter a valid integer");
+}
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{parseInt} 遇到 \texttt{"12x"}、\texttt{"12.5"} 或超出 \texttt{int} 范围的文本，
+      会抛出 \texttt{NumberFormatException}。
+    \item 先用 \texttt{strip()} 清理首尾空白；这里不会自动重试。
+    \item \texttt{"-10"} 可以成功解析；数量是否允许为负，仍需另行检查。
+  \end{itemize}
+  \medskip
+  {\footnotesize\texttt{Double.parseDouble} 也可能因无效格式抛出该异常；
+  浮点数超出范围可能得到无穷大，不能用解析成功代替数值范围检查。}
+\end{frame}
+
+\section{常用标准库：数学计算}
+
+\begin{frame}{数学工具：使用 Math 完成常见计算}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lll}
+      \textbf{调用示例} & \textbf{作用} & \textbf{结果与类型} \\
+      \hline
+      \texttt{Math.abs(-8)} & 绝对值 & \texttt{8}（\texttt{int}） \\
+      \texttt{Math.min(3, 7)} & 两个数中较小的值 & \texttt{3}（\texttt{int}） \\
+      \texttt{Math.max(3, 7)} & 两个数中较大的值 & \texttt{7}（\texttt{int}） \\
+      \texttt{Math.sqrt(9)} & 平方根 & \texttt{3.0}（\texttt{double}） \\
+      \texttt{Math.pow(2, 3)} & 幂：$2^3$ & \texttt{8.0}（\texttt{double}） \\
+      \texttt{Math.round(2.5)} & 舍入到最接近的整数 & \texttt{3}（\texttt{long}） \\
+    \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item \texttt{round} 遇到恰好在中间的值时，向正无穷方向取整：\par
+      \texttt{Math.round(-2.5)} 得到 \texttt{-2}，并非 \texttt{-3}。
+    \item 返回类型取决于方法及参数；\texttt{round(double)} 返回 \texttt{long}。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{接下来需要自主学习的内容}
+  \begin{itemize}
+    \item \textbf{（可选）}参考资料05-1。
+    \item \textbf{（可选）}《Java 核心技术 卷 I》中枚举、异常处理、泛型，
+      以及字符串处理与数学方法的相关内容。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{课后练习}
+  \begin{enumerate}
+    \item \textbf{（必选）}完成枚举、异常处理、泛型与常用标准库的补充语句练习项目。
+  \end{enumerate}
+  \bigskip
+  项目链接之后会发到群里。
+\end{frame}
+
+\end{document}
